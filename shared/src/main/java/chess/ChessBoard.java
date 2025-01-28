@@ -11,7 +11,7 @@ public class ChessBoard {
     public ArrayList<ArrayList<ChessPiece>> board;
 
     public ChessBoard() {
-        ArrayList<ArrayList<ChessPiece>> board;
+        this.board = new ArrayList<ArrayList<ChessPiece>>(8);
         this.resetBoard();
         }
 
@@ -22,7 +22,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        ( board.get(position.getRow()-1) ).add(position.getColumn()-1, piece);
+        this.board.get(position.getRow()-1).add(position.getColumn()-1, piece);
     }
 
     /**
@@ -33,7 +33,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return board.get(position.getRow()-1).get(position.getColumn()-1);
+        return this.board.get(position.getRow()-1).get(position.getColumn()-1);
     }
 
     /**
@@ -42,11 +42,55 @@ public class ChessBoard {
      */
     public void resetBoard() {
         this.board = new ArrayList<ArrayList<ChessPiece>>(8);
+        this.board.add(0, new ArrayList<ChessPiece>(8));
+        this.board.add(1, new ArrayList<ChessPiece>(8));
+        this.board.add(2, new ArrayList<ChessPiece>(8));
+        this.board.add(3, new ArrayList<ChessPiece>(8));
+        this.board.add(4, new ArrayList<ChessPiece>(8));
+        this.board.add(5, new ArrayList<ChessPiece>(8));
+        this.board.add(6, new ArrayList<ChessPiece>(8));
+        this.board.add(7, new ArrayList<ChessPiece>(8));
+
+        this.board.get(0).add(0, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+        this.board.get(0).add(1, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
+        this.board.get(0).add(2, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
+        this.board.get(0).add(3, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
+        this.board.get(0).add(4, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
+        this.board.get(0).add(5, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
+        this.board.get(0).add(6, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
+        this.board.get(0).add(7, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+
+        this.board.get(1).add(0, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+        this.board.get(1).add(1, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+        this.board.get(1).add(2, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+        this.board.get(1).add(3, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+        this.board.get(1).add(4, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+        this.board.get(1).add(5, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+        this.board.get(1).add(6, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+        this.board.get(1).add(7, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+
+        this.board.get(6).add(0, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        this.board.get(6).add(1, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        this.board.get(6).add(2, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        this.board.get(6).add(3, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        this.board.get(6).add(4, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        this.board.get(6).add(5, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        this.board.get(6).add(6, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        this.board.get(6).add(7, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+
+        this.board.get(7).add(0, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+        this.board.get(7).add(1, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
+        this.board.get(7).add(2, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
+        this.board.get(7).add(3, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
+        this.board.get(7).add(4, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
+        this.board.get(7).add(5, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
+        this.board.get(7).add(6, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
+        this.board.get(7).add(7, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+
+
+        /*
         for (int i = 0; i < 8; i++){
-            board.add(i, new ArrayList<ChessPiece>(8));
-        }
-        for (int i = 0; i < 8; i++){
-            switch (i){
+            switch (i) {
                 case 0:
                     this.addPiece(new ChessPosition(i, 0), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
                     this.addPiece(new ChessPosition(i, 1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
@@ -84,6 +128,23 @@ public class ChessBoard {
                     break;
             }
         }
+         */
 
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof ChessBoard){
+            ChessBoard obj = (ChessBoard)o;
+            for (int i = 1; i < 9; i++){
+                for(int j = 1; j < 9; j++){
+                    if(obj.getPiece(new ChessPosition(i, j)) != this.getPiece(new ChessPosition(i, j))){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }
