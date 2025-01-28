@@ -45,20 +45,68 @@ public class ChessBoard {
                             break;
                     }
                 }
+
+                // Add White Special Row to the board
+                board.add(i, r);
+
             } else if (i==1){
                 // Construct White Pawn Row
                 ArrayList<ChessPiece> r = new ArrayList<ChessPiece>(8);
                 for (int j = 0; j < 8; j++) {
                     r.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
                 }
+
                 // Add White Pawn Row to the board
-                board.add(1, r);
+                board.add(i, r);
+
             } else if (i==6) {
-                //set up black pawn row
+                // Set Up Black Pawn Row
+                ArrayList<ChessPiece> r = new ArrayList<ChessPiece>(8);
+                for (int j = 0; j < 8; j++) {
+                    r.add(j, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+                }
+
+                // Add Black Pawn Row to the board
+                board.add(i, r);
+
             } else if (i==7) {
-                // set up black special row
+                // Construct White Special Row
+                ArrayList<ChessPiece> r = new ArrayList<ChessPiece>(8);
+                for (int j = 0; j < 8; j++) {
+                    switch (j) {
+                        case 0:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+                            break;
+                        case 1:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
+                            break;
+                        case 2:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
+                            break;
+                        case 3:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
+                            break;
+                        case 4:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
+                            break;
+                        case 5:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
+                            break;
+                        case 6:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
+                            break;
+                        case 7:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                // Add Black Special Row to the board
+                board.add(i, r);
             } else {
-                // add null
+                board.add(i, new ArrayList<ChessPiece>(8));
             }
         }
     }
