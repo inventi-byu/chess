@@ -48,7 +48,7 @@ public class ChessMove {
     public boolean equals(Object o){
         if (o instanceof ChessMove){
             ChessMove obj = (ChessMove)o;
-            return obj.start == this.start && obj.end == this.end && obj.promp == this.promp;
+            return obj.start.equals(this.start) && obj.end.equals(this.end) && (obj.promp == this.promp);
         }
         return false;
     }
