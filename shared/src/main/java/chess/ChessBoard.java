@@ -13,15 +13,46 @@ public class ChessBoard {
         ArrayList<ArrayList<ChessPiece>> board = new ArrayList<ArrayList<ChessPiece>>(8);
         for (int i = 0; i < 8; i++){
             if (i==0) {
+                // Construct White Special Row
+                ArrayList<ChessPiece> r = new ArrayList<ChessPiece>(8);
                 for (int j = 0; j < 8; j++) {
-                // set up bottom row of white
+                    switch (j){
+                        case 0:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+                            break;
+                        case 1:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
+                            break;
+                        case 2:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
+                            break;
+                        case 3:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
+                            break;
+                        case 4:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
+                            break;
+                        case 5:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
+                            break;
+                        case 6:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
+                            break;
+                        case 7:
+                            r.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+                            break;
+                        default:
+                            break;
+                    }
                 }
             } else if (i==1){
-                // Set up the row of pawns.
-                ArrayList<ChessPiece> r1 = new ArrayList<ChessPiece>(8);
+                // Construct White Pawn Row
+                ArrayList<ChessPiece> r = new ArrayList<ChessPiece>(8);
                 for (int j = 0; j < 8; j++) {
-                    r1.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+                    r.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
                 }
+                // Add White Pawn Row to the board
+                board.add(1, r);
             } else if (i==6) {
                 //set up black pawn row
             } else if (i==7) {
