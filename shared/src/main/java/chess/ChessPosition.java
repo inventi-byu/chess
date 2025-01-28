@@ -10,12 +10,10 @@ public class ChessPosition {
 
     private int r;
     private int c;
-    public ChessPiece piece;
 
     public ChessPosition(int row, int col) {
         r = row;
         c = col;
-        piece = null;
     }
 
     /**
@@ -33,11 +31,15 @@ public class ChessPosition {
     public int getColumn() {
         return this.c;
     }
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof ChessPosition){
+            ChessPosition obj = (ChessPosition)o;
+            if (obj.getRow() == this.getRow() && obj.getColumn() == this.getColumn()){
+                return true;
+            }
+        }
+        return false;
+    }
 
-    public void setPiece(ChessPiece piece){
-        this.piece = piece;
-    }
-    public ChessPiece getPiece(ChessPiece piece){
-        return this.piece;
-    }
 }
