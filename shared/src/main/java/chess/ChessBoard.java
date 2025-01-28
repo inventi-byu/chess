@@ -25,8 +25,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        ArrayList<ChessPiece> r = board.get(position.getRow());
-        if r.get()
+        this.board.get(position.getRow()).add(position.getColumn(), piece);
     }
     /**
      * Gets a chess piece on the chessboard
