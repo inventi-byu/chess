@@ -42,4 +42,9 @@ public class ChessPosition {
         return false;
     }
 
+    @Override
+    public int hashCode(){
+        return (this.c * 100) + this.r ;
+    }
+
 }
