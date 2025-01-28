@@ -1,4 +1,5 @@
 package chess;
+import java.util.*;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -9,7 +10,26 @@ package chess;
 public class ChessBoard {
 
     public ChessBoard() {
-        
+        ArrayList<ArrayList<ChessPiece>> board = new ArrayList<ArrayList<ChessPiece>>(8);
+        for (int i = 0; i < 8; i++){
+            if (i==0) {
+                for (int j = 0; j < 8; j++) {
+                // set up bottom row of white
+                }
+            } else if (i==1){
+                // Set up the row of pawns.
+                ArrayList<ChessPiece> r1 = new ArrayList<ChessPiece>(8);
+                for (int j = 0; j < 8; j++) {
+                    r1.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+                }
+            } else if (i==6) {
+                //set up black pawn row
+            } else if (i==7) {
+                // set up black special row
+            } else {
+                // add null
+            }
+        }
     }
 
     /**
