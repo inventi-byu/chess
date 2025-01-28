@@ -45,13 +45,13 @@ public class ChessBoard {
     }
 
     @Override
-    public boolean equals(){
+    public boolean equals(Object o){
         throw new RuntimeException("Not implemented.");
     }
 
     @Override
     public int hashCode(){
-        Objects.hash(null);
+        return Objects.hash(null);
     }
 }
 
