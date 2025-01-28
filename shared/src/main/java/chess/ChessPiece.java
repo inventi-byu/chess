@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.*;
 
 /**
  * Represents a single chess piece
@@ -49,4 +50,15 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented");
     }
+
+    @Override
+    public boolean equals(){
+        throw new RuntimeException("Not implemented.");
+    }
+
+    @Override
+    public int hashCode(){
+        Objects.hash(null);
+    }
 }
+
