@@ -8,7 +8,7 @@ import java.util.*;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    public ArrayList<ArrayList<ChessPiece>> board;
+    private ArrayList<ArrayList<ChessPiece>> board;
 
     public ChessBoard() {
         this.board = new ArrayList<ArrayList<ChessPiece>>(8);
