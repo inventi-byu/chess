@@ -11,10 +11,10 @@ import java.util.*;
  */
 public class ChessBoard {
 
-    ArrayList<ArrayList<ChessPiece>> board;
+    ChessPiece[][] board;
 
     public ChessBoard() {
-        this.board = new ArrayList<ArrayList<ChessPiece>>(8);
+        board = new ChessPiece[8][8];
         this.resetBoard();
     }
 
@@ -25,7 +25,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        this.board.get(position.getRow()).add(position.getColumn(), piece);
+        this.board[position.getRow()-1][position.getColumn()-1] = piece;
     }
     /**
      * Gets a chess piece on the chessboard
@@ -35,7 +35,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return this.board.get(position.getRow()).get(position.getColumn());
+        return this.board[position.getRow()-1][position.getColumn()-1];
     }
 
     /**
@@ -43,50 +43,42 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        this.board = new ArrayList<ArrayList<ChessPiece>>(8);
-
-        for(int i = 0; i < 8; i++){
-            this.board.add(i, new ArrayList<ChessPiece>(8));
-        }
+        this.board = new ChessPiece[8][8];
         for (int i = 0; i < 8; i++){
             switch (i){
                 case 0:
                     // Setup WSR
-                    ArrayList<ChessPiece> r0 = this.board.get(i);
-                    r0.add(0, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
-                    r0.add(1, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
-                    r0.add(2, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
-                    r0.add(3, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
-                    r0.add(4, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
-                    r0.add(5, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
-                    r0.add(6, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
-                    r0.add(7, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+                    board[i][0] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+                    board[i][1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+                    board[i][2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+                    board[i][3] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING);
+                    board[i][4] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
+                    board[i][5] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+                    board[i][6] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+                    board[i][7] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
                     break;
                 case 1:
                     // Setup WPR
-                    ArrayList<ChessPiece> r1 = this.board.get(i);
                     for (int j = 0; j < 8; j++){
-                        r1.add(j, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+                        board[i][j] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
                     }
                     break;
                 case 6:
                     //BPR
-                    ArrayList<ChessPiece> r6 = this.board.get(i);
                     for (int j = 0; j < 8; j++){
-                        r6.add(j, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+                        board[i][j] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
                     }
                     break;
                 case 7:
                     //BSR
-                    ArrayList<ChessPiece> r7 = this.board.get(i);
-                    r7.add(0, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
-                    r7.add(1, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
-                    r7.add(2, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
-                    r7.add(3, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
-                    r7.add(4, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
-                    r7.add(5, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
-                    r7.add(6, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
-                    r7.add(7, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+                    board[i][0] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+                    board[i][1] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+                    board[i][2] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+                    board[i][3] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
+                    board[i][4] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
+                    board[i][5] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+                    board[i][6] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+                    board[i][7] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
                     break;
 
             }
@@ -100,7 +92,7 @@ public class ChessBoard {
             ChessBoard obj =(ChessBoard)o;
             for (int i = 0; i < 8; i++){
                 for (int j = 0; j < 8; j++){
-                    if (this.board.get(i).get(j) != obj.board.get(i).get(j)){
+                    if (this.board[i][j] != obj.board[i][j]){
                         return false;
                     }
                 }
@@ -112,7 +104,15 @@ public class ChessBoard {
 
     @Override
     public int hashCode(){
-        return Objects.hash(board);
+        return Objects.hash((java.lang.Object)board);
+    }
+
+    @Override
+    public toString() {
+        for(int i=0; i < 8; i++){
+            StringBuilder sb = new StringBuilder();
+
+        }
     }
 }
 
