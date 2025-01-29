@@ -92,7 +92,7 @@ public class ChessBoard {
             ChessBoard obj =(ChessBoard)o;
             for (int i = 0; i < 8; i++){
                 for (int j = 0; j < 8; j++){
-                    if (this.board[i][j] != obj.board[i][j]){
+                    if (!this.board[i][j].equals(obj.board[i][j])){
                         return false;
                     }
                 }
@@ -106,14 +106,18 @@ public class ChessBoard {
     public int hashCode(){
         return Objects.hash((java.lang.Object)board);
     }
-
+    /*
     @Override
-    public toString() {
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
         for(int i=0; i < 8; i++){
-            StringBuilder sb = new StringBuilder();
+            System.out.println("Hi");
 
         }
+        return "hi";
     }
+    */
+
 }
 
 

@@ -58,7 +58,11 @@ public class ChessPiece {
 
     @Override
     public boolean equals(Object o){
-        throw new RuntimeException("Not implemented.");
+        if (o instanceof ChessPiece){
+            ChessPiece obj = (ChessPiece)o;
+            return this.color == obj.color && this.type == obj.type;
+        }
+        return false;
     }
 
     @Override
