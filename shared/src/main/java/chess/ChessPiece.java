@@ -51,6 +51,11 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
+
+    public boolean isEnemy(ChessPiece piece){
+        return this.getTeamColor() != piece.getTeamColor();
+    }
+
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         PieceMovesCalculator calc = new PieceMovesCalculator();
         return calc.moves(board, myPosition, type);
