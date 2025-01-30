@@ -150,6 +150,7 @@ public class PieceMovesCalculator {
                 break;
             case ChessMove.Direction.RIGHT:
                 col++;
+                break;
             case ChessMove.Direction.DIAGur:
                 row++;
                 col++;
