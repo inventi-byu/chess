@@ -33,6 +33,13 @@ public class ChessPosition {
         return this.c;
     }
 
+    @Override
+    public String toString() {
+        return "ChessPosition{" + r +
+                ", " + c +
+                '}';
+    }
+
     public boolean isInBounds(){
         // Remember this is the chess boundaries, not array boundaries
         // This is 1 indexed, not 0 indexed
