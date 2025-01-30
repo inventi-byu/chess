@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.*;
+
 public class PieceMovesCalculator {
     private ChessBoard board;
     private ChessPosition position;
@@ -17,7 +18,6 @@ public class PieceMovesCalculator {
         // Create empty list
         List<ChessMove> moves = new ArrayList<ChessMove>();
 
-        //
         switch (this.piece.getPieceType()) {
             // Remember the limit means how far you can go in that direction
             // For knight, you can only go one time in each direction
@@ -205,107 +205,40 @@ public class PieceMovesCalculator {
             case ChessMove.Direction.Lur:
                 row += 2;
                 col++;
+                break;
             case ChessMove.Direction.Lul:
                 row += 2;
                 col--;
+                break;
             case ChessMove.Direction.Lrr:
                 row--;
                 col += 2;
+                break;
             case ChessMove.Direction.Lrl:
                 row++;
                 col += 2;
+                break;
             case ChessMove.Direction.Ldr:
                 row -= 2;
                 col--;
+                break;
             case ChessMove.Direction.Ldl:
                 row -= 2;
                 col++;
+                break;
             case ChessMove.Direction.Llr:
                 row++;
                 col -= 2;
+                break;
             case ChessMove.Direction.Lll:
                 row--;
                 col -= 2;
+                break;
         }
         return new ChessPosition(row, col);
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-    public List<ChessMove> checkPath(ChessMove.Direction direction, int limit) {
-        List<ChessMove> moves = new ArrayList<ChessMove>();
-
-        int row = this.position.getRow() - 1;
-        int col = this.position.getColumn() - 1;
-
-        int true_limit = 8 - row;
-
-        while (row < true_limit) {
-
-
-            }
-
-            return moves;
-        }
-    }
-
-
-    */
-
-
-
-/*
-    public someMethod() {
-        ChessMove move = this.checkPosition(new ChessPosition(i, col));
-        if (move == null) {
-            // We hit a friend piece
-            break;
-        }
-        moves.add(move);
-        if (this.piece.isEnemy(this.board.getPiece(new ChessPosition(i, col)))) {
-            break;
-        }
-    }
-    public ChessMove checkPosition(ChessPosition check_position){
-        if (piece != null) {
-            // there's a piece in the way
-            if (piece.isEnemy(board.getPiece(check_position))) {
-                return new ChessMove(this.position, check_position, null);
-            }
-            return null;
-        } else {
-            return new ChessMove(this.position, check_position, null);
-        }
-    }
-}
- */
 
 /*
 How are the pieces all fundamentally the same?
