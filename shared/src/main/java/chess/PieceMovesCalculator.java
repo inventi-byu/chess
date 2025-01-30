@@ -67,17 +67,25 @@ public class PieceMovesCalculator {
             case ChessPiece.PieceType.PAWN:
                 switch (piece.getTeamColor()){
                     case ChessGame.TeamColor.WHITE:
+                        if(position.getRow() == 2){
+                            moves.addAll(this.checkPath(ChessMove.Direction.UP, 2));
+                        } else {
+                            moves.addAll(this.checkPath(ChessMove.Direction.UP, 1));
+                        }
+                        moves.addAll(this.checkPath(ChessMove.Direction.DIAGur, 1));
+                        moves.addAll(this.checkPath(ChessMove.Direction.DIAGul, 1));
                         break;
                     case ChessGame.TeamColor.BLACK:
+                        if(position.getRow() == 7){
+                            moves.addAll(this.checkPath(ChessMove.Direction.DOWN, 2));
+                        } else {
+                            moves.addAll(this.checkPath(ChessMove.Direction.DOWN, 1));
+                        }
+                        moves.addAll(this.checkPath(ChessMove.Direction.DIAGdr, 1));
+                        moves.addAll(this.checkPath(ChessMove.Direction.DIAGdl, 1));
                         break;
                 }
-                if ( (piece.getTeamColor() == ChessGame.TeamColor.WHITE && position.getRow() == 2) || ((piece.getTeamColor() == ChessGame.TeamColor.BLACK && position.getRow() == 7))) {
-                    moves.addAll(this.checkPath(ChessMove.Direction.UP, 2));
-                } else {
-                    moves.addAll(this.checkPath(ChessMove.Direction.UP, 1));
-                }
-                moves.addAll(this.checkPath(ChessMove.Direction.DIAGur, 1));
-                moves.addAll(this.checkPath(ChessMove.Direction.DIAGul, 1));
+
                 break;
 
 
