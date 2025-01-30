@@ -65,6 +65,12 @@ public class PieceMovesCalculator {
                 moves.addAll(this.checkPath(ChessMove.Direction.DIAGdr, 0));
                 break;
             case ChessPiece.PieceType.PAWN:
+                switch (piece.getTeamColor()){
+                    case ChessGame.TeamColor.WHITE:
+                        break;
+                    case ChessGame.TeamColor.BLACK:
+                        break;
+                }
                 if ( (piece.getTeamColor() == ChessGame.TeamColor.WHITE && position.getRow() == 2) || ((piece.getTeamColor() == ChessGame.TeamColor.BLACK && position.getRow() == 7))) {
                     moves.addAll(this.checkPath(ChessMove.Direction.UP, 2));
                 } else {
@@ -112,17 +118,22 @@ public class PieceMovesCalculator {
             // If there's an enemy, keep that move and stop then break
             // Otherwise just break
             if (cur_piece != null){
+                if(piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+                    if (direction == ChessMove.Direction.UP || direction == ChessMove.Direction.DOWN) {
+                        // It can't move forward if there is a piece in the way
+                        break;
+                    }
+                }
                 if(cur_piece.isEnemy(this.piece)){
                     moves.add(new ChessMove(position, cur_pos, null));
                 }
                 break;
             }
 
-            // Pawns can't move diagonally if there's not an enemy piece there
+            // Pawns can't move to an empty square diagonally, only if there's an enemy piece there
             if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
-                if (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul) {
-                    i++;
-                    continue;
+                if (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul || direction == ChessMove.Direction.DIAGdl || direction == ChessMove.Direction.DIAGdr) {
+                    break;
                 }
             }
             // There is no piece so you can move there
@@ -130,7 +141,6 @@ public class PieceMovesCalculator {
             // Increment move counter
             i++;
         }
-
         return moves;
     }
 
