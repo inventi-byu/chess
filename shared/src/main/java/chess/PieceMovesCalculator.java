@@ -143,6 +143,13 @@ public class PieceMovesCalculator {
                 if (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul || direction == ChessMove.Direction.DIAGdl || direction == ChessMove.Direction.DIAGdr) {
                     break;
                 }
+                if (cur_pos.isPromotionEdge(piece.getTeamColor())){
+                    moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.QUEEN));
+                    moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.BISHOP));
+                    moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.ROOK));
+                    moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.KNIGHT));
+                    break;
+                }
             }
             // There is no piece so you can move there
             moves.add(new ChessMove(position, cur_pos, null));

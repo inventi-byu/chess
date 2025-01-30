@@ -46,6 +46,10 @@ public class ChessPosition {
         return (this.r > 0 && this.r < 9 && this.c > 0 && this.c < 9);
     }
 
+    public boolean isPromotionEdge(ChessGame.TeamColor color){
+        return ( (color == ChessGame.TeamColor.WHITE && this.r == 8)  || (color == ChessGame.TeamColor.BLACK && this.r == 1));
+    }
+
     @Override
     public boolean equals(Object o){
         if(o instanceof ChessPosition){
