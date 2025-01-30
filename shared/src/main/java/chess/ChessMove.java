@@ -19,6 +19,24 @@ public class ChessMove {
         this.end = endPosition;
         this.promp = promotionPiece;
     }
+    public enum Direction {
+        UP,
+        DOWN,
+        RIGHT,
+        LEFT,
+        DIAGur,
+        DIAGul,
+        DIAGdl,
+        DIAGdr,
+        Lur,
+        Lul,
+        Lrr,
+        Lrl,
+        Ldr,
+        Ldl,
+        Llr,
+        Lll,
+    }
 
     /**
      * @return ChessPosition of starting location

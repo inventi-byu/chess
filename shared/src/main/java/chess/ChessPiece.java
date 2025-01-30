@@ -57,8 +57,8 @@ public class ChessPiece {
     }
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        PieceMovesCalculator calc = new PieceMovesCalculator();
-        return calc.moves(board, myPosition, type);
+        PieceMovesCalculator calc = new PieceMovesCalculator(board, myPosition);
+        return calc.moves();
     }
 
     @Override
