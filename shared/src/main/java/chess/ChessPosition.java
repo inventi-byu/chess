@@ -33,6 +33,12 @@ public class ChessPosition {
         return this.c;
     }
 
+    public boolean isInBounds(){
+        // Remember this is the chess boundaries, not array boundaries
+        // This is 1 indexed, not 0 indexed
+        return (this.r > 0 && this.r < 9 && this.c > 0 && this.c < 9);
+    }
+
     @Override
     public boolean equals(Object o){
         if(o instanceof ChessPosition){

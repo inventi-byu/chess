@@ -19,6 +19,8 @@ public class PieceMovesCalculator {
 
         //
         switch (this.piece.getPieceType()) {
+            // Remember the limit means how far you can go in that direction
+            // For knight, you can only go one time in each direction
             case ChessPiece.PieceType.ROOK:
                 moves.addAll(this.checkPath(ChessMove.Direction.UP, 0));
                 moves.addAll(this.checkPath(ChessMove.Direction.DOWN, 0));
@@ -26,15 +28,15 @@ public class PieceMovesCalculator {
                 moves.addAll(this.checkPath(ChessMove.Direction.RIGHT, 0));
                 break;
             case ChessPiece.PieceType.KNIGHT:
-                moves.addAll(this.checkPath(ChessMove.Direction.Lur, 0));
-                moves.addAll(this.checkPath(ChessMove.Direction.Lul, 0));
-                moves.addAll(this.checkPath(ChessMove.Direction.Lrr, 0));
-                moves.addAll(this.checkPath(ChessMove.Direction.Lrl, 0));
+                moves.addAll(this.checkPath(ChessMove.Direction.Lur, 1));
+                moves.addAll(this.checkPath(ChessMove.Direction.Lul, 1));
+                moves.addAll(this.checkPath(ChessMove.Direction.Lrr, 1));
+                moves.addAll(this.checkPath(ChessMove.Direction.Lrl, 1));
                 //
-                moves.addAll(this.checkPath(ChessMove.Direction.Ldr, 0));
-                moves.addAll(this.checkPath(ChessMove.Direction.Ldl, 0));
-                moves.addAll(this.checkPath(ChessMove.Direction.Llr, 0));
-                moves.addAll(this.checkPath(ChessMove.Direction.Lll, 0));
+                moves.addAll(this.checkPath(ChessMove.Direction.Ldr, 1));
+                moves.addAll(this.checkPath(ChessMove.Direction.Ldl, 1));
+                moves.addAll(this.checkPath(ChessMove.Direction.Llr, 1));
+                moves.addAll(this.checkPath(ChessMove.Direction.Lll, 1));
                 break;
             case ChessPiece.PieceType.BISHOP:
                 moves.addAll(this.checkPath(ChessMove.Direction.DIAGur, 0));
@@ -63,7 +65,13 @@ public class PieceMovesCalculator {
                 moves.addAll(this.checkPath(ChessMove.Direction.DIAGdr, 0));
                 break;
             case ChessPiece.PieceType.PAWN:
-                //moves.addAll(this.checkPath(ChessMove.Direction.P, 0));
+                if ( (piece.getTeamColor() == ChessGame.TeamColor.WHITE && position.getRow() == 2) || ((piece.getTeamColor() == ChessGame.TeamColor.BLACK && position.getRow() == 7))) {
+                    moves.addAll(this.checkPath(ChessMove.Direction.UP, 2));
+                } else {
+                    moves.addAll(this.checkPath(ChessMove.Direction.UP, 1));
+                }
+                moves.addAll(this.checkPath(ChessMove.Direction.DIAGur, 1));
+                moves.addAll(this.checkPath(ChessMove.Direction.DIAGul, 1));
                 break;
 
 
@@ -72,7 +80,49 @@ public class PieceMovesCalculator {
     }
 
 
-    public List<ChessMove> checkPath(ChessMove.Direction direction, int limit) {return null;}
+    public List<ChessMove> checkPath(ChessMove.Direction direction, int limit) {
+
+        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+        /*
+        While you aren't at the edge
+        if not knight or pawn
+            check the square in the next direction over
+                if friend piece, stop adding
+                if enemy add and then stop
+                else add
+
+            if knight
+            do special stuff
+
+         */
+        ChessPosition cur_pos = new ChessPosition(position.getRow(), position.getColumn());
+        boolean no_limit = (limit == 0);
+        int i = 0;
+
+        // While it is in bounds, and there are either no limits or it is in limit
+        while (cur_pos.isInBounds() && (no_limit || i < limit) ) {
+            ChessPiece cur_piece = board.getPiece(cur_pos);
+            if (cur_piece != null){
+                if(cur_piece.isEnemy(this.piece)){
+                    moves.add(new ChessMove(position, cur_pos, null));
+                }
+                break;
+            }
+            if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+                if (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul){
+                    continue;
+                }
+            } else {
+                moves.add(new ChessMove(position, cur_pos, null));
+                cur_pos = this.getNewPosition(cur_pos, direction);
+            }
+            i++;
+        }
+
+        return moves;
+
+
+    }
 
 
     public ChessPosition getNewPosition(ChessPosition old_pos, ChessMove.Direction dir) {
