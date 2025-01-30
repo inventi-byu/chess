@@ -112,6 +112,7 @@ public class PieceMovesCalculator {
 
         ChessPosition cur_pos = new ChessPosition(position.getRow(), position.getColumn());
         boolean no_limit = (limit == 0);
+        boolean dir_is_diagonal = (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul || direction == ChessMove.Direction.DIAGdl || direction == ChessMove.Direction.DIAGdr);
         int i = 0;
 
         // While it is in bounds, and there are either no limits or it is in limit
@@ -133,6 +134,15 @@ public class PieceMovesCalculator {
                     }
                 }
                 if(cur_piece.isEnemy(this.piece)){
+                    if (piece.getPieceType() == ChessPiece.PieceType.PAWN){
+                        if (dir_is_diagonal && cur_pos.isPromotionEdge(piece.getTeamColor())) {
+                            moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.QUEEN));
+                            moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.BISHOP));
+                            moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.ROOK));
+                            moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.KNIGHT));
+                            break;
+                        }
+                    }
                     moves.add(new ChessMove(position, cur_pos, null));
                 }
                 break;
@@ -140,7 +150,7 @@ public class PieceMovesCalculator {
 
             // Pawns can't move to an empty square diagonally, only if there's an enemy piece there
             if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
-                if (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul || direction == ChessMove.Direction.DIAGdl || direction == ChessMove.Direction.DIAGdr) {
+                if (dir_is_diagonal) {
                     break;
                 }
                 if (cur_pos.isPromotionEdge(piece.getTeamColor())){
