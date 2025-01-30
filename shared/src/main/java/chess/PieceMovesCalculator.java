@@ -85,28 +85,12 @@ public class PieceMovesCalculator {
                         moves.addAll(this.checkPath(ChessMove.Direction.DIAGdl, 1));
                         break;
                 }
-
                 break;
-
-
         }
         return moves;
     }
 
-
     public List<ChessMove> checkPath(ChessMove.Direction direction, int limit) {
-        /*
-        While you aren't at the edge
-        if not knight or pawn
-            check the square in the next direction over
-                if friend piece, stop adding
-                if enemy add and then stop
-                else add
-
-            if knight
-            do special stuff
-
-         */
 
         ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
 
@@ -117,11 +101,14 @@ public class PieceMovesCalculator {
 
         // While it is in bounds, and there are either no limits or it is in limit
         while (cur_pos.isInBounds() && (no_limit || i < limit) ) {
+
             cur_pos = this.getNewPosition(cur_pos, direction);
+
             // If the new position is off the board, don't use it
             if (!cur_pos.isInBounds()){
                 break;
             }
+
             // The position is in bounds, get the piece
             ChessPiece cur_piece = board.getPiece(cur_pos);
             // If there's an enemy, keep that move and stop then break
