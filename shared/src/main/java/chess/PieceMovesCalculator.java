@@ -120,14 +120,11 @@ public class PieceMovesCalculator {
             }
             // There is no piece so you can move there
             moves.add(new ChessMove(position, cur_pos, null));
-
             // Increment move counter
             i++;
         }
 
         return moves;
-
-
     }
 
     public ChessPosition getNewPosition(ChessPosition old_pos, ChessMove.Direction dir) {
