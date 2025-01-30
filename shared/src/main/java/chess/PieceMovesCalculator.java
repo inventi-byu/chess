@@ -81,8 +81,6 @@ public class PieceMovesCalculator {
 
 
     public List<ChessMove> checkPath(ChessMove.Direction direction, int limit) {
-
-        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
         /*
         While you aren't at the edge
         if not knight or pawn
@@ -95,12 +93,16 @@ public class PieceMovesCalculator {
             do special stuff
 
          */
+
+        ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
+
         ChessPosition cur_pos = new ChessPosition(position.getRow(), position.getColumn());
         boolean no_limit = (limit == 0);
         int i = 0;
 
         // While it is in bounds, and there are either no limits or it is in limit
         while (cur_pos.isInBounds() && (no_limit || i < limit) ) {
+            cur_pos = this.getNewPosition(cur_pos, direction);
             ChessPiece cur_piece = board.getPiece(cur_pos);
             if (cur_piece != null){
                 if(cur_piece.isEnemy(this.piece)){
@@ -108,14 +110,18 @@ public class PieceMovesCalculator {
                 }
                 break;
             }
+
+            // Pawns can't move diagonally if there's not an enemy piece there
             if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
-                if (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul){
+                if (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul) {
+                    i++;
                     continue;
                 }
-            } else {
-                moves.add(new ChessMove(position, cur_pos, null));
-                cur_pos = this.getNewPosition(cur_pos, direction);
             }
+            // There is no piece so you can move there
+            moves.add(new ChessMove(position, cur_pos, null));
+
+            // Increment move counter
             i++;
         }
 
@@ -123,7 +129,6 @@ public class PieceMovesCalculator {
 
 
     }
-
 
     public ChessPosition getNewPosition(ChessPosition old_pos, ChessMove.Direction dir) {
         int row = old_pos.getRow();
