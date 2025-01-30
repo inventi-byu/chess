@@ -103,7 +103,14 @@ public class PieceMovesCalculator {
         // While it is in bounds, and there are either no limits or it is in limit
         while (cur_pos.isInBounds() && (no_limit || i < limit) ) {
             cur_pos = this.getNewPosition(cur_pos, direction);
+            // If the new position is off the board, don't use it
+            if (!cur_pos.isInBounds()){
+                break;
+            }
+            // The position is in bounds, get the piece
             ChessPiece cur_piece = board.getPiece(cur_pos);
+            // If there's an enemy, keep that move and stop then break
+            // Otherwise just break
             if (cur_piece != null){
                 if(cur_piece.isEnemy(this.piece)){
                     moves.add(new ChessMove(position, cur_pos, null));

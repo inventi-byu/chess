@@ -113,6 +113,12 @@ public class ChessBoard {
     }
     */
 
+    @Override
+    public String toString() {
+        return "ChessBoard{" +
+                "board=" + Arrays.toString(board) +
+                '}';
+    }
 }
 
 
