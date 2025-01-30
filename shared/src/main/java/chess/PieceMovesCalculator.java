@@ -6,14 +6,18 @@ public class PieceMovesCalculator {
     private ChessPosition position;
     private ChessPiece piece;
 
-    public PieceMovesCalculator(ChessBoard board, ChessPosition position) {
+    public PieceMovesCalculator(ChessBoard board, ChessPiece piece, ChessPosition position) {
         this.board = board;
         this.position = position;
-        this.piece = this.board.getPiece(this.position);
+        this.piece = piece;
     }
 
     public List<ChessMove> moves() {
+
+        // Create empty list
         List<ChessMove> moves = new ArrayList<ChessMove>();
+
+        //
         switch (this.piece.getPieceType()) {
             case ChessPiece.PieceType.ROOK:
                 moves.addAll(this.checkPath(ChessMove.Direction.UP, 0));
@@ -22,7 +26,15 @@ public class PieceMovesCalculator {
                 moves.addAll(this.checkPath(ChessMove.Direction.RIGHT, 0));
                 break;
             case ChessPiece.PieceType.KNIGHT:
-                moves.addAll(this.checkPath(ChessMove.Direction.L, 0));
+                moves.addAll(this.checkPath(ChessMove.Direction.Lur, 0));
+                moves.addAll(this.checkPath(ChessMove.Direction.Lul, 0));
+                moves.addAll(this.checkPath(ChessMove.Direction.Lrr, 0));
+                moves.addAll(this.checkPath(ChessMove.Direction.Lrl, 0));
+                //
+                moves.addAll(this.checkPath(ChessMove.Direction.Ldr, 0));
+                moves.addAll(this.checkPath(ChessMove.Direction.Ldl, 0));
+                moves.addAll(this.checkPath(ChessMove.Direction.Llr, 0));
+                moves.addAll(this.checkPath(ChessMove.Direction.Lll, 0));
                 break;
             case ChessPiece.PieceType.BISHOP:
                 moves.addAll(this.checkPath(ChessMove.Direction.DIAGur, 0));
@@ -51,13 +63,17 @@ public class PieceMovesCalculator {
                 moves.addAll(this.checkPath(ChessMove.Direction.DIAGdr, 0));
                 break;
             case ChessPiece.PieceType.PAWN:
-                moves.addAll(this.checkPath(ChessMove.Direction.P, 0));
+                //moves.addAll(this.checkPath(ChessMove.Direction.P, 0));
                 break;
 
 
         }
         return moves;
     }
+
+
+    public List<ChessMove> checkPath(ChessMove.Direction direction, int limit) {return null;}
+
 
     public ChessPosition getNewPosition(ChessPosition old_pos, ChessMove.Direction dir) {
         int row = old_pos.getRow();
@@ -92,32 +108,62 @@ public class PieceMovesCalculator {
                 col++;
                 break;
             case ChessMove.Direction.Lur:
-                row+=2;
+                row += 2;
                 col++;
             case ChessMove.Direction.Lul:
-                row+=2;
+                row += 2;
                 col--;
             case ChessMove.Direction.Lrr:
                 row--;
-                col+=2;
+                col += 2;
             case ChessMove.Direction.Lrl:
                 row++;
-                col+=2;
+                col += 2;
             case ChessMove.Direction.Ldr:
-                row-=2;
+                row -= 2;
                 col--;
             case ChessMove.Direction.Ldl:
-                row-=2;
+                row -= 2;
                 col++;
             case ChessMove.Direction.Llr:
                 row++;
-                col-=2;
+                col -= 2;
             case ChessMove.Direction.Lll:
                 row--;
-                col-=2;
+                col -= 2;
         }
         return new ChessPosition(row, col);
     }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
     public List<ChessMove> checkPath(ChessMove.Direction direction, int limit) {
         List<ChessMove> moves = new ArrayList<ChessMove>();
 
@@ -135,6 +181,12 @@ public class PieceMovesCalculator {
         }
     }
 
+
+    */
+
+
+
+/*
     public someMethod() {
         ChessMove move = this.checkPosition(new ChessPosition(i, col));
         if (move == null) {
@@ -158,7 +210,7 @@ public class PieceMovesCalculator {
         }
     }
 }
-
+ */
 
 /*
 How are the pieces all fundamentally the same?
