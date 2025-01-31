@@ -100,19 +100,6 @@ public class ChessBoard {
         return Objects.deepEquals(board, that.board);
     }
 
-
-    /*
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for(int i=0; i < 8; i++){
-            System.out.println("Hi");
-
-        }
-        return "hi";
-    }
-    */
-
     @Override
     public String toString() {
         return "ChessBoard{" +
