@@ -9,8 +9,8 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
-    public ChessBoard board;
-    public ChessGame.TeamColor TeamTurn;
+    private ChessBoard board;
+    private ChessGame.TeamColor TeamTurn;
 
     public ChessGame() {
         this.board = new ChessBoard();
