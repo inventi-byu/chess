@@ -45,7 +45,15 @@ public class ChessBoard {
      * @returns A ChessPosition representing the position of the king of the color specified by the teamColor
      */
     public ChessPosition getKingPosition(ChessGame.TeamColor teamColor){
-        throw new RuntimeException("getKingPosition() not implemented.");
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                ChessPosition cur_pos = new ChessPosition(i, j);
+                if ( this.getPiece(cur_pos).equals( new ChessPiece(teamColor, ChessPiece.PieceType.KING )) ){
+                    return cur_pos;
+                }
+            }
+        }
+        return null;
     }
 
 
