@@ -155,10 +155,10 @@ public class ChessGame {
             for (int j = 1; j < 9; j ++) {
                 ChessPosition cur_pos = new ChessPosition(i, j);
                 ChessPiece piece = this.board.getPiece(cur_pos);
-                if (piece.isEnemy(king_copy)) {
+                if(piece != null && piece.isEnemy(king_copy)) {
                     Collection<ChessMove> moves = piece.pieceMoves(this.board, cur_pos);
                     for (ChessMove move : moves) {
-                        if (move.getEndPosition() == king_pos) {
+                        if (move.getEndPosition().equals(king_pos)) {
                             return true;
                         }
                     }

@@ -47,9 +47,13 @@ public class ChessBoard {
     public ChessPosition getKingPosition(ChessGame.TeamColor teamColor){
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
-                ChessPosition cur_pos = new ChessPosition(i, j);
-                if ( this.getPiece(cur_pos).equals( new ChessPiece(teamColor, ChessPiece.PieceType.KING )) ){
-                    return cur_pos;
+                ChessPosition cur_pos = new ChessPosition(i+1, j+1);
+                ChessPiece king_copy =  new ChessPiece(teamColor, ChessPiece.PieceType.KING );
+                ChessPiece cur_piece = this.getPiece(cur_pos);
+                if (cur_piece != null){
+                    if (cur_piece.equals(king_copy)){
+                        return cur_pos;
+                    }
                 }
             }
         }
