@@ -120,11 +120,11 @@ public class ChessGame {
             }
             // Must handle other cases
             // Check to see if pieceMoves given put you in danger
-            boolean in_checkmate = false;
             for (ChessMove move : king_moves){
                 // If there is a move the king can make that ends up with no enemies going to that spot,
                 // There is somewhere the king can go so it is not in checkmate
-                if ( this.getEnemyMovesHere(teamColor, move.getEndPosition()).isEmpty() ){
+                Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(teamColor, move.getEndPosition());
+                if ( enemy_moves.isEmpty() ){
                     return false;
                 }
             }
@@ -174,6 +174,12 @@ public class ChessGame {
                 if (piece != null && piece.isEnemy(generic_test_piece)) {
                     Collection<ChessMove> moves = piece.pieceMoves(this.board, cur_pos);
                     for (ChessMove move : moves) {
+                        // OK so the problem with this right now, is that when you call pieceMoves on the piece, it will only return valid moves
+                        // for where the pieces currently are. If I ask it for it's moves, it will not be calculating based on if
+                        // the king were at the position we want to look at where if could potentially go, because
+                        // the king is not currently there. Somehow we need to tell pieceMoves that the king is
+                        // no longer "at" it's current position, but to calculate moves based on the board where
+                        // the king is in a different position, the position in question that we get passed in as one of the arguments.
                         if (move.getEndPosition().equals(position)) {
                             enemy_moves.add(move);
                         }
