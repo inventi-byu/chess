@@ -45,7 +45,7 @@ public class ChessBoard {
      * @returns A ChessPosition representing the position of the king of the color specified by the teamColor
      */
     public ChessPosition getKingPosition(ChessGame.TeamColor teamColor){
-        throw new RuntimeException("getKingPosition() not implemented.")
+        throw new RuntimeException("getKingPosition() not implemented.");
     }
 
 
