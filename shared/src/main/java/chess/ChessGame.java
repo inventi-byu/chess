@@ -91,14 +91,13 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        /*
-        for every enemy piece on the board:
-            run pieceMoves and figure out where they can go
-            for every move it can make
-                if the end position is the same as the position of the king
-                    return true
-         return false
-         */
+        if(!this.isInCheckmate(teamColor)){
+            if (this.kingIsInDanger(teamColor)){
+                return true;
+            }
+        }
+        return false;
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -109,6 +108,16 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
+        if (kingIsInDanger(teamColor)){
+            // Find out where the king is, and get the king so you can call pieceMoves() on it
+            ChessPosition king_position = this.board.getKingPosition(teamColor);
+            ChessPiece king = this.board.getPiece(king_position);
+
+            if (king.pieceMoves(this.board, king_position) == null){
+                return true;
+            }
+        }
+        return false;
         /*
         List attackingMoves = new ArrayList<ChessMove>();
          */
@@ -132,17 +141,38 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
+        /*
         if ( !(this.isInCheck(teamColor) && this.isInCheckmate(teamColor)) ){
-            /*
-            for every friend piece:
-                do pieceMoves
-                if pieceMoves != null
-                    return true
-            return false;
-             */
+
+            // for every friend piece:
+            //    do pieceMoves
+            //    if pieceMoves != null
+            //        return true
+            //return false;
         }
+        return false;
+        */
         throw new RuntimeException("isInStalemate() is not implemented!");
     }
+    /**
+     * Determines if a given king is in danger of being attacked
+     *
+     * @param teamColor which team's king to see if they are in danger
+     * @return true if there is a move from the enemy that can be done against the king
+    */
+    private boolean kingIsInDanger(ChessGame.TeamColor teamColor){
+        /*
+        for every enemy piece on the board:
+            run pieceMoves and figure out where they can go
+            for every move it can make
+                if the end position is the same as the position of the king
+                    return true
+         return false
+         */
+        throw new RuntimeException("kingIsInDanger() not implemented!");
+    }
+
+
 
     /**
      * Sets this game's chessboard with a given board
