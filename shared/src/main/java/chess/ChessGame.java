@@ -97,8 +97,6 @@ public class ChessGame {
             }
         }
         return false;
-
-        throw new RuntimeException("Not implemented");
     }
 
     /**
