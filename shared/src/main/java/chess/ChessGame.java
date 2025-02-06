@@ -149,9 +149,25 @@ public class ChessGame {
      * @param position ChessPosition - position potentially under attack you want to check.
      * @returns An ArrayList of all moves of the enemy of teamColor that end at that position.
      */
-    public List<ChessMove> getEnemyMoves(TeamColor teamColor, ChessPosition position){
+    public Collection<ChessMove> getEnemyMovesHere(TeamColor teamColor, ChessPosition position) {
+        ArrayList<ChessMove> enemy_moves = new ArrayList<ChessMove>();
+        ChessPiece generic_test_piece = new ChessPiece(teamColor, null);
 
-        throw new RuntimeException("getEnemyMoves() not implemented!");
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
+                ChessPosition cur_pos = new ChessPosition(i, j);
+                ChessPiece piece = this.board.getPiece(cur_pos);
+                if (piece != null && piece.isEnemy(generic_test_piece)) {
+                    Collection<ChessMove> moves = piece.pieceMoves(this.board, cur_pos);
+                    for (ChessMove move : moves) {
+                        if (move.getEndPosition().equals(position)) {
+                            enemy_moves.add(move);
+                        }
+                    }
+                }
+            }
+        }
+        return enemy_moves;
     }
 
 
@@ -165,24 +181,9 @@ public class ChessGame {
         ChessPosition king_pos = this.board.getKingPosition(teamColor);
         // We'll need to use a king piece, but not put it on the board just to refer to it for isEnemy()
         ChessPiece king_copy = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
-
-        for (int i = 1; i < 9; i++){
-            for (int j = 1; j < 9; j ++) {
-                ChessPosition cur_pos = new ChessPosition(i, j);
-                ChessPiece piece = this.board.getPiece(cur_pos);
-                if(piece != null && piece.isEnemy(king_copy)) {
-                    Collection<ChessMove> moves = piece.pieceMoves(this.board, cur_pos);
-                    for (ChessMove move : moves) {
-                        if (move.getEndPosition().equals(king_pos)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+        Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(teamColor, king_pos);
+        return !(enemy_moves.isEmpty());
     }
-
 
 
     /**
