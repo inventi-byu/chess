@@ -53,6 +53,9 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         // Get the piece
         ChessPiece piece = this.getBoard().getPiece(startPosition);
+        if (piece == null) {
+            return null;
+        }
         Collection<ChessMove> moves = piece.pieceMoves(this.board, startPosition);
         if (this.isInCheckmate(this.getTeamTurn())){
             // Do something
