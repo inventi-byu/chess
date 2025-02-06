@@ -120,7 +120,7 @@ public class ChessGame {
             }
             // Must handle other cases
             // Check to see if pieceMoves given put you in danger
-            Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(teamColor, king_position);
+            boolean in_checkmate = false;
             for (ChessMove move : king_moves){
                 // If there is a move the king can make that ends up with no enemies going to that spot,
                 // There is somewhere the king can go so it is not in checkmate
@@ -128,6 +128,7 @@ public class ChessGame {
                     return false;
                 }
             }
+            // Go through the whole loop, if none are empty, the king cannot escape
             return true;
         } else {
             return false;
