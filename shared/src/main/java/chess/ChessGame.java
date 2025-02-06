@@ -112,8 +112,10 @@ public class ChessGame {
             ChessPiece king = this.board.getPiece(king_position);
             Collection<ChessMove> king_moves = king.pieceMoves(this.board, king_position);
 
-            if (king_moves == null){
-                // CHECK THIS -> is an empty ArrayList or Collection considered null? If not, the if logic above this line will not work!
+            // The only time this will be true is when the king is surrounded by friendly pieces
+            // The only piece that could attack it is a knight
+            if (king_moves.isEmpty()){
+                // If your king is in danger but he can't move, you're in checkmate
                 return true;
             }
             // Must handle other cases
