@@ -110,15 +110,26 @@ public class ChessGame {
             // Find out where the king is, and get the king so you can call pieceMoves() on it
             ChessPosition king_position = this.board.getKingPosition(teamColor);
             ChessPiece king = this.board.getPiece(king_position);
+            Collection<ChessMove> king_moves = king.pieceMoves(this.board, king_position);
 
-            if (king.pieceMoves(this.board, king_position) == null){
+            if (king_moves == null){
                 // CHECK THIS -> is an empty ArrayList or Collection considered null? If not, the if logic above this line will not work!
                 return true;
             }
             // Must handle other cases
-            // Check to see if piecemoves given put you in danger
+            // Check to see if pieceMoves given put you in danger
+            Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(teamColor, king_position);
+            for (ChessMove move : king_moves){
+                // If there is a move the king can make that ends up with no enemies going to that spot,
+                // There is somewhere the king can go so it is not in checkmate
+                if ( this.getEnemyMovesHere(teamColor, move.getEndPosition()).isEmpty() ){
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     /**
@@ -182,6 +193,7 @@ public class ChessGame {
         // We'll need to use a king piece, but not put it on the board just to refer to it for isEnemy()
         ChessPiece king_copy = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
         Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(teamColor, king_pos);
+        // If the enemy has no moves to the king space, it is not in danger
         return !(enemy_moves.isEmpty());
     }
 
