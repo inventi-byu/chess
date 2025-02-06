@@ -149,7 +149,8 @@ public class ChessGame {
      * @param position ChessPosition - position potentially under attack you want to check.
      * @returns An ArrayList of all moves of the enemy of teamColor that end at that position.
      */
-    public List<ChessMove> getEnemyMoves(TeamColor teamColor){
+    public List<ChessMove> getEnemyMoves(TeamColor teamColor, ChessPosition position){
+
         throw new RuntimeException("getEnemyMoves() not implemented!");
     }
 
