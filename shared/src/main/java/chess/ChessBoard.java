@@ -47,7 +47,7 @@ public class ChessBoard {
     public ChessPosition getKingPosition(ChessGame.TeamColor teamColor){
         for (int i = 1; i < 9; i++){
             for (int j = 1; j < 9; j++){
-                ChessPosition cur_pos = new ChessPosition(i+1, j+1);
+                ChessPosition cur_pos = new ChessPosition(i, j);
                 ChessPiece king_copy =  new ChessPiece(teamColor, ChessPiece.PieceType.KING );
                 ChessPiece cur_piece = this.getPiece(cur_pos);
                 if (cur_piece != null){
