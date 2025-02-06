@@ -39,6 +39,17 @@ public class ChessBoard {
     }
 
     /**
+     * A function to get the ChessPosition of the king of a given team.
+     *
+     * @param teamColor the color of the king wanted
+     * @returns A ChessPosition representing the position of the king of the color specified by the teamColor
+     */
+    public ChessPosition getKingPosition(ChessGame.TeamColor teamColor){
+        throw new RuntimeException("getKingPosition() not implemented.")
+    }
+
+
+    /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
