@@ -91,6 +91,14 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        /*
+        for every enemy piece on the board:
+            run pieceMoves and figure out where they can go
+            for every move it can make
+                if the end position is the same as the position of the king
+                    return true
+         return false
+         */
         throw new RuntimeException("Not implemented");
     }
 
@@ -101,7 +109,19 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        /*
+        List attackingMoves = new ArrayList<ChessMove>();
+         */
+
+            /*
+            for every enemy piece:
+                do piece moves
+                for every move:
+                    if one of the end positions is the king
+                        add that move to the list of moves
+
+
+             */
     }
 
     /**
@@ -112,7 +132,16 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if ( !(this.isInCheck(teamColor) && this.isInCheckmate(teamColor)) ){
+            /*
+            for every friend piece:
+                do pieceMoves
+                if pieceMoves != null
+                    return true
+            return false;
+             */
+        }
+        throw new RuntimeException("isInStalemate() is not implemented!");
     }
 
     /**
