@@ -115,6 +115,8 @@ public class ChessGame {
                 // CHECK THIS -> is an empty ArrayList or Collection considered null? If not, the if logic above this line will not work!
                 return true;
             }
+            // Must handle other cases
+            // Check to see if piecemoves given put you in danger
         }
         return false;
     }
@@ -140,6 +142,18 @@ public class ChessGame {
         */
         throw new RuntimeException("isInStalemate() is not implemented!");
     }
+
+    /**
+     * A function that returns a list of enemyMoves to a specific point.
+     * @param teamColor ChessGame.TeamColor - the piece's color (will get the enemy of this piece's moves).
+     * @param position ChessPosition - position potentially under attack you want to check.
+     * @returns An ArrayList of all moves of the enemy of teamColor that end at that position.
+     */
+    public List<ChessMove> getEnemyMoves(TeamColor teamColor){
+        throw new RuntimeException("getEnemyMoves() not implemented!");
+    }
+
+
     /**
      * Determines if a given king is in danger of being attacked
      *

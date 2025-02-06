@@ -48,7 +48,7 @@ public class ChessBoard {
         for (int i = 1; i < 9; i++){
             for (int j = 1; j < 9; j++){
                 ChessPosition cur_pos = new ChessPosition(i, j);
-                ChessPiece king_copy =  new ChessPiece(teamColor, ChessPiece.PieceType.KING );
+                ChessPiece king_copy =  new ChessPiece(teamColor, ChessPiece.PieceType.KING);
                 ChessPiece cur_piece = this.getPiece(cur_pos);
                 if (cur_piece != null){
                     if (cur_piece.equals(king_copy)){
