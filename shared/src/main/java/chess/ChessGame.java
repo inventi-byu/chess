@@ -112,23 +112,11 @@ public class ChessGame {
             ChessPiece king = this.board.getPiece(king_position);
 
             if (king.pieceMoves(this.board, king_position) == null){
+                // CHECK THIS -> is an empty ArrayList or Collection considered null? If not, the if logic above this line will not work!
                 return true;
             }
         }
         return false;
-        /*
-        List attackingMoves = new ArrayList<ChessMove>();
-         */
-
-            /*
-            for every enemy piece:
-                do piece moves
-                for every move:
-                    if one of the end positions is the king
-                        add that move to the list of moves
-
-
-             */
     }
 
     /**
@@ -159,15 +147,25 @@ public class ChessGame {
      * @return true if there is a move from the enemy that can be done against the king
     */
     private boolean kingIsInDanger(ChessGame.TeamColor teamColor){
-        /*
-        for every enemy piece on the board:
-            run pieceMoves and figure out where they can go
-            for every move it can make
-                if the end position is the same as the position of the king
-                    return true
-         return false
-         */
-        throw new RuntimeException("kingIsInDanger() not implemented!");
+        ChessPosition king_pos = this.board.getKingPosition(teamColor);
+        // We'll need to use a king piece, but not put it on the board just to refer to it for isEnemy()
+        ChessPiece king_copy = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
+
+        for (int i = 1; i < 9; i++){
+            for (int j = 1; j < 9; j ++) {
+                ChessPosition cur_pos = new ChessPosition(i, j);
+                ChessPiece piece = this.board.getPiece(cur_pos);
+                if (piece.isEnemy(king_copy)) {
+                    Collection<ChessMove> moves = piece.pieceMoves(this.board, cur_pos);
+                    for (ChessMove move : moves) {
+                        if (move.getEndPosition() == king_pos) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 
