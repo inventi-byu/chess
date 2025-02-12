@@ -18,14 +18,6 @@ public class ChessBoard {
         //this.resetBoard();
     }
 
-    public void setBoard(ChessBoard otherBoard){
-        this.board = otherBoard.getBoard();
-    }
-
-    public ChessPiece[][] getBoard(){
-        return this.board;
-    }
-
     /**
      * Adds a chess piece to the chessboard
      *
@@ -124,7 +116,15 @@ public class ChessBoard {
      */
     public ChessBoard copy(){
         ChessBoard newBoard = new ChessBoard();
-        newBoard.
+        for (int i = 1; i < 9; i++){
+            for (int j = 1; j < 9; j++){
+                ChessPosition cur_pos = new ChessPosition(i,j);
+                ChessPiece cur_piece = this.getPiece(cur_pos);
+                if (cur_piece != null){
+                    newBoard.addPiece(cur_pos, cur_piece);
+                }
+            }
+        }
         return newBoard;
     }
 
