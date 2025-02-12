@@ -219,8 +219,14 @@ public class ChessGame {
      * @return A ChessBoard that is the current board with the king moved to a different position.
      */
     public ChessBoard getPossibleBoard(ChessPosition newPosition, ChessGame.TeamColor color) {
-
-        return board;
+        ChessBoard possibleBoard = this.board.copy();
+        ChessPosition cur_king_pos = possibleBoard.getKingPosition(color);
+        if (possibleBoard.getPiece(newPosition) != null){
+            throw new RuntimeException("That space is not empty!");
+        }
+        possibleBoard.removePiece(cur_king_pos);
+        possibleBoard.addPiece(newPosition, new ChessPiece(color, ChessPiece.PieceType.KING));
+        return possibleBoard;
     }
 
     /**
