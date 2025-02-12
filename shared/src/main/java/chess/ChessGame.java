@@ -148,7 +148,7 @@ public class ChessGame {
             for (int i = 1; i < 9; i++){
                 for (int j = 1; j < 9; j++){
                     // If the piece in that square is a friend
-                    ChessPosition cur_pos = new ChessPosition(i,j)
+                    ChessPosition cur_pos = new ChessPosition(i,j);
                     if ( ! (this.board.getPiece(cur_pos).isEnemy(test_piece)) ){
                         Collection<ChessMove> moves = this.validMoves(cur_pos);
                         if (!moves.isEmpty()){
