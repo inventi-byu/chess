@@ -143,18 +143,23 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        /*
+        ChessPiece test_piece = new ChessPiece(teamColor, null);
         if ( !(this.isInCheck(teamColor) && this.isInCheckmate(teamColor)) ){
-
-            // for every friend piece:
-            //    do pieceMoves
-            //    if pieceMoves != null
-            //        return true
-            //return false;
+            for (int i = 1; i < 9; i++){
+                for (int j = 1; j < 9; j++){
+                    // If the piece in that square is a friend
+                    ChessPosition cur_pos = new ChessPosition(i,j)
+                    if ( ! (this.board.getPiece(cur_pos).isEnemy(test_piece)) ){
+                        Collection<ChessMove> moves = this.validMoves(cur_pos);
+                        if (!moves.isEmpty()){
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
         }
         return false;
-        */
-        throw new RuntimeException("isInStalemate() is not implemented!");
     }
 
     /**
