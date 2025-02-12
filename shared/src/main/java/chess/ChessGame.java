@@ -166,14 +166,14 @@ public class ChessGame {
     public Collection<ChessMove> getEnemyMovesHere(TeamColor teamColor, ChessPosition position) {
         ArrayList<ChessMove> enemy_moves = new ArrayList<ChessMove>();
         ChessPiece generic_test_piece = new ChessPiece(teamColor, null);
+        ChessBoard potentialBoard = this.getPossibleBoard(teamColor, position);
 
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
                 ChessPosition cur_pos = new ChessPosition(i, j);
                 ChessPiece piece = this.board.getPiece(cur_pos);
                 if (piece != null && piece.isEnemy(generic_test_piece)) {
-                    this.get
-                    Collection<ChessMove> moves = piece.pieceMoves(this.board, cur_pos);
+                    Collection<ChessMove> moves = piece.pieceMoves(potentialBoard, cur_pos);
                     for (ChessMove move : moves) {
                         // OK so the problem with this right now, is that when you call pieceMoves on the piece, it will only return valid moves
                         // for where the pieces currently are. If I ask it for its moves, it will not be calculating based on if
@@ -214,18 +214,16 @@ public class ChessGame {
      *
      * @param newPosition A ChessPosition representing the position to move the king to in the
      *                    hypothetical board.
-     * @param color The color of king that should be moved to that position
+     * @param teamColor The color of king that should be moved to that position
      *
      * @return A ChessBoard that is the current board with the king moved to a different position.
      */
-    public ChessBoard getPossibleBoard(ChessPosition newPosition, ChessGame.TeamColor color) {
+    public ChessBoard getPossibleBoard(ChessGame.TeamColor teamColor, ChessPosition newPosition) {
         ChessBoard possibleBoard = this.board.copy();
-        ChessPosition cur_king_pos = possibleBoard.getKingPosition(color);
-        if (possibleBoard.getPiece(newPosition) != null){
-            throw new RuntimeException("That space is not empty!");
-        }
+        ChessPosition cur_king_pos = possibleBoard.getKingPosition(teamColor);
+
         possibleBoard.removePiece(cur_king_pos);
-        possibleBoard.addPiece(newPosition, new ChessPiece(color, ChessPiece.PieceType.KING));
+        possibleBoard.addPiece(newPosition, new ChessPiece(teamColor, ChessPiece.PieceType.KING));
         return possibleBoard;
     }
 
