@@ -172,10 +172,11 @@ public class ChessGame {
                 ChessPosition cur_pos = new ChessPosition(i, j);
                 ChessPiece piece = this.board.getPiece(cur_pos);
                 if (piece != null && piece.isEnemy(generic_test_piece)) {
+                    this.get
                     Collection<ChessMove> moves = piece.pieceMoves(this.board, cur_pos);
                     for (ChessMove move : moves) {
                         // OK so the problem with this right now, is that when you call pieceMoves on the piece, it will only return valid moves
-                        // for where the pieces currently are. If I ask it for it's moves, it will not be calculating based on if
+                        // for where the pieces currently are. If I ask it for its moves, it will not be calculating based on if
                         // the king were at the position we want to look at where if could potentially go, because
                         // the king is not currently there. Somehow we need to tell pieceMoves that the king is
                         // no longer "at" it's current position, but to calculate moves based on the board where
@@ -206,6 +207,21 @@ public class ChessGame {
         return !(enemy_moves.isEmpty());
     }
 
+    /**
+     * Moves the king in a copy of the ChessBoard to a new position to test
+     * moves as if the king were at that position (to meet requirements for
+     * checkmate)
+     *
+     * @param newPosition A ChessPosition representing the position to move the king to in the
+     *                    hypothetical board.
+     * @param color The color of king that should be moved to that position
+     *
+     * @return A ChessBoard that is the current board with the king moved to a different position.
+     */
+    public ChessBoard getPossibleBoard(ChessPosition newPosition, ChessGame.TeamColor color) {
+        this.board.getKingPosition()
+        return board;
+    }
 
     /**
      * Sets this game's chessboard with a given board
