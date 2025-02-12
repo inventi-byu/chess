@@ -18,6 +18,14 @@ public class ChessBoard {
         //this.resetBoard();
     }
 
+    public void setBoard(ChessBoard otherBoard){
+        this.board = otherBoard.getBoard();
+    }
+
+    public ChessPiece[][] getBoard(){
+        return this.board;
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -109,6 +117,18 @@ public class ChessBoard {
 
     }
 
+    /**
+     * Copies the ChessBoard array and puts it into a new ChessBoard, and returns that ChessBoard.
+     *
+     * @return A copied version of the ChessBoard.
+     */
+    public ChessBoard copy(){
+        ChessBoard newBoard = new ChessBoard();
+        newBoard.
+        return newBoard;
+    }
+
+
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(board);
@@ -129,6 +149,9 @@ public class ChessBoard {
                 "board=" + Arrays.toString(board) +
                 '}';
     }
+
+
+
 }
 
 
