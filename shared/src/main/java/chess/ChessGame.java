@@ -94,12 +94,20 @@ public class ChessGame {
          * @return True if the specified team is in check
          */
         public boolean isInCheck(TeamColor teamColor) {
+            if (this.pieceIsInDanger(this.board.getKingPosition(teamColor))){
+                return true;
+            }
+            return false;
+
+            /*(
             if(!this.isInCheckmate(teamColor)){
                 if (this.pieceIsInDanger(this.board.getKingPosition(teamColor))){
                     return true;
                 }
             }
             return false;
+            */
+
         }
 
         /**
@@ -159,7 +167,7 @@ public class ChessGame {
          */
         public Collection<ChessMove> safeMoves(ChessPosition position){
             ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
-
+            throw new RuntimeException("Not Implemented!");
         }
 
         /**
@@ -208,7 +216,8 @@ public class ChessGame {
             ArrayList<ChessPosition> enemy_locations = this.getPieceLocations(enemy_color);
             for (ChessPosition enemy_location : enemy_locations){
                 ChessPiece cur_enemy_piece = this.board.getPiece(enemy_location);
-                Collection<ChessMove> moves = cur_enemy_piece.pieceMoves(this.board, cur_pos);
+                // TODO: this may need to be changed (this.board to possibleBoard for checkmate
+                Collection<ChessMove> moves = cur_enemy_piece.pieceMoves(this.board, enemy_location);
                 for (ChessMove move : moves){
                     if (move.getEndPosition().equals(position)) {
                         enemy_moves.add(move);
@@ -249,7 +258,7 @@ public class ChessGame {
      * @param teamColor the TeamColor to check.
      * @return an ArrayList of all the piece ChessPositions for the specified team.
      */
-    public Collection<ChessPosition> getPieceLocations(ChessGame.TeamColor teamColor) {
+    public ArrayList<ChessPosition> getPieceLocations(ChessGame.TeamColor teamColor) {
         ArrayList<ChessPosition> locations = new ArrayList<ChessPosition>();
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
