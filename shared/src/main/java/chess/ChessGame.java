@@ -197,27 +197,26 @@ public class ChessGame {
          * @return True if the specified team is in stalemate, otherwise false
          */
         public boolean isInStalemate(TeamColor teamColor) {
-            
-
-
+            /*
+            get all the pieces of the team
+            if each piece has no validmoves
+                return true
+            otherwise return false
+             */
             ChessPiece test_piece = new ChessPiece(teamColor, null);
-            if ( !(this.isInCheck(teamColor) && this.isInCheckmate(teamColor)) ){
-                for (int i = 1; i < 9; i++){
-                    for (int j = 1; j < 9; j++){
-                        // If the piece in that square is a friend
-                        ChessPosition cur_pos = new ChessPosition(i,j);
-                        if ( ! (this.board.getPiece(cur_pos).isEnemy(test_piece)) ){
-                            Collection<ChessMove> moves = this.validMoves(cur_pos);
-                            if (!moves.isEmpty()){
-                                return false;
-                            }
-                        }
+            if ( !this.isInCheck(teamColor) ){
+                Collection<ChessPosition> piece_locations = this.getPieceLocations(teamColor);
+                for (ChessPosition piece_location : piece_locations) {
+                    Collection<ChessMove> moves = this.validMoves(piece_location);
+                    if(!moves.isEmpty()){
+                            return false;
                     }
                 }
                 return true;
             }
             return false;
         }
+
 
         /**
          * A function that returns a list of enemyMoves to a specific point.
