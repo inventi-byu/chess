@@ -106,33 +106,45 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (kingIsInDanger(teamColor)){
-            // Find out where the king is, and get the king so you can call pieceMoves() on it
-            ChessPosition king_position = this.board.getKingPosition(teamColor);
-            ChessPiece king = this.board.getPiece(king_position);
-            Collection<ChessMove> king_moves = king.pieceMoves(this.board, king_position);
+        /*
+        if the king is in check
+        and no king move is safe
+        return true
+        otherwise
+        return false
 
-            // The only time this will be true is when the king is surrounded by friendly pieces
-            // The only piece that could attack it is a knight
-            if (king_moves.isEmpty()){
-                // If your king is in danger but he can't move, you're in checkmate
-                return true;
-            }
-            // Must handle other cases
-            // Check to see if pieceMoves given put you in danger
-            for (ChessMove move : king_moves){
-                // If there is a move the king can make that ends up with no enemies going to that spot,
-                // There is somewhere the king can go so it is not in checkmate
-                Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(teamColor, move.getEndPosition());
-                if ( enemy_moves.isEmpty() ){
-                    return false;
-                }
-            }
-            // Go through the whole loop, if none are empty, the king cannot escape
-            return true;
-        } else {
-            return false;
+         */
+        if (this.isInCheck(teamColor){
+            if (this.hasNoMoves())
         }
+        return false;
+//        if (kingIsInDanger(teamColor)){
+//            // Find out where the king is, and get the king so you can call pieceMoves() on it
+//            ChessPosition king_position = this.board.getKingPosition(teamColor);
+//            ChessPiece king = this.board.getPiece(king_position);
+//            Collection<ChessMove> king_moves = king.pieceMoves(this.board, king_position);
+//
+//            // The only time this will be true is when the king is surrounded by friendly pieces
+//            // The only piece that could attack it is a knight
+//            if (king_moves.isEmpty()){
+//                // If your king is in danger but he can't move, you're in checkmate
+//                return true;
+//            }
+//            // Must handle other cases
+//            // Check to see if pieceMoves given put you in danger
+//            for (ChessMove move : king_moves){
+//                // If there is a move the king can make that ends up with no enemies going to that spot,
+//                // There is somewhere the king can go so it is not in checkmate
+//                Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(teamColor, move.getEndPosition());
+//                if ( enemy_moves.isEmpty() ){
+//                    return false;
+//                }
+//            }
+//            // Go through the whole loop, if none are empty, the king cannot escape
+//            return true;
+//        } else {
+//            return false;
+//        }
     }
 
     /**

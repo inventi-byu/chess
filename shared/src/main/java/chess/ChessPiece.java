@@ -56,6 +56,7 @@ public class ChessPiece {
         return this.getTeamColor() != piece.getTeamColor();
     }
 
+
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         PieceMovesCalculator calc = new PieceMovesCalculator(board, this, myPosition);
         return calc.moves();
