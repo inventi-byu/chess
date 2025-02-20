@@ -114,8 +114,10 @@ public class ChessGame {
         return false
 
          */
-        if (this.isInCheck(teamColor){
-            if (this.hasNoMoves())
+        if (this.isInCheck(teamColor)){
+            if (this.hasNoSafeMoves(this.board.getKingPosition(teamColor))){
+                return true;
+            }
         }
         return false;
 //        if (kingIsInDanger(teamColor)){
@@ -145,6 +147,15 @@ public class ChessGame {
 //        } else {
 //            return false;
 //        }
+    }
+
+    /**
+     * Checks if a piece has any moves where it will not be captured, and returns an ArrayList of all the safe moves.
+     * @param position a ChessPosition that you want to check
+     * @return An ArrayList of safe moves, if there are any, and an empty list if there are none.
+     */
+    public boolean safeMoves(ChessPosition position){
+        
     }
 
     /**

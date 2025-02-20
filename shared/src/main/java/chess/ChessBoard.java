@@ -65,7 +65,6 @@ public class ChessBoard {
         return null;
     }
 
-
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
