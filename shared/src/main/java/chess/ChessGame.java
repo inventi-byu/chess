@@ -249,9 +249,24 @@ public class ChessGame {
      * @param teamColor the TeamColor to check.
      * @return an ArrayList of all the piece ChessPositions for the specified team.
      */
-    public Collection<ChessPosition> getPieceLocations(ChessGame.TeamColor teamColor){
-            return
+    public Collection<ChessPosition> getPieceLocations(ChessGame.TeamColor teamColor) {
+        ArrayList<ChessPosition> locations = new ArrayList<ChessPosition>();
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
+                ChessPosition cur_pos = new ChessPosition(i,j);
+                if (this.board.pieceIsHere(cur_pos)){
+                    ChessPiece cur_piece = this.board.getPiece(cur_pos);
+
+                    // If this piece is the color we want to get...add it to the list.
+                    if (cur_piece.getTeamColor() == teamColor){
+                        locations.add(cur_pos);
+                    }
+
+                }
+            }
         }
+        return locations;
+    }
 
     /**
      * Checks to see if the piece at the given position is in danger of attack where it currently is.
