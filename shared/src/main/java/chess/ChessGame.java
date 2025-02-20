@@ -197,32 +197,61 @@ public class ChessGame {
          */
         public Collection<ChessMove> getEnemyMovesHere(TeamColor teamColor, ChessPosition position) {
             ArrayList<ChessMove> enemy_moves = new ArrayList<ChessMove>();
-            ChessPiece generic_test_piece = new ChessPiece(teamColor, null);
-            ChessBoard potentialBoard = this.getPossibleBoard(teamColor, position);
 
-            for (int i = 1; i < 9; i++) {
-                for (int j = 1; j < 9; j++) {
-                    ChessPosition cur_pos = new ChessPosition(i, j);
-                    ChessPiece piece = this.board.getPiece(cur_pos);
-                    if (piece != null && piece.isEnemy(generic_test_piece)) {
-                        Collection<ChessMove> moves = piece.pieceMoves(potentialBoard, cur_pos);
-                        for (ChessMove move : moves) {
-                            // OK so the problem with this right now, is that when you call pieceMoves on the piece, it will only return valid moves
-                            // for where the pieces currently are. If I ask it for its moves, it will not be calculating based on if
-                            // the king were at the position we want to look at where if could potentially go, because
-                            // the king is not currently there. Somehow we need to tell pieceMoves that the king is
-                            // no longer "at" it's current position, but to calculate moves based on the board where
-                            // the king is in a different position, the position in question that we get passed in as one of the arguments.
-                            if (move.getEndPosition().equals(position)) {
-                                enemy_moves.add(move);
-                            }
-                        }
+            ChessGame.TeamColor enemy_color;
+            if (teamColor == TeamColor.WHITE){
+                enemy_color = TeamColor.BLACK;
+            } else{
+                enemy_color = TeamColor.WHITE;
+            }
+
+            ArrayList<ChessPosition> enemy_locations = this.getPieceLocations(enemy_color);
+            for (ChessPosition enemy_location : enemy_locations){
+                ChessPiece cur_enemy_piece = this.board.getPiece(enemy_location);
+                Collection<ChessMove> moves = cur_enemy_piece.pieceMoves(this.board, cur_pos);
+                for (ChessMove move : moves){
+                    if (move.getEndPosition().equals(position)) {
+                        enemy_moves.add(move);
                     }
                 }
             }
+
+
+//            ChessPiece generic_test_piece = new ChessPiece(teamColor, null);
+//         //   ChessBoard potentialBoard = this.getPossibleBoard(teamColor, position;
+//            ChessGame.TeamColor enemyColor = this.
+//             ArrayList<ChessPosition> enemyLocations = this.getPieceLocations(teamColor);
+//            for (int i = 1; i < 9; i++) {
+//                for (int j = 1; j < 9; j++) {
+//                    ChessPosition cur_pos = new ChessPosition(i, j);
+//                    ChessPiece piece = this.board.getPiece(cur_pos);
+//                    if (piece != null && piece.isEnemy(generic_test_piece)) {
+//                        Collection<ChessMove> moves = piece.pieceMoves(potentialBoard, cur_pos);
+//                        for (ChessMove move : moves) {
+//                            // OK so the problem with this right now, is that when you call pieceMoves on the piece, it will only return valid moves
+//                            // for where the pieces currently are. If I ask it for its moves, it will not be calculating based on if
+//                            // the king were at the position we want to look at where if could potentially go, because
+//                            // the king is not currently there. Somehow we need to tell pieceMoves that the king is
+//                            // no longer "at" it's current position, but to calculate moves based on the board where
+//                            // the king is in a different position, the position in question that we get passed in as one of the arguments.
+//                            if (move.getEndPosition().equals(position)) {
+//                                enemy_moves.add(move);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
             return enemy_moves;
         }
 
+    /**
+     * Gives a list of all the piece ChessPositions for the specified team.
+     * @param teamColor the TeamColor to check.
+     * @return an ArrayList of all the piece ChessPositions for the specified team.
+     */
+    public Collection<ChessPosition> getPieceLocations(ChessGame.TeamColor teamColor){
+            return
+        }
 
     /**
      * Checks to see if the piece at the given position is in danger of attack where it currently is.
