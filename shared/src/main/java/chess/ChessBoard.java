@@ -44,6 +44,14 @@ public class ChessBoard {
     }
 
     /**
+     * Tells you if there is a piece at a given ChessPosition, or if it is null.
+     * @param position the ChessPosition to check.
+     * @return True if there is a piece, False if it is null.
+     */
+    public boolean pieceIsHere(ChessPosition position){
+        return (this.getPiece(position) != null);
+    }
+    /**
      * A function to get the ChessPosition of the king of a given team.
      *
      * @param teamColor the color of the king wanted
