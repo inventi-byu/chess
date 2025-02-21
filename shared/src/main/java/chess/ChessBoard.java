@@ -157,10 +157,77 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        return "ChessBoard{" +
-                "board=" + Arrays.toString(board) +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("-----------------\n");
+        // The rows must be constructed in reverse, since row 1 is at the bottom
+        // (it is at the end of the string)
+        // But columns are constructed as normal, left to right since that is how
+        // the string reads/is constructed
+        for (int i = 8; i > 0; i--){
+            sb.append('|');
+            for (int j = 1; j < 9; j++){
+                ChessPosition cur_pos = new ChessPosition(i,j);
+                ChessPiece cur_piece = this.getPiece(cur_pos);
+                // If there is no piece there, add a space.
+                if (cur_piece == null) {
+                    sb.append(" |");
+                    continue;
+                }
+                if (cur_piece.getTeamColor() == ChessGame.TeamColor.WHITE){
+                    switch (cur_piece.getPieceType()){
+                        case ChessPiece.PieceType.KING:
+                            sb.append("K|");
+                            break;
+                        case ChessPiece.PieceType.QUEEN:
+                            sb.append("Q|");
+                            break;
+                        case ChessPiece.PieceType.BISHOP:
+                            sb.append("B|");
+                            break;
+                        case ChessPiece.PieceType.KNIGHT:
+                            sb.append("N|");
+                            break;
+                        case ChessPiece.PieceType.ROOK:
+                            sb.append("R|");
+                            break;
+                        case ChessPiece.PieceType.PAWN:
+                            sb.append("P|");
+                            break;
+                    }
+                } else {
+                    // Team is Black
+                    switch (cur_piece.getPieceType()){
+                        case ChessPiece.PieceType.KING:
+                            sb.append("k|");
+                            break;
+                        case ChessPiece.PieceType.QUEEN:
+                            sb.append("q|");
+                            break;
+                        case ChessPiece.PieceType.BISHOP:
+                            sb.append("b|");
+                            break;
+                        case ChessPiece.PieceType.KNIGHT:
+                            sb.append("n|");
+                            break;
+                        case ChessPiece.PieceType.ROOK:
+                            sb.append("r|");
+                            break;
+                        case ChessPiece.PieceType.PAWN:
+                            sb.append("p|");
+                            break;
+                    }
+                }
+            }
+            sb.append('\n');
+        }
+        sb.append("-----------------");
+        return sb.toString();
     }
+
+
+
+
+
 
 
 
