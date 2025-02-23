@@ -203,7 +203,11 @@ public class ChessGame {
                 return true
             otherwise return false
              */
-            ChessPiece test_piece = new ChessPiece(teamColor, null);
+            ChessPosition king_pos = this.board.getKingPosition(teamColor);
+            if (!this.pieceIsInDanger(king_pos)){
+                
+            }
+            return false;
             if ( !this.isInCheck(teamColor) ){
                 Collection<ChessPosition> piece_locations = this.getPieceLocations(teamColor);
                 for (ChessPosition piece_location : piece_locations) {
