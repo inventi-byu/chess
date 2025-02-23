@@ -121,7 +121,7 @@ public class ChessGame {
 
             ChessPiece.PieceType promp = move.getPromotionPiece();
             if (promp != null){
-                
+                piece.setPieceType(promp);
             }
 
             ChessBoard newBoard = this.getPossibleBoard(piece_start_pos, move.getEndPosition());
