@@ -51,30 +51,33 @@ public class ChessGame {
          * startPosition
          */
         public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+            /*
+                Do piece moves
+                For every move
+                    if the board created by that move is NOT in check or checkmate
+                        add that move to valid moves
+             */
+
             // Get the piece
             ChessPiece piece = this.getBoard().getPiece(startPosition);
             if (piece == null) {
                 return null;
             }
 
-            /*
-            Collection<ChessMove> moves = piece.pieceMoves(this.board, startPosition);
-            if (this.isInCheckmate(this.getTeamTurn())){
-                // Do something
+            Collection<ChessMove> valid_moves = new ArrayList<ChessMove>();
+            Collection<ChessMove> piece_moves = piece.pieceMoves(this.board, startPosition);
+
+            for (ChessMove move : piece_moves){
+                // Get the end_pos, and find the piece's king. Move the piece to it's potential position after this move.
+                ChessPosition end_pos = move.getEndPosition();
+                ChessPosition king_pos = this.board.getKingPosition(piece.getTeamColor());
+                ChessBoard possibleBoard = this.getPossibleBoard(startPosition, end_pos);
+                // If that move did not put the king in danger, it is valid
+                if (!this.pieceIsInDanger(king_pos, possibleBoard)){
+                    valid_moves.add(move);
+                }
             }
-            if (this.isInCheck(this.getTeamTurn())){
-                // Do something
-            }
-            if (this.isInStalemate(this.getTeamTurn())) {
-                // Do something
-            }
-            // Everything ok
-            for (int i = 0; i < moves.size(); i++){
-                //some other stuffa
-            }
-            */
-            // Not completed
-            throw new RuntimeException("Not implemented");
+            return valid_moves;
         }
 
         /**
@@ -94,7 +97,7 @@ public class ChessGame {
          * @return True if the specified team is in check
          */
         public boolean isInCheck(TeamColor teamColor) {
-            if (this.pieceIsInDanger(this.board.getKingPosition(teamColor))){
+            if (this.pieceIsInDanger(this.board.getKingPosition(teamColor), this.board)){
                 return true;
             }
             return false;
@@ -204,16 +207,12 @@ public class ChessGame {
             otherwise return false
              */
             ChessPosition king_pos = this.board.getKingPosition(teamColor);
-            if (!this.pieceIsInDanger(king_pos)){
-                
-            }
-            return false;
-            if ( !this.isInCheck(teamColor) ){
+            if (!this.pieceIsInDanger(king_pos, this.board)){
                 Collection<ChessPosition> piece_locations = this.getPieceLocations(teamColor);
                 for (ChessPosition piece_location : piece_locations) {
                     Collection<ChessMove> moves = this.validMoves(piece_location);
                     if(!moves.isEmpty()){
-                            return false;
+                        return false;
                     }
                 }
                 return true;
@@ -306,9 +305,9 @@ public class ChessGame {
      * @param position the ChessPosition of the piece that is being inquired.
      * @return True if the piece is in danger of attack by an enemy, returns false otherwise.
      */
-    public boolean pieceIsInDanger(ChessPosition position){
-            ChessPiece piece = this.board.getPiece(position);
-            Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(piece.getTeamColor(), position, this.board);
+    public boolean pieceIsInDanger(ChessPosition position, ChessBoard board){
+            ChessPiece piece = board.getPiece(position);
+            Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(piece.getTeamColor(), position, board);
             return !(enemy_moves.isEmpty());
     }
 
