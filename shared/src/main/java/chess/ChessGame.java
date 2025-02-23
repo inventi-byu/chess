@@ -68,10 +68,11 @@ public class ChessGame {
             Collection<ChessMove> piece_moves = piece.pieceMoves(this.board, startPosition);
 
             for (ChessMove move : piece_moves){
-                // Get the end_pos, and find the piece's king. Move the piece to it's potential position after this move.
+                // Get the end_pos, and move the piece to it's potential position after this move.
+                // Then find the piece's king on the possibleBoard.
                 ChessPosition end_pos = move.getEndPosition();
-                ChessPosition king_pos = this.board.getKingPosition(piece.getTeamColor());
                 ChessBoard possibleBoard = this.getPossibleBoard(startPosition, end_pos);
+                ChessPosition king_pos = possibleBoard.getKingPosition(piece.getTeamColor());
                 // If that move did not put the king in danger, it is valid
                 if (!this.pieceIsInDanger(king_pos, possibleBoard)){
                     valid_moves.add(move);
@@ -87,7 +88,49 @@ public class ChessGame {
          * @throws InvalidMoveException if move is invalid
          */
         public void makeMove(ChessMove move) throws InvalidMoveException {
-            throw new RuntimeException("Not implemented");
+            /*
+            Get the piece at the start location
+            If the piece's color is not having it's turn
+                throw invalid move exception
+            run valid moves on the piece
+            if move is not in valid moves
+                throw invalid move exception
+            get the possible board with moving that piece
+            set this.board to the possible board
+             */
+            TeamColor cur_team_turn = this.getTeamTurn();
+            ChessPosition piece_start_pos = move.getStartPosition();
+            ChessPiece piece = this.board.getPiece(piece_start_pos);
+            if (piece == null){
+                throw new InvalidMoveException("There is no piece there.");
+            }
+            if (piece.getTeamColor() != cur_team_turn){
+                throw new InvalidMoveException("It is not this team's turn!");
+            }
+            Collection<ChessMove> valid_moves = this.validMoves(piece_start_pos);
+            boolean isAValidMove = false;
+            for (ChessMove valid_move : valid_moves){
+                if (move.equals(valid_move)){
+                    isAValidMove = true;
+                }
+            }
+            // If it's not a valid move, throw an error
+            if (!isAValidMove){
+                throw new InvalidMoveException("That is not a valid move for this piece!");
+            }
+
+            ChessPiece.PieceType promp = move.getPromotionPiece();
+            if (promp != null){
+                
+            }
+
+            ChessBoard newBoard = this.getPossibleBoard(piece_start_pos, move.getEndPosition());
+            this.board = newBoard;
+            if (cur_team_turn == TeamColor.WHITE){
+                this.setTeamTurn(TeamColor.BLACK);
+            } else {
+                this.setTeamTurn(TeamColor.WHITE);
+            }
         }
 
         /**
