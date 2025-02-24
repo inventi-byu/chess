@@ -13,6 +13,8 @@ public class ChessPiece {
 
     ChessGame.TeamColor color;
     ChessPiece.PieceType type;
+    boolean hasMoved; // Has piece moved since start of game?
+
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.color = pieceColor;
         this.type = type;
@@ -60,10 +62,35 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
 
+    /**
+     * Returns if the piece has moved since the start of the game.
+     */
+    public boolean getHasMoved(){
+        return this.hasMoved;
+    }
+
+    /**
+     * Sets if the piece has moved since the start of the game.
+     * @param hasMoved whether the piece has moved since the start of the game (true or false).
+     */
+    public void setHasMoved(boolean hasMoved){
+        this.hasMoved = hasMoved;
+    }
+
+    /**
+     * Tells if the given piece is an enemy (has a different team color) to this piece.
+     * @param piece the piece to check for animosity.
+     * @return true if the piece is an enemy (has a different team color).
+     */
     public boolean isEnemy(ChessPiece piece){
         return this.getTeamColor() != piece.getTeamColor();
     }
 
+    /**
+     * Tells if the given piece is a friend (has the same team color) to this piece.
+     * @param piece the piece to check for friendship.
+     * @return true if the piece is a friend (has the same team color).
+     */
     public boolean isFriend(ChessPiece piece){
         return this.getTeamColor() == piece.getTeamColor();
     }

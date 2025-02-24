@@ -162,7 +162,6 @@ public class ChessGame {
 
              */
 
-            // TODO: Ok so the reason this isn't working for all cases is because we have to check if any potential board can leave the king safe
 
             if (this.isInCheck(teamColor)){
                 if (this.safeMoves(this.board.getKingPosition(teamColor)).isEmpty() ){
@@ -311,32 +310,6 @@ public class ChessGame {
                     }
                 }
             }
-
-
-//            ChessPiece generic_test_piece = new ChessPiece(teamColor, null);
-//         //   ChessBoard potentialBoard = this.getPossibleBoard(teamColor, position);
-//            ChessGame.TeamColor enemyColor = this.
-//             ArrayList<ChessPosition> enemyLocations = this.getPieceLocations(teamColor);
-//            for (int i = 1; i < 9; i++) {
-//                for (int j = 1; j < 9; j++) {
-//                    ChessPosition cur_pos = new ChessPosition(i, j);
-//                    ChessPiece piece = this.board.getPiece(cur_pos);
-//                    if (piece != null && piece.isEnemy(generic_test_piece)) {
-//                        Collection<ChessMove> moves = piece.pieceMoves(potentialBoard, cur_pos);
-//                        for (ChessMove move : moves) {
-//                            // OK so the problem with this right now, is that when you call pieceMoves on the piece, it will only return valid moves
-//                            // for where the pieces currently are. If I ask it for its moves, it will not be calculating based on if
-//                            // the king were at the position we want to look at where it could potentially go, because
-//                            // the king is not currently there. Somehow we need to tell pieceMoves that the king is
-//                            // no longer "at" it's current position, but to calculate moves based on the board where
-//                            // the king is in a different position, the position in question that we get passed in as one of the arguments.
-//                            if (move.getEndPosition().equals(position)) {
-//                                enemy_moves.add(move);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
             return enemy_moves;
         }
 
@@ -350,7 +323,7 @@ public class ChessGame {
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
                 ChessPosition cur_pos = new ChessPosition(i,j);
-                if (this.board.pieceIsHere(cur_pos)){
+                if (this.board.isPieceHere(cur_pos)){
                     ChessPiece cur_piece = this.board.getPiece(cur_pos);
 
                     // If this piece is the color we want to get...add it to the list.
@@ -370,10 +343,11 @@ public class ChessGame {
      * @return True if the piece is in danger of attack by an enemy, returns false otherwise.
      */
     public boolean pieceIsInDanger(ChessPosition position, ChessBoard board){
-            ChessPiece piece = board.getPiece(position);
-            Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(piece.getTeamColor(), position, board);
-            return !(enemy_moves.isEmpty());
+        ChessPiece piece = board.getPiece(position);
+        Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(piece.getTeamColor(), position, board);
+        return !(enemy_moves.isEmpty());
     }
+
 
     /**
      * Moves a piecein a copy of the ChessBoard to a new position to test

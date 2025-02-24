@@ -48,7 +48,7 @@ public class ChessBoard {
      * @param position the ChessPosition to check.
      * @return True if there is a piece, False if it is null.
      */
-    public boolean pieceIsHere(ChessPosition position){
+    public boolean isPieceHere(ChessPosition position){
         return (this.getPiece(position) != null);
     }
     /**
