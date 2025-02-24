@@ -131,6 +131,11 @@ public class ChessGame {
             } else {
                 this.setTeamTurn(TeamColor.WHITE);
             }
+
+            // For castling
+            if(!piece.getHasMoved()){
+                piece.setHasMoved(true);
+                }
         }
 
         /**
