@@ -98,6 +98,36 @@ public class ChessBoard {
     }
 
     /**
+     * A function that returns a list of enemyMoves to a specific point.
+     * @param teamColor ChessGame.TeamColor - the piece's color (will get the enemy of this piece's moves).
+     * @param position ChessPosition - position potentially under attack you want to check.
+     * @return An ArrayList of all moves of the enemy of teamColor that end at that position.
+     */
+    public Collection<ChessMove> getEnemyMovesHere(ChessGame.TeamColor teamColor, ChessPosition position) {
+        ArrayList<ChessMove> enemy_moves = new ArrayList<ChessMove>();
+
+        ChessGame.TeamColor enemy_color;
+        if (teamColor == ChessGame.TeamColor.WHITE){
+            enemy_color = ChessGame.TeamColor.BLACK;
+        } else{
+            enemy_color = ChessGame.TeamColor.WHITE;
+        }
+
+        ArrayList<ChessPosition> enemy_locations = this.getPieceLocations(enemy_color);
+        for (ChessPosition enemy_location : enemy_locations){
+            ChessPiece cur_enemy_piece = this.getPiece(enemy_location);
+            Collection<ChessMove> moves = cur_enemy_piece.pieceMoves(this, enemy_location);
+            for (ChessMove move : moves){
+                if (move.getEndPosition().equals(position)) {
+                    enemy_moves.add(move);
+                }
+            }
+        }
+        return enemy_moves;
+    }
+
+
+    /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */

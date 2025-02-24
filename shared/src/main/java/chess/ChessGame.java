@@ -210,53 +210,17 @@ public class ChessGame {
                     it's a safe move so add it to the list
             return the safe move list
              */
-
             ArrayList<ChessMove> safe_moves = new ArrayList<ChessMove>();
             ChessPiece piece = this.board.getPiece(position);
             Collection<ChessMove> piece_moves = piece.pieceMoves(this.board, position);
             for (ChessMove move : piece_moves){
                 // Put the piece in the new hypothetical end position of the move
                 ChessBoard possibleBoard = this.getPossibleBoard(position, move.getEndPosition());
-                Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(piece.getTeamColor(), move.getEndPosition(), possibleBoard);
+                Collection<ChessMove> enemy_moves = possibleBoard.getEnemyMovesHere(piece.getTeamColor(), move.getEndPosition());
                 if ( enemy_moves.isEmpty() ){
                     safe_moves.add(move);
                 }
             }
-
-
-
-
-            //        if (kingIsInDanger(teamColor)){
-            //            // Find out where the king is, and get the king so you can call pieceMoves() on it
-            //            ChessPosition king_position = this.board.getKingPosition(teamColor);
-            //            ChessPiece king = this.board.getPiece(king_position);
-            //            Collection<ChessMove> king_moves = king.pieceMoves(this.board, king_position);
-            //
-            //            // The only time this will be true is when the king is surrounded by friendly pieces
-            //            // The only piece that could attack it is a knight
-            //            if (king_moves.isEmpty()){
-            //                // If your king is in danger but he can't move, you're in checkmate
-            //                return true;
-            //            }
-            //            // Must handle other cases
-            //            // Check to see if pieceMoves given put you in danger
-            //            for (ChessMove move : king_moves){
-            //                // If there is a move the king can make that ends up with no enemies going to that spot,
-            //                // There is somewhere the king can go so it is not in checkmate
-            //                Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(teamColor, move.getEndPosition());
-            //                if ( enemy_moves.isEmpty() ){
-            //                    return false;
-            //                }
-            //            }
-            //            // Go through the whole loop, if none are empty, the king cannot escape
-            //            return true;
-            //        } else {
-            //            return false;
-            //        }
-
-
-
-
             return safe_moves;
         }
 
@@ -288,54 +252,24 @@ public class ChessGame {
             return false;
         }
 
-
-        /**
-         * A function that returns a list of enemyMoves to a specific point.
-         * @param teamColor ChessGame.TeamColor - the piece's color (will get the enemy of this piece's moves).
-         * @param position ChessPosition - position potentially under attack you want to check.
-         * @returns An ArrayList of all moves of the enemy of teamColor that end at that position.
-         */
-        public Collection<ChessMove> getEnemyMovesHere(TeamColor teamColor, ChessPosition position, ChessBoard board) {
-            ArrayList<ChessMove> enemy_moves = new ArrayList<ChessMove>();
-
-            ChessGame.TeamColor enemy_color;
-            if (teamColor == TeamColor.WHITE){
-                enemy_color = TeamColor.BLACK;
-            } else{
-                enemy_color = TeamColor.WHITE;
-            }
-
-            ArrayList<ChessPosition> enemy_locations = this.board.getPieceLocations(enemy_color);
-            for (ChessPosition enemy_location : enemy_locations){
-                ChessPiece cur_enemy_piece = board.getPiece(enemy_location);
-                Collection<ChessMove> moves = cur_enemy_piece.pieceMoves(board, enemy_location);
-                for (ChessMove move : moves){
-                    if (move.getEndPosition().equals(position)) {
-                        enemy_moves.add(move);
-                    }
-                }
-            }
-            return enemy_moves;
-        }
-
     /**
      * Checks to see if the piece at the given position is in danger of attack where it currently is.
      * @param position the ChessPosition of the piece that is being inquired.
+     * @param board The ChessBoard to check
      * @return True if the piece is in danger of attack by an enemy, returns false otherwise.
      */
     public boolean pieceIsInDanger(ChessPosition position, ChessBoard board){
         ChessPiece piece = board.getPiece(position);
-        Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(piece.getTeamColor(), position, board);
+        Collection<ChessMove> enemy_moves = board.getEnemyMovesHere(piece.getTeamColor(), position);
         return !(enemy_moves.isEmpty());
     }
 
-
     /**
-     * Moves a piecein a copy of the ChessBoard to a new position to test
+     * Moves a piece in a copy of the ChessBoard to a new position to test
      * moves as if the piece were at that position (to meet requirements for
      * checkmate)
      *
-     * @param newPosition A ChessPosition representing the position of the piece to be moved.
+     * @param oldPosition A ChessPosition representing the position of the piece to be moved.
      * @param newPosition The new position to move the piece to.
      *
      * @return A ChessBoard that is the current board with the king moved to a different position.
