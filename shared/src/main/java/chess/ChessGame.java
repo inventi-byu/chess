@@ -74,7 +74,7 @@ public class ChessGame {
                 ChessBoard possibleBoard = this.getPossibleBoard(startPosition, end_pos);
                 ChessPosition king_pos = possibleBoard.getKingPosition(piece.getTeamColor());
                 // If that move did not put the king in danger, it is valid
-                if (!this.pieceIsInDanger(king_pos, possibleBoard)){
+                if (!possibleBoard.pieceIsInDanger(king_pos)){
                     valid_moves.add(move);
                 }
             }
@@ -145,7 +145,7 @@ public class ChessGame {
          * @return True if the specified team is in check
          */
         public boolean isInCheck(TeamColor teamColor) {
-            if (this.pieceIsInDanger(this.board.getKingPosition(teamColor), this.board)){
+            if (this.board.pieceIsInDanger(this.board.getKingPosition(teamColor))){
                 return true;
             }
             return false;
@@ -183,7 +183,7 @@ public class ChessGame {
                         Collection<ChessMove> moves = piece.pieceMoves(this.board, pieceLocation);
                         for (ChessMove move : moves){
                             ChessBoard possibleBoard = this.getPossibleBoard(move.getStartPosition(), move.getEndPosition());
-                            if (!this.pieceIsInDanger(possibleBoard.getKingPosition(teamColor), possibleBoard)){
+                            if (!possibleBoard.pieceIsInDanger(possibleBoard.getKingPosition(teamColor))){
                                 return false;
                             }
                         }
@@ -239,7 +239,7 @@ public class ChessGame {
             otherwise return false
              */
             ChessPosition king_pos = this.board.getKingPosition(teamColor);
-            if (!this.pieceIsInDanger(king_pos, this.board)){
+            if (!this.board.pieceIsInDanger(king_pos)){
                 Collection<ChessPosition> piece_locations = this.board.getPieceLocations(teamColor);
                 for (ChessPosition piece_location : piece_locations) {
                     Collection<ChessMove> moves = this.validMoves(piece_location);
@@ -251,18 +251,6 @@ public class ChessGame {
             }
             return false;
         }
-
-    /**
-     * Checks to see if the piece at the given position is in danger of attack where it currently is.
-     * @param position the ChessPosition of the piece that is being inquired.
-     * @param board The ChessBoard to check
-     * @return True if the piece is in danger of attack by an enemy, returns false otherwise.
-     */
-    public boolean pieceIsInDanger(ChessPosition position, ChessBoard board){
-        ChessPiece piece = board.getPiece(position);
-        Collection<ChessMove> enemy_moves = board.getEnemyMovesHere(piece.getTeamColor(), position);
-        return !(enemy_moves.isEmpty());
-    }
 
     /**
      * Moves a piece in a copy of the ChessBoard to a new position to test

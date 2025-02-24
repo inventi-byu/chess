@@ -51,6 +51,18 @@ public class ChessBoard {
     public boolean isPieceHere(ChessPosition position){
         return (this.getPiece(position) != null);
     }
+
+    /**
+     * Checks to see if the piece at the given position is in danger of attack where it currently is.
+     * @param position the ChessPosition of the piece that is being inquired.
+     * @return True if the piece is in danger of attack by an enemy, returns false otherwise.
+     */
+    public boolean pieceIsInDanger(ChessPosition position){
+        ChessPiece piece = this.getPiece(position);
+        Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(piece.getTeamColor(), position);
+        return !(enemy_moves.isEmpty());
+    }
+
     /**
      * A function to get the ChessPosition of the king of a given team.
      *
