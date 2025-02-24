@@ -293,7 +293,7 @@ public class ChessGame {
 
 
 //            ChessPiece generic_test_piece = new ChessPiece(teamColor, null);
-//         //   ChessBoard potentialBoard = this.getPossibleBoard(teamColor, position;
+//         //   ChessBoard potentialBoard = this.getPossibleBoard(teamColor, position);
 //            ChessGame.TeamColor enemyColor = this.
 //             ArrayList<ChessPosition> enemyLocations = this.getPieceLocations(teamColor);
 //            for (int i = 1; i < 9; i++) {
@@ -305,7 +305,7 @@ public class ChessGame {
 //                        for (ChessMove move : moves) {
 //                            // OK so the problem with this right now, is that when you call pieceMoves on the piece, it will only return valid moves
 //                            // for where the pieces currently are. If I ask it for its moves, it will not be calculating based on if
-//                            // the king were at the position we want to look at where if could potentially go, because
+//                            // the king were at the position we want to look at where it could potentially go, because
 //                            // the king is not currently there. Somehow we need to tell pieceMoves that the king is
 //                            // no longer "at" it's current position, but to calculate moves based on the board where
 //                            // the king is in a different position, the position in question that we get passed in as one of the arguments.
@@ -354,55 +354,39 @@ public class ChessGame {
             return !(enemy_moves.isEmpty());
     }
 
+    /**
+     * Moves a piecein a copy of the ChessBoard to a new position to test
+     * moves as if the piece were at that position (to meet requirements for
+     * checkmate)
+     *
+     * @param newPosition A ChessPosition representing the position of the piece to be moved.
+     * @param newPosition The new position to move the piece to.
+     *
+     * @return A ChessBoard that is the current board with the king moved to a different position.
+     */
+    public ChessBoard getPossibleBoard(ChessPosition oldPosition, ChessPosition newPosition) {
+        ChessBoard possibleBoard = this.board.copy();
+        ChessPiece piece = possibleBoard.getPiece(oldPosition);
+        possibleBoard.removePiece(oldPosition);
+        possibleBoard.addPiece(newPosition, piece);
+        return possibleBoard;
+    }
 
-    //    /**
-    //     * Determines if a given king is in danger of being attacked
-    //     *
-    //     * @param teamColor which team's king to see if they are in danger
-    //     * @return true if there is a move from the enemy that can be done against the king
-    //     */
-    //    private boolean kingIsInDanger(ChessGame.TeamColor teamColor) {
-    //        ChessPosition king_pos = this.board.getKingPosition(teamColor);
-    //        // We'll need to use a king piece, but not put it on the board just to refer to it for isEnemy()
-    //        ChessPiece king_copy = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
-    //        Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(teamColor, king_pos);
-    //        // If the enemy has no moves to the king space, it is not in danger
-    //        return !(enemy_moves.isEmpty());
-    //    }
+    /**
+     * Sets this game's chessboard with a given board
+     *
+     * @param board the new board to use
+     */
+    public void setBoard(ChessBoard board) {
+        this.board = board;
+    }
 
-        /**
-         * Moves a piecein a copy of the ChessBoard to a new position to test
-         * moves as if the piece were at that position (to meet requirements for
-         * checkmate)
-         *
-         * @param newPosition A ChessPosition representing the position of the piece to be moved.
-         * @param newPosition The new position to move the piece to.
-         *
-         * @return A ChessBoard that is the current board with the king moved to a different position.
-         */
-        public ChessBoard getPossibleBoard(ChessPosition oldPosition, ChessPosition newPosition) {
-            ChessBoard possibleBoard = this.board.copy();
-            ChessPiece piece = possibleBoard.getPiece(oldPosition);
-            possibleBoard.removePiece(oldPosition);
-            possibleBoard.addPiece(newPosition, piece);
-            return possibleBoard;
-        }
-
-        /**
-         * Sets this game's chessboard with a given board
-         *
-         * @param board the new board to use
-         */
-        public void setBoard(ChessBoard board) {
-            this.board = board;
-        }
-
-        /**
-         * Gets the current chessboard
-         *
-         * @return the chessboard
-         */
-        public ChessBoard getBoard() {
-            return this.board;
-        }
+    /**
+     * Gets the current chessboard
+     *
+     * @return the chessboard
+     */
+    public ChessBoard getBoard() {
+        return this.board;
+    }
 }
