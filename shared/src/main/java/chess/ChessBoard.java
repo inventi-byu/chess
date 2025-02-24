@@ -74,6 +74,30 @@ public class ChessBoard {
     }
 
     /**
+     * Gives a list of all the piece ChessPositions for the specified team.
+     * @param teamColor the TeamColor to check.
+     * @return an ArrayList of all the piece ChessPositions for the specified team.
+     */
+    public ArrayList<ChessPosition> getPieceLocations(ChessGame.TeamColor teamColor) {
+        ArrayList<ChessPosition> locations = new ArrayList<ChessPosition>();
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
+                ChessPosition cur_pos = new ChessPosition(i,j);
+                if (this.isPieceHere(cur_pos)){
+                    ChessPiece cur_piece = this.getPiece(cur_pos);
+
+                    // If this piece is the color we want to get...add it to the list.
+                    if (cur_piece.getTeamColor() == teamColor){
+                        locations.add(cur_pos);
+                    }
+
+                }
+            }
+        }
+        return locations;
+    }
+
+    /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */

@@ -178,7 +178,7 @@ public class ChessGame {
                     we're in checkmate because we never passed the test above.
 
                      */
-                    for (ChessPosition pieceLocation : this.getPieceLocations(teamColor)){
+                    for (ChessPosition pieceLocation : this.board.getPieceLocations(teamColor)){
                         ChessPiece piece = this.board.getPiece(pieceLocation);
                         Collection<ChessMove> moves = piece.pieceMoves(this.board, pieceLocation);
                         for (ChessMove move : moves){
@@ -276,7 +276,7 @@ public class ChessGame {
              */
             ChessPosition king_pos = this.board.getKingPosition(teamColor);
             if (!this.pieceIsInDanger(king_pos, this.board)){
-                Collection<ChessPosition> piece_locations = this.getPieceLocations(teamColor);
+                Collection<ChessPosition> piece_locations = this.board.getPieceLocations(teamColor);
                 for (ChessPosition piece_location : piece_locations) {
                     Collection<ChessMove> moves = this.validMoves(piece_location);
                     if(!moves.isEmpty()){
@@ -305,7 +305,7 @@ public class ChessGame {
                 enemy_color = TeamColor.WHITE;
             }
 
-            ArrayList<ChessPosition> enemy_locations = this.getPieceLocations(enemy_color);
+            ArrayList<ChessPosition> enemy_locations = this.board.getPieceLocations(enemy_color);
             for (ChessPosition enemy_location : enemy_locations){
                 ChessPiece cur_enemy_piece = board.getPiece(enemy_location);
                 Collection<ChessMove> moves = cur_enemy_piece.pieceMoves(board, enemy_location);
@@ -317,30 +317,6 @@ public class ChessGame {
             }
             return enemy_moves;
         }
-
-    /**
-     * Gives a list of all the piece ChessPositions for the specified team.
-     * @param teamColor the TeamColor to check.
-     * @return an ArrayList of all the piece ChessPositions for the specified team.
-     */
-    public ArrayList<ChessPosition> getPieceLocations(ChessGame.TeamColor teamColor) {
-        ArrayList<ChessPosition> locations = new ArrayList<ChessPosition>();
-        for (int i = 1; i < 9; i++) {
-            for (int j = 1; j < 9; j++) {
-                ChessPosition cur_pos = new ChessPosition(i,j);
-                if (this.board.isPieceHere(cur_pos)){
-                    ChessPiece cur_piece = this.board.getPiece(cur_pos);
-
-                    // If this piece is the color we want to get...add it to the list.
-                    if (cur_piece.getTeamColor() == teamColor){
-                        locations.add(cur_pos);
-                    }
-
-                }
-            }
-        }
-        return locations;
-    }
 
     /**
      * Checks to see if the piece at the given position is in danger of attack where it currently is.
