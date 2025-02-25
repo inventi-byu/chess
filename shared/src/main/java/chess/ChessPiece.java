@@ -13,11 +13,12 @@ public class ChessPiece {
 
     ChessGame.TeamColor color;
     ChessPiece.PieceType type;
-    boolean hasMoved; // Has piece moved since start of game?
+    // boolean hasMoved; // Has piece moved since start of game?
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.color = pieceColor;
         this.type = type;
+        // this.hasMoved = false;
     }
 
     /**
@@ -54,28 +55,22 @@ public class ChessPiece {
         this.type = type;
     }
 
-    /**
-     * Calculates all the positions a chess piece can move to
-     * Does not take into account moves that are illegal due to leaving the king in
-     * danger
-     *
-     * @return Collection of valid moves
-     */
 
-    /**
-     * Returns if the piece has moved since the start of the game.
-     */
-    public boolean getHasMoved(){
-        return this.hasMoved;
-    }
 
-    /**
-     * Sets if the piece has moved since the start of the game.
-     * @param hasMoved whether the piece has moved since the start of the game (true or false).
-     */
-    public void setHasMoved(boolean hasMoved){
-        this.hasMoved = hasMoved;
-    }
+//    /**
+//     * Returns if the piece has moved since the start of the game.
+//     */
+//    public boolean getHasMoved(){
+//        return this.hasMoved;
+//    }
+//
+//    /**
+//     * Sets if the piece has moved since the start of the game.
+//     * @param hasMoved whether the piece has moved since the start of the game (true or false).
+//     */
+//    public void setHasMoved(boolean hasMoved){
+//        this.hasMoved = hasMoved;
+//    }
 
     /**
      * Tells if the given piece is an enemy (has a different team color) to this piece.
@@ -95,6 +90,15 @@ public class ChessPiece {
         return this.getTeamColor() == piece.getTeamColor();
     }
 
+    /**
+     * Calculates all the positions a chess piece can move to
+     * Does not take into account moves that are illegal due to leaving the king in
+     * danger
+     * @param board The ChessBoard on which the piece is located
+     * @param myPosition The ChessPosition of the piece on that ChessBoard.
+     *
+     * @return Collection of valid moves
+     */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         PieceMovesCalculator calc = new PieceMovesCalculator(board, this, myPosition);
         return calc.moves();

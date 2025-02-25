@@ -132,10 +132,12 @@ public class ChessGame {
                 this.setTeamTurn(TeamColor.WHITE);
             }
 
+            /*
             // For castling
             if(!piece.getHasMoved()){
                 piece.setHasMoved(true);
-                }
+            }
+             */
         }
 
         /**
@@ -164,9 +166,7 @@ public class ChessGame {
             return true
             otherwise
             return false
-
              */
-
 
             if (this.isInCheck(teamColor)){
                 if (this.safeMoves(this.board.getKingPosition(teamColor)).isEmpty() ){
@@ -176,7 +176,6 @@ public class ChessGame {
                         if it can
                             we are not in checkmate
                     we're in checkmate because we never passed the test above.
-
                      */
                     for (ChessPosition pieceLocation : this.board.getPieceLocations(teamColor)){
                         ChessPiece piece = this.board.getPiece(pieceLocation);
@@ -200,8 +199,6 @@ public class ChessGame {
          * @return An ArrayList of safe moves, if there are any, and an empty list if there are none.
          */
         public Collection<ChessMove> safeMoves(ChessPosition position){
-
-
             /*
             make the safe move list
             get the piece
