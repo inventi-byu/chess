@@ -11,11 +11,15 @@ import java.util.*;
  */
 public class ChessBoard {
 
-    ChessPiece[][] board;
+    private ChessPiece[][] board;
 
     public ChessBoard() {
-        board = new ChessPiece[8][8];
+        this.board = new ChessPiece[8][8];
         //this.resetBoard();
+    }
+
+    public ChessPiece getPiece(ChessPosition position) {
+        return this.board[position.getRow()-1][position.getColumn()-1];
     }
 
     /**
@@ -37,10 +41,6 @@ public class ChessBoard {
 
     public void removePiece(ChessPosition position){
         this.board[position.getRow()-1][position.getColumn()-1] = null;
-    }
-
-    public ChessPiece getPiece(ChessPosition position) {
-        return this.board[position.getRow()-1][position.getColumn()-1];
     }
 
     /**
