@@ -9,9 +9,9 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessMove {
-    public ChessPosition start;
-    public ChessPosition end;
-    public ChessPiece.PieceType promp;
+    private ChessPosition start;
+    private ChessPosition end;
+    private ChessPiece.PieceType promp;
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
