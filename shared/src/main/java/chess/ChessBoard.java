@@ -141,7 +141,7 @@ public class ChessBoard {
         }
         return enemy_moves;
     }
-    
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)

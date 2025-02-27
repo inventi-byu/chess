@@ -68,7 +68,7 @@ public class ChessGame {
             Collection<ChessMove> piece_moves = piece.pieceMoves(this.board, startPosition);
 
             for (ChessMove move : piece_moves){
-                // Get the end_pos, and move the piece to it's potential position after this move.
+                // Get the end_pos, and move the piece to its potential position after this move.
                 // Then find the piece's king on the possibleBoard.
                 ChessPosition end_pos = move.getEndPosition();
                 ChessBoard possibleBoard = this.getPossibleBoard(startPosition, end_pos);
@@ -107,7 +107,9 @@ public class ChessGame {
             if (piece.getTeamColor() != cur_team_turn){
                 throw new InvalidMoveException("It is not this team's turn!");
             }
+
             Collection<ChessMove> valid_moves = this.validMoves(piece_start_pos);
+
             boolean isAValidMove = false;
             for (ChessMove valid_move : valid_moves){
                 if (move.equals(valid_move)){
@@ -131,13 +133,6 @@ public class ChessGame {
             } else {
                 this.setTeamTurn(TeamColor.WHITE);
             }
-
-            /*
-            // For castling
-            if(!piece.getHasMoved()){
-                piece.setHasMoved(true);
-            }
-             */
         }
 
         /**
