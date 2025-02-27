@@ -9,8 +9,8 @@ import java.util.*;
  * signature of the existing methods.
  */
 public class ChessPosition {
-    int r;
-    int c;
+    private int r;
+    private int c;
 
     public ChessPosition(int row, int col) {
         this.r = row;
@@ -33,21 +33,14 @@ public class ChessPosition {
         return this.c;
     }
 
-    @Override
-    public String toString() {
-        return "ChessPosition{" + r +
-                ", " + c +
-                '}';
+    public boolean isPromotionEdge(ChessGame.TeamColor color){
+        return ( (color == ChessGame.TeamColor.WHITE && this.r == 8)  || (color == ChessGame.TeamColor.BLACK && this.r == 1));
     }
 
     public boolean isInBounds(){
         // Remember this is the chess boundaries, not array boundaries
         // This is 1 indexed, not 0 indexed
         return (this.r > 0 && this.r < 9 && this.c > 0 && this.c < 9);
-    }
-
-    public boolean isPromotionEdge(ChessGame.TeamColor color){
-        return ( (color == ChessGame.TeamColor.WHITE && this.r == 8)  || (color == ChessGame.TeamColor.BLACK && this.r == 1));
     }
 
     @Override
@@ -62,5 +55,12 @@ public class ChessPosition {
     @Override
     public int hashCode(){
         return Objects.hash(this.r, this.c);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessPosition{" + r +
+                ", " + c +
+                '}';
     }
 }

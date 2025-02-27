@@ -11,8 +11,8 @@ import java.util.*;
  */
 public class ChessPiece {
 
-    ChessGame.TeamColor color;
-    ChessPiece.PieceType type;
+    private ChessGame.TeamColor color;
+    private ChessPiece.PieceType type;
     // boolean hasMoved; // Has piece moved since start of game?
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
@@ -54,23 +54,6 @@ public class ChessPiece {
     public void setPieceType(ChessPiece.PieceType type){
         this.type = type;
     }
-
-
-
-//    /**
-//     * Returns if the piece has moved since the start of the game.
-//     */
-//    public boolean getHasMoved(){
-//        return this.hasMoved;
-//    }
-//
-//    /**
-//     * Sets if the piece has moved since the start of the game.
-//     * @param hasMoved whether the piece has moved since the start of the game (true or false).
-//     */
-//    public void setHasMoved(boolean hasMoved){
-//        this.hasMoved = hasMoved;
-//    }
 
     /**
      * Tells if the given piece is an enemy (has a different team color) to this piece.
@@ -120,7 +103,7 @@ public class ChessPiece {
 
     @Override
     public String toString() {
-        return "ChessPiece{" + color + " " + type +
+        return "ChessPiece{" + this.color + " " + this.type +
                 '}';
     }
 }
