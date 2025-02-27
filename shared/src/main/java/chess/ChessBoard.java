@@ -15,9 +15,15 @@ public class ChessBoard {
 
     public ChessBoard() {
         this.board = new ChessPiece[8][8];
-        //this.resetBoard();
     }
 
+    /**
+     * Gets a chess piece on the chessboard
+     *
+     * @param position The position to get the piece from
+     * @return Either the piece at the position, or null if no piece is at that
+     * position
+     */
     public ChessPiece getPiece(ChessPosition position) {
         return this.board[position.getRow()-1][position.getColumn()-1];
     }
@@ -26,19 +32,17 @@ public class ChessBoard {
      * Adds a chess piece to the chessboard
      *
      * @param position where to add the piece to
-     * @param piece    the piece to add
+     * @param piece the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         this.board[position.getRow()-1][position.getColumn()-1] = piece;
     }
-    /**
-     * Gets a chess piece on the chessboard
-     *
-     * @param position The position to get the piece from
-     * @return Either the piece at the position, or null if no piece is at that
-     * position
-     */
 
+    /**
+     * Removes a chess piece to the chessboard
+     *
+     * @param position position of piece to remove
+     */
     public void removePiece(ChessPosition position){
         this.board[position.getRow()-1][position.getColumn()-1] = null;
     }
@@ -46,7 +50,7 @@ public class ChessBoard {
     /**
      * Tells you if there is a piece at a given ChessPosition, or if it is null.
      * @param position the ChessPosition to check.
-     * @return True if there is a piece, False if it is null.
+     * @return true if there is a piece, false if it is null.
      */
     public boolean isPieceHere(ChessPosition position){
         return (this.getPiece(position) != null);
@@ -55,7 +59,7 @@ public class ChessBoard {
     /**
      * Checks to see if the piece at the given position is in danger of attack where it currently is.
      * @param position the ChessPosition of the piece that is being inquired.
-     * @return True if the piece is in danger of attack by an enemy, returns false otherwise.
+     * @return true if the piece is in danger of attack by an enemy, returns false otherwise.
      */
     public boolean pieceIsInDanger(ChessPosition position){
         ChessPiece piece = this.getPiece(position);
@@ -91,7 +95,7 @@ public class ChessBoard {
      * @return an ArrayList of all the piece ChessPositions for the specified team.
      */
     public ArrayList<ChessPosition> getPieceLocations(ChessGame.TeamColor teamColor) {
-        ArrayList<ChessPosition> locations = new ArrayList<ChessPosition>();
+        ArrayList<ChessPosition> piece_locations = new ArrayList<ChessPosition>();
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
                 ChessPosition cur_pos = new ChessPosition(i,j);
@@ -100,13 +104,13 @@ public class ChessBoard {
 
                     // If this piece is the color we want to get...add it to the list.
                     if (cur_piece.getTeamColor() == teamColor){
-                        locations.add(cur_pos);
+                        piece_locations.add(cur_pos);
                     }
 
                 }
             }
         }
-        return locations;
+        return piece_locations;
     }
 
     /**
@@ -118,7 +122,7 @@ public class ChessBoard {
     public Collection<ChessMove> getEnemyMovesHere(ChessGame.TeamColor teamColor, ChessPosition position) {
         ArrayList<ChessMove> enemy_moves = new ArrayList<ChessMove>();
 
-        ChessGame.TeamColor enemy_color;
+        ChessGame.TeamColor enemy_color = null;
         if (teamColor == ChessGame.TeamColor.WHITE){
             enemy_color = ChessGame.TeamColor.BLACK;
         } else{
@@ -137,8 +141,7 @@ public class ChessBoard {
         }
         return enemy_moves;
     }
-
-
+    
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
