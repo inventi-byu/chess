@@ -45,9 +45,14 @@ public class MemoryAuthDAO implements AuthDAO {
     /**
      * Removes an AuthData from the database
      * @param authData the AuthData to remove
-     * @return true if the AuthData was successfully removed
+     * @return true if the AuthData was successfully removed, return false if nothing to remove
      */
-    public boolean deleteAuth(AuthData authData);
+    public boolean deleteAuth(AuthData authData){
+        if(this.authExists(authData)){
+            this.authDB.remove(authData.authToken());
+        }
+        return false;
+    };
 
 
 }
