@@ -34,7 +34,11 @@ public class MemoryAuthDAO implements AuthDAO {
      * @return true if the AuthData was added to the database
      */
     public boolean createAuth(AuthData authData){
-        if(this.getAuth(authData.authToken()) != null):
+        if(this.authExists(authData)){
+            return false;
+        }
+        this.authDB.put(authData.authToken(), authData.username());
+        return true;
 
     };
 
