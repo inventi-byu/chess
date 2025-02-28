@@ -26,14 +26,17 @@ public class MemoryAuthDAO implements AuthDAO {
         }
         return null;
     };
-    
+
 
     /**
      * Adds an AuthData to the database.
      * @param authData the AuthData to add
      * @return true if the AuthData was added to the database
      */
-    public boolean createAuth(AuthData authData){};
+    public boolean createAuth(AuthData authData){
+        if(this.getAuth(authData.authToken()) != null):
+
+    };
 
     /**
      * Removes an AuthData from the database

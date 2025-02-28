@@ -23,4 +23,11 @@ public interface AuthDAO {
      */
     public boolean deleteAuth(AuthData authData);
 
+    public default boolean authExists(AuthData authData){
+        if (this.getAuth(authData.authToken()) != null){
+            return true;
+        }
+        return false;
+    }
+
 }
