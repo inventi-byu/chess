@@ -1,5 +1,6 @@
 package server;
 
+import com.google.gson.*;
 import spark.*;
 
 public class Server {
@@ -88,6 +89,15 @@ public class Server {
      * @return Not sure yet
      */
     public Object clear(Request req, Response res){
+        // TODO: Not sure if this is right but it will do for now.
+//        // Create the request object from JSON
+//        ClearRequest clearRequest = new Gson().fromJson(req.body(), ClearRequest);
+//        // Create a new handler for database functions
+//        ClearHandler handler = new ClearHandler();
+//        // Update the status of the response based on what the handler does
+//        res.status(handler.handleClear(ClearRequest));
+//        return "";
+
         throw new RuntimeException("Server.clear() is not implemented!");
     }
 }
