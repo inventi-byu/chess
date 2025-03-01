@@ -1,6 +1,6 @@
 package service;
 
-public enum RequestType {
+public enum RequestMethod {
     GET,
     POST,
     PUT,

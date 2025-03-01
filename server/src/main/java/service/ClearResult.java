@@ -1,4 +1,4 @@
 package service;
 
-public class ClearResult extends Result {
+public record ClearResult(int status, String error_message) {
 }
