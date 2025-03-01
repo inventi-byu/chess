@@ -9,7 +9,7 @@ public class ClearService {
     }
 
     public ClearResult clear(ClearRequest request){
-        if (request.method() == RequestMethod.DELETE){
+        if (request.getMethod() == RequestMethod.DELETE){
             MemoryAdminDAO adminDAO = new MemoryAdminDAO();
             if (adminDAO.clear()){
                 return new ClearResult(200, "");
