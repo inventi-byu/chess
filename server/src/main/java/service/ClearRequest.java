@@ -2,15 +2,14 @@ package service;
 
 public class ClearRequest {
 
-    private RequestMethod method;
-    private String errorMessage;
+    private String requestMethod;
 
-    public ClearRequest(RequestMethod method){
-        this.method = method;
+    public ClearRequest(String requestMethod){
+        this.requestMethod = requestMethod;
     }
 
-    public RequestMethod getMethod(){
-        return this.method;
+    public String getRequestMethod(){
+        return this.requestMethod;
     }
 
 }

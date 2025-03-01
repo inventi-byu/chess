@@ -3,27 +3,27 @@ package service;
 public class ClearResult {
 
     private int status;
-    private String errorMessage;
+    private String message;
 
-    public ClearResult(int status, String errorMessage){
+    public ClearResult(int status, String message){
         this.status = status;
-        this.errorMessage = errorMessage;
+        this.message = message;
     }
 
     public int getStatus(){
         return this.status;
     }
 
-    public String getErrorMessage(){
-        return this.errorMessage;
+    public String getMessage(){
+        return this.message;
     }
 
     @Override
 
     public String toString(){
         return ("ClearResult(status = " +
-                status + ", errorMessage = " +
-                errorMessage
+                status + ", message = " +
+                message
                 );
     }
 

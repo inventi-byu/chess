@@ -1,6 +1,8 @@
 package server;
 
 import com.google.gson.*;
+import handler.ClearHandler;
+import service.ClearService;
 import spark.*;
 
 public class Server {
@@ -11,6 +13,7 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
+        Spark.delete("/db", this::clear);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
@@ -90,14 +93,11 @@ public class Server {
      */
     public Object clear(Request req, Response res){
         // TODO: Not sure if this is right but it will do for now.
-//        // Create the request object from JSON
-//        ClearRequest clearRequest = new Gson().fromJson(req.body(), ClearRequest);
-//        // Create a new handler for database functions
-//        ClearHandler handler = new ClearHandler();
-//        // Update the status of the response based on what the handler does
-//        res.status(handler.handleClear(ClearRequest));
-//        return "";
-
-        throw new RuntimeException("Server.clear() is not implemented!");
+        ClearHandler handler = new ClearHandler();
+        res = handler.handle(req, res);
+        // this may not work because res doesn't do anything?
+        // However, since the same res object in memory is passed into the function
+        // I assume instead of making a copy, this may work.
+        return "";
     }
 }
