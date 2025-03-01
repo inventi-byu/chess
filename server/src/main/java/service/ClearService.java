@@ -6,7 +6,7 @@ public class ClearService {
     }
 
     public ClearResult clearDB(ClearRequest request){
-        if (request.getType() == DELETE)
+        if (request.getType() == RequestType.DELETE)
     }
 
 
