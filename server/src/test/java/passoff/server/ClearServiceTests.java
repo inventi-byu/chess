@@ -8,6 +8,6 @@ public class ClearServiceTests {
     @Test
     public void clearDatabase(){
         ClearService clearservice = new ClearService();
-        assert clearservice.clearDB(new ClearRequest(method= RequestMethod.DELETE)) == true;
+        assert clearservice.clear(new ClearRequest(method= RequestMethod.DELETE)) == true;
     }
 }

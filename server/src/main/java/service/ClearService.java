@@ -1,14 +1,21 @@
 package service;
 
+import dataaccess.MemoryAdminDAO;
+
 public class ClearService {
 
     public ClearService(){
 
     }
 
-    public ClearResult clearDB(ClearRequest request){
-        //if (request.getType() == RequestType.DELETE)
-        return null;
+    public ClearResult clear(ClearRequest request){
+        if (request.method() == RequestMethod.DELETE){
+            MemoryAdminDAO adminDAO = new MemoryAdminDAO();
+            if (adminDAO.clear()){
+                return new ClearResult(200, "");
+            };
+        }
+        return new ClearResult(500, "Error: Invalid method");
     }
 
 
