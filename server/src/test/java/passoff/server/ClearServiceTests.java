@@ -5,12 +5,15 @@ import service.RequestMethod;
 import service.ClearRequest;
 import service.ClearResult;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class ClearServiceTests {
 
+
     @Test
-    public void clearDatabase(){
+    public void clearDatabaseTest(){
         ClearService clearservice = new ClearService();
         ClearResult result = clearservice.clear(new ClearRequest(RequestMethod.DELETE));
-        assert result.equals(new ClearResult(200, ""));
+        assertEquals(new ClearResult(200, ""), result);
     }
 }
