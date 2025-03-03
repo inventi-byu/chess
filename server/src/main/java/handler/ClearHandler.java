@@ -28,7 +28,7 @@ public class ClearHandler {
         res.status(result.getStatus());
         String message = result.getMessage();
         if (!message.isEmpty()){
-            res.header("message", message);
+            res.body(message);
             // TODO: Should I put that in the body rather than a header?
         }
         return res;
