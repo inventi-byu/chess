@@ -2,7 +2,9 @@ package server;
 
 import com.google.gson.*;
 import handler.ClearHandler;
+import handler.UserHandler;
 import service.ClearService;
+import service.RegisterRequest;
 import service.ResponseException;
 import spark.*;
 
@@ -47,9 +49,8 @@ public class Server {
      * @return Not sure yet
      */
     public Object registerUser(Request req, Response res){
-        RegisterRequest request = new Gson().fromJson(res.body(), RegisterRequest.class);
         UserHandler handler = new UserHandler();
-        res = handler.handleRegister(request);
+        res = handler.handleRegister(req, res);
         // return "";
         throw new RuntimeException("Server.registerUser() is not implemented!");
     }

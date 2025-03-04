@@ -2,7 +2,7 @@ package service;
 
 import dataaccess.MemoryAdminDAO;
 
-public class ClearService {
+public class ClearService extends Service {
 
     public ClearService(){
 

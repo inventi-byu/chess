@@ -1,5 +1,10 @@
 package handler;
 
+import model.UserData;
+import service.RegisterRequest;
+import service.UserService;
+import service.RegisterResult;
+
 import spark.Request;
 import spark.Response;
 import com.google.gson.Gson;
@@ -8,11 +13,11 @@ public class UserHandler {
     public UserHandler(){}
 
     public Response handleRegister(Request req, Response res){
-        RegisterRequest request = new Gson().fromJson(req.body(), RegisterRequest.class);
+        UserData userdata = new Gson().fromJson(req.body(), UserData.class);
         UserService service = new UserService();
-        RegisterResult result = service.register(request);
-        res.status(result.getStatusCode);
-        res.body(new Gson().toJson(result.getAuthData));
+        RegisterResult result = service.register(new RegisterRequest(userdata));
+        res.status(result.getStatusCode());
+        res.body(new Gson().toJson(result.getAuthData()));
         return res;
     };
 }

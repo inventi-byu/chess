@@ -1,19 +1,14 @@
 package service;
 
-public class RegisterRequest {
-    private String username;
-    private String password;
-    private String email;
+import model.UserData;
 
-    public RegisterRequest(String username, String password, String email){
-        this.username = username;
-        this.password = password;
-        this.email = email;
+public class RegisterRequest {
+    private UserData userData;
+
+    public RegisterRequest(UserData userData){
+        this.userData = userData;
     }
 
-    public String getUsername(){return this.username;}
+    public UserData getUserData(){return this.userData;}
 
-    public String getPassword(){return this.password;}
-
-    public String getEmail(){return this.email;}
 }
