@@ -14,8 +14,8 @@ public class LogoutService extends Service {
     }
 
     public LogoutResult logout(LogoutRequest request) throws ResponseException {
-        AuthData authData = this.authenticateWithToken(request.getAuthToken());
         // authenticateWithCredentials throws the errors
+        AuthData authData = this.authenticateWithToken(request.getAuthToken());
         if (this.authDAO.deleteAuth(authData)){
             return new LogoutResult(200);
         }

@@ -21,8 +21,10 @@ public class SessionHandler extends Handler {
     }
 
     /**
-     * Handles a clear request from http coming from the server endpoint
-     * @param req the request as a Spark request.
+     * Handles a login request via the login service.
+     * @param req the Spark request from the client
+     * @param res the Spark response to send back to the client
+     * @return A JSON string of the AuthData returned from the login service.
      */
     public String handleLogin(Request req, Response res) throws ResponseException {
         LoginRequest request = new Gson().fromJson(req.body(), LoginRequest.class);
@@ -31,11 +33,14 @@ public class SessionHandler extends Handler {
         return new Gson().toJson(result.getAuthData());
     }
 
+    /**
+     * Handles a logout request via the login service.
+     * @param req the Spark request from the client
+     * @param res the Spark response to send back to the client
+     * @return an empty string (200 success response).
+     */
     public String handleLogout(Request req, Response res) throws ResponseException {
         String authToken = req.headers("authorization");
-        if(authToken.isEmpty()){
-            throw new ResponseException(401, "Error: not authorized");
-        }
         LogoutRequest request = new LogoutRequest(authToken);
         LogoutResult result = this.logoutService.logout(request);
 
