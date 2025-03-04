@@ -2,7 +2,7 @@ package handler;
 
 import model.UserData;
 import service.request.RegisterRequest;
-import service.ResponseException;
+import service.exception.ResponseException;
 import service.UserService;
 import service.result.RegisterResult;
 

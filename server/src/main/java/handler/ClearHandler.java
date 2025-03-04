@@ -3,7 +3,7 @@ package handler;
 import service.request.ClearRequest;
 import service.result.ClearResult;
 import service.ClearService;
-import service.ResponseException;
+import service.exception.ResponseException;
 import spark.Request;
 import spark.Response;
 

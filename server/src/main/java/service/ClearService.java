@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.*;
+import service.exception.ResponseException;
 import service.request.ClearRequest;
 import service.result.ClearResult;
 

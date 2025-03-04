@@ -2,6 +2,7 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import service.exception.ResponseException;
 
 import java.util.UUID;
 
