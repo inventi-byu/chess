@@ -9,10 +9,11 @@ public class ResponseException extends RuntimeException {
 
     public ResponseException(int statusCode, String message) {
         super(message);
+        this.statusCode = statusCode;
     }
 
     public String toJson(){
-        return new Gson().toJson(Map.of("status", this.getStatusCode(), "message", this.getMessage()));
+        return new Gson().toJson(Map.of("message", this.getMessage()));
     }
 
     public int getStatusCode(){
