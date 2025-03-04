@@ -3,6 +3,7 @@ package server;
 import com.google.gson.*;
 import handler.ClearHandler;
 import handler.UserHandler;
+import org.eclipse.jetty.server.session.SessionHandler;
 import service.ClearService;
 import service.RegisterRequest;
 import service.ResponseException;
@@ -60,6 +61,8 @@ public class Server {
      * @return Not sure yet
      */
     public Object loginUser(Request req, Response res){
+        SessionHandler handler = new SessionHandler();
+        return handler.handleLogin(req, res);
         throw new RuntimeException("Server.loginUser() is not implemented!");
     }
     /**
@@ -106,7 +109,6 @@ public class Server {
      */
     public Object clear(Request req, Response res) throws ResponseException {
         ClearHandler handler = new ClearHandler();
-        res = handler.handle(req, res);
-        return "";
+        return handler.handle(req, res);
     }
 }

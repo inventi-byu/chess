@@ -16,7 +16,7 @@ public class ClearHandler {
      * Handles a clear request from http coming from the server endpoint
      * @param req the request as a Spark request.
      */
-    public Response handle(Request req, Response res) throws ResponseException  {
+    public String handle(Request req, Response res) throws ResponseException  {
         /*
         Convert json to a request
         call the service function and get the result, convert the result into a json, and return that.
@@ -28,7 +28,7 @@ public class ClearHandler {
         // No message for successful clear requests
         res.status(result.getStatus());
 
-        return res;
+        return "";
     }
 
 

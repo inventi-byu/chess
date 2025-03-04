@@ -2,17 +2,15 @@ package service;
 
 import model.AuthData;
 
-public class RegisterResult {
-
+public class LoginResult {
     private int status;
     private AuthData authData;
 
-    public RegisterResult(int status, AuthData authData){
-        this.status = status;
+    public LoginResult(int status, AuthData authData){
         this.authData = authData;
     }
 
-    public int getStatusCode(){
+    public int getStatus(){
         return this.status;
     }
 
@@ -22,7 +20,7 @@ public class RegisterResult {
 
     @Override
     public String toString(){
-        return ("ClearResult(status = " +
+        return ("LoginResult(status = " +
                 status + ", AuthData = " +
                 this.getAuthData().toString()
         );
@@ -30,14 +28,12 @@ public class RegisterResult {
 
     @Override
     public boolean equals(Object o){
-        if (o instanceof RegisterResult){
-            RegisterResult obj = (RegisterResult)o;
-            if(this.getStatusCode() == obj.getStatusCode() && this.authData.equals(obj.authData)){
+        if (o instanceof LoginResult){
+            LoginResult obj = (LoginResult)o;
+            if(this.getStatus() == obj.getStatus() && this.authData.equals(obj.authData)){
                 return true;
             }
         }
         return false;
     }
-
 }
-
