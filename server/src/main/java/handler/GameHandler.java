@@ -34,4 +34,13 @@ public class GameHandler {
         res.status(result.getStatus());
         return new Gson().toJson(Map.of("games", result.getGames()));
     }
+
+    public String handleJoinGame(Request req, Response res){
+        String authToken = req.headers("authorization");
+        JoinGameRequest request = new Gson().fromJson(req.body(), JoinGameRequest.class);
+        request.setAuthorization(authToken);
+        JoinGameResult result = this.gameService.joinGame(request);
+        res.status(result.getStatus());
+        return "";
+    }
 }
