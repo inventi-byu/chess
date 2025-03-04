@@ -11,7 +11,7 @@ public class MemoryAuthDAO implements AuthDAO {
     Map<String, String> authDB;
 
     public MemoryAuthDAO(){
-        this.authDB = new HashMap<>();
+        this.authDB = new HashMap<String, String>();
     }
 
     /**
@@ -54,5 +54,8 @@ public class MemoryAuthDAO implements AuthDAO {
         return false;
     };
 
+    public void clearAuthTable(){
+        this.authDB = new HashMap<String, String>();
+    }
 
 }

@@ -1,16 +1,62 @@
 package server;
 
 import com.google.gson.*;
+import dataaccess.MemoryAdminDAO;
+import dataaccess.MemoryAuthDAO;
+import dataaccess.MemoryGameDAO;
+import dataaccess.MemoryUserDAO;
 import handler.ClearHandler;
 import handler.UserHandler;
 import handler.SessionHandler;
+import org.eclipse.jetty.server.Authentication;
 import service.ClearService;
 import service.RegisterRequest;
+import service.*;
 import service.ResponseException;
 import spark.*;
 
 
 public class Server {
+
+    private MemoryAuthDAO authDAO = new MemoryAuthDAO();
+    private MemoryUserDAO userDAO = new MemoryUserDAO();
+    private MemoryAdminDAO adminDAO = new MemoryAdminDAO();
+    private MemoryGameDAO gameDAO = new MemoryGameDAO();
+
+    private ClearService ClearService;
+    private UserService UserService;
+    private LoginService LoginService;
+    private LogoutService LogoutService;
+    //private GameService GameService;
+
+    private ClearHandler ClearHandler;
+    private UserHandler UserHandler;
+    private SessionHandler SessionHandler;
+    // private GameHandler GameHandler;
+
+
+
+    public Server(){
+
+        this.authDAO = new MemoryAuthDAO();
+        this.userDAO = new MemoryUserDAO();
+        this.adminDAO = new MemoryAdminDAO();
+        this.gameDAO = new MemoryGameDAO();
+
+        this.ClearService = new ClearService();
+        this.UserService = new UserService();
+        this.LoginService = new LoginService();
+        this.LogoutService = new LogoutService();
+        //this.GameService = new GameService();
+
+        this.ClearHandler = new ClearHandler();
+        this.UserHandler = new UserHandler();
+        this.SessionHandler = new SessionHandler();
+        //this.GameHandler = new GameHandler();
+
+
+
+    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -21,7 +67,7 @@ public class Server {
         Spark.delete("/db", this::clear);
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::loginUser);
-        // Spark.post("/session", this::logoutUser);
+        Spark.post("/session", this::logoutUser);
         Spark.exception(ResponseException.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
