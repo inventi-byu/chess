@@ -26,4 +26,12 @@ public class GameHandler {
         res.status(result.getStatus());
         return new Gson().toJson(Map.of("gameID", result.getGameID()));
     }
+
+    public String handleListGames(Request req, Response res){
+        String authToken = req.headers("authorization");
+        ListGamesRequest request = new ListGamesRequest(authToken);
+        ListGamesResult result = this.gameService.listGames(request);
+        res.status(result.getStatus());
+        return new Gson().toJson(result.getGames());
+    }
 }

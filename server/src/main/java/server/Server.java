@@ -127,6 +127,7 @@ public class Server {
      * @return Not sure yet
      */
     public Object listGames(Request req, Response res){
+        return this.GameHandler.handleListGames(req, res);
         throw new RuntimeException("Server.listGames() is not implemented!");
     }
     /**
