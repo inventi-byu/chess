@@ -47,6 +47,10 @@ public class Server {
      * @return Not sure yet
      */
     public Object registerUser(Request req, Response res){
+        RegisterRequest request = new Gson().fromJson(res.body(), RegisterRequest.class);
+        UserHandler handler = new UserHandler();
+        res = handler.handleRegister(request);
+        // return "";
         throw new RuntimeException("Server.registerUser() is not implemented!");
     }
     /**

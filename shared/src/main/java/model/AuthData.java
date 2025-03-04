@@ -2,7 +2,7 @@ package model;
 
 /**
  * A record for storing a user's authentication data
- * @param authToken the authorization token of the user
  * @param username the username with whom to associate the authToken
+ * @param authToken the authorization token of the user
  */
-public record AuthData(String authToken, String username) { }
+public record AuthData(String username, String authToken) { }

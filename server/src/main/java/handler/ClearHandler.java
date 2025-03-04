@@ -10,9 +10,7 @@ import spark.Response;
 
 public class ClearHandler {
 
-    public ClearHandler(){
-
-    }
+    public ClearHandler(){}
 
     /**
      * Handles a clear request from http coming from the server endpoint
