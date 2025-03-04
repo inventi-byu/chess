@@ -32,7 +32,7 @@ public class Service {
             // Invalid password, not authorized
             throw new ResponseException(401, "Error: unauthorized");
         }
-        throw new ResponseException(500, "Error: user could not be found");
+        throw new ResponseException(401, "Error: unauthorized");
     }
 
     public AuthData authenticateWithToken(String authToken) throws ResponseException {
