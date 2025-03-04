@@ -18,6 +18,7 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", this::clear);
+        Spark.post("/user", this::registerUser);
         Spark.exception(ResponseException.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
@@ -48,11 +49,11 @@ public class Server {
      * @param res the http register response that the server should give.
      * @return Not sure yet
      */
-    public Object registerUser(Request req, Response res){
+    public Object registerUser(Request req, Response res) throws ResponseException {
         UserHandler handler = new UserHandler();
         res = handler.handleRegister(req, res);
-        // return "";
-        throw new RuntimeException("Server.registerUser() is not implemented!");
+        return "";
+        //throw new RuntimeException("Server.registerUser() is not implemented!");
     }
     /**
      * Sends the login request information from the client to the handler.

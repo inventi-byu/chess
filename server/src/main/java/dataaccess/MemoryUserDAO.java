@@ -3,7 +3,6 @@ package dataaccess;
 import model.UserData;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class MemoryUserDAO implements UserDAO {
 
@@ -11,10 +10,13 @@ public class MemoryUserDAO implements UserDAO {
 
     public MemoryUserDAO(){
         this.database = new ArrayList<UserData>();
+        //this.database.add(new UserData("username", "password", "email"));
+
     }
 
     public boolean createUser(UserData userData){
-
+        this.database.add(userData);
+        return true;
     }
 
     public UserData getUser(String username){
@@ -25,6 +27,5 @@ public class MemoryUserDAO implements UserDAO {
         }
         return null;
     }
-
 
 }
