@@ -17,6 +17,6 @@ public class LogoutService extends Service {
         if (this.authDAO.deleteAuth(authData)){
             return new LogoutResult(200);
         }
-        throw new ResponseException(500, "Error: an unknown error occured.");
+        throw new ResponseException(500, "Error: an unknown error occurred.");
     }
 }
