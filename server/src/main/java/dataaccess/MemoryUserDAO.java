@@ -10,7 +10,7 @@ public class MemoryUserDAO implements UserDAO {
 
     public MemoryUserDAO(){
         this.database = new ArrayList<UserData>();
-        //this.database.add(new UserData("username", "password", "email"));
+        this.database.add(new UserData("username", "password", "email"));
 
     }
 

@@ -10,9 +10,7 @@ public class LoginService extends Service{
 
     public LoginResult login(LoginRequest request) throws ResponseException {
         AuthData authData = this.authenticate(request.getUsername(), request.getPassword());
-        if (authData != null){
-            return new LoginResult(200, authData);
-        }
-
+        // authenticate throws the errors
+        return new LoginResult(200, authData);
     }
 }

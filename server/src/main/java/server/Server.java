@@ -3,7 +3,7 @@ package server;
 import com.google.gson.*;
 import handler.ClearHandler;
 import handler.UserHandler;
-import org.eclipse.jetty.server.session.SessionHandler;
+import handler.SessionHandler;
 import service.ClearService;
 import service.RegisterRequest;
 import service.ResponseException;
@@ -20,6 +20,7 @@ public class Server {
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", this::clear);
         Spark.post("/user", this::registerUser);
+        Spark.post("/session", this::loginUser);
         Spark.exception(ResponseException.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
@@ -63,7 +64,7 @@ public class Server {
     public Object loginUser(Request req, Response res){
         SessionHandler handler = new SessionHandler();
         return handler.handleLogin(req, res);
-        throw new RuntimeException("Server.loginUser() is not implemented!");
+        //throw new RuntimeException("Server.loginUser() is not implemented!");
     }
     /**
      * Sends the logout request from the client to the handler.

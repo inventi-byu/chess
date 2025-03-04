@@ -7,6 +7,7 @@ public class LoginResult {
     private AuthData authData;
 
     public LoginResult(int status, AuthData authData){
+        this.status = status;
         this.authData = authData;
     }
 
