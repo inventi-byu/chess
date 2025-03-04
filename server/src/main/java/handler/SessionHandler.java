@@ -22,4 +22,13 @@ public class SessionHandler {
         res.status(result.getStatus());
         return new Gson().toJson(result.getAuthData());
     }
+
+    public String handleLogout(Request req, Response res) throws ResponseException {
+        LogoutRequest request = new Gson().fromJson(req.body(), LogoutRequest.class);
+        LogoutService service = new LogoutService();
+        LogoutResult result = service.logout(request);
+        // Returns nothing but 200 status if working properly
+        res.status(result.getStatus());
+        return "";
+    }
 }

@@ -21,6 +21,7 @@ public class Server {
         Spark.delete("/db", this::clear);
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::loginUser);
+        // Spark.post("/session", this::logoutUser);
         Spark.exception(ResponseException.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
@@ -55,6 +56,7 @@ public class Server {
         UserHandler handler = new UserHandler();
         return handler.handleRegister(req, res);
     }
+
     /**
      * Sends the login request information from the client to the handler.
      * @param req the http login request from the client
@@ -73,7 +75,8 @@ public class Server {
      * @return Not sure yet
      */
     public Object logoutUser(Request req, Response res){
-        throw new RuntimeException("Server.logoutUser() is not implemented!");
+        SessionHandler handler = new SessionHandler();
+        return handler.handleLogout(req, res);
     }
     /**
      * Sends the list games request from the client to the handler.
