@@ -1,9 +1,5 @@
 package java.service;
 import org.junit.jupiter.api.*;
-import service.ClearService;
-import service.RequestMethod;
-import service.ClearRequest;
-import service.ClearResult;
 
 public class ClearServiceTests {
     @Test

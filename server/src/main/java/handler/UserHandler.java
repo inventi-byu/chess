@@ -1,10 +1,10 @@
 package handler;
 
 import model.UserData;
-import service.RegisterRequest;
+import service.request.RegisterRequest;
 import service.ResponseException;
 import service.UserService;
-import service.RegisterResult;
+import service.result.RegisterResult;
 
 import spark.Request;
 import spark.Response;

@@ -1,4 +1,4 @@
-package service;
+package service.result;
 
 public class LogoutResult {
     private int status;

@@ -1,8 +1,7 @@
 package handler;
 
-import com.google.gson.Gson;
-import service.ClearRequest;
-import service.ClearResult;
+import service.request.ClearRequest;
+import service.result.ClearResult;
 import service.ClearService;
 import service.ResponseException;
 import spark.Request;

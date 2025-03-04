@@ -1,14 +1,17 @@
 package handler;
 
 import com.google.gson.Gson;
-import model.UserData;
 import service.*;
+import service.request.CreateGameRequest;
+import service.request.JoinGameRequest;
+import service.request.ListGamesRequest;
+import service.result.CreateGameResult;
+import service.result.JoinGameResult;
+import service.result.ListGamesResult;
 import spark.Request;
 import spark.Response;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class GameHandler {
 

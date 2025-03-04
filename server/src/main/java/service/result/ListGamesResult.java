@@ -1,4 +1,4 @@
-package service;
+package service.result;
 
 import model.GameMetaData;
 
@@ -9,7 +9,7 @@ public class ListGamesResult {
     private int status;
     private List<GameMetaData> games;
 
-    ListGamesResult(int status, List<GameMetaData> games){
+    public ListGamesResult(int status, List<GameMetaData> games){
         this.status = status;
         this.games = games;
     }

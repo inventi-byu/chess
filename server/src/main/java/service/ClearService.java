@@ -1,6 +1,8 @@
 package service;
 
 import dataaccess.*;
+import service.request.ClearRequest;
+import service.result.ClearResult;
 
 public class ClearService extends Service {
 

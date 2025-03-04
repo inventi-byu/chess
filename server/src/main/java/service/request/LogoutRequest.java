@@ -1,4 +1,4 @@
-package service;
+package service.request;
 
 public class LogoutRequest {
     private String authorization;

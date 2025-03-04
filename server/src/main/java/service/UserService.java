@@ -2,6 +2,8 @@ package service;
 
 import dataaccess.*;
 import model.AuthData;
+import service.request.RegisterRequest;
+import service.result.RegisterResult;
 
 public class UserService extends Service {
 

@@ -1,12 +1,16 @@
 package service;
 
-import chess.ChessGame;
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
-import model.GameData;
 import model.GameMetaData;
+import service.request.CreateGameRequest;
+import service.request.JoinGameRequest;
+import service.request.ListGamesRequest;
+import service.result.CreateGameResult;
+import service.result.JoinGameResult;
+import service.result.ListGamesResult;
 
 import java.util.List;
 

@@ -1,12 +1,13 @@
 package handler;
 
 import service.*;
+import service.request.LoginRequest;
+import service.request.LogoutRequest;
+import service.result.LoginResult;
+import service.result.LogoutResult;
 import spark.Request;
 import spark.Response;
 import com.google.gson.Gson;
-
-import java.util.Collection;
-import java.util.HashMap;
 
 public class SessionHandler {
 
