@@ -8,6 +8,7 @@ import dataaccess.MemoryUserDAO;
 import handler.ClearHandler;
 import handler.UserHandler;
 import handler.SessionHandler;
+import handler.GameHandler;
 import org.eclipse.jetty.server.Authentication;
 import service.ClearService;
 import service.RegisterRequest;
@@ -27,12 +28,12 @@ public class Server {
     private UserService UserService;
     private LoginService LoginService;
     private LogoutService LogoutService;
-    //private GameService GameService;
+    private GameService GameService;
 
     private ClearHandler ClearHandler;
     private UserHandler UserHandler;
     private SessionHandler SessionHandler;
-    // private GameHandler GameHandler;
+    private GameHandler GameHandler;
 
 
 
@@ -47,12 +48,12 @@ public class Server {
         this.UserService = new UserService(this.authDAO, this.userDAO, this.gameDAO);
         this.LoginService = new LoginService(this.authDAO, this.userDAO, this.gameDAO);
         this.LogoutService = new LogoutService(this.authDAO, this.userDAO, this.gameDAO);
-        //this.GameService = new GameService(this.authDAO, this.userDAO, this.gameDAO);
+        this.GameService = new GameService(this.authDAO, this.userDAO, this.gameDAO);
 
         this.ClearHandler = new ClearHandler(this.ClearService);
         this.UserHandler = new UserHandler(this.UserService);
         this.SessionHandler = new SessionHandler(this.LoginService, this.LogoutService);
-        //this.GameHandler = new GameHandler(this.GameService);
+        this.GameHandler = new GameHandler(this.GameService);
     }
 
     public int run(int desiredPort) {
@@ -65,6 +66,7 @@ public class Server {
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::loginUser);
         Spark.delete("/session", this::logoutUser);
+        Spark.post("/game", this::createGame);
         Spark.exception(ResponseException.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
@@ -134,7 +136,7 @@ public class Server {
      * @return Not sure yet
      */
     public Object createGame(Request req, Response res){
-        throw new RuntimeException("Server.createGame() is not implemented!");
+        return this.GameHandler.handleCreateGame(req, res);
     }
     /**
      * Sends the http join request from the client to the handler.
