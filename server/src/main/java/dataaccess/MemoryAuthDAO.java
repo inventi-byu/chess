@@ -2,8 +2,8 @@ package dataaccess;
 
 import model.AuthData;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 
 public class MemoryAuthDAO implements AuthDAO {
@@ -26,7 +26,6 @@ public class MemoryAuthDAO implements AuthDAO {
         }
         return null;
     };
-
 
     /**
      * Adds an AuthData to the database.
