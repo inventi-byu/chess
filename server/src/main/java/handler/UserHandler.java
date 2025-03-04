@@ -10,7 +10,7 @@ import spark.Request;
 import spark.Response;
 import com.google.gson.Gson;
 
-public class UserHandler {
+public class UserHandler extends Handler {
 
     private UserService userService;
 

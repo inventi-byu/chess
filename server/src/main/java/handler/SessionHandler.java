@@ -9,7 +9,7 @@ import spark.Request;
 import spark.Response;
 import com.google.gson.Gson;
 
-public class SessionHandler {
+public class SessionHandler extends Handler {
 
     private LoginService loginService;
     private LogoutService logoutService;

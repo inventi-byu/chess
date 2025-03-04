@@ -1,5 +1,7 @@
 package handler;
 
-public interface Handler {
-    //public Response handle( req, res);
+import service.Service;
+
+public class Handler {
+    public Handler(){}
 }

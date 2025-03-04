@@ -13,7 +13,7 @@ import spark.Response;
 
 import java.util.Map;
 
-public class GameHandler {
+public class GameHandler extends Handler {
 
     private GameService gameService;
 

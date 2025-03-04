@@ -7,7 +7,7 @@ import service.ResponseException;
 import spark.Request;
 import spark.Response;
 
-public class ClearHandler {
+public class ClearHandler extends Handler {
 
     private ClearService clearService;
 
@@ -32,6 +32,4 @@ public class ClearHandler {
 
         return "";
     }
-
-
 }
