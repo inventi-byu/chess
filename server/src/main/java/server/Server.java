@@ -146,7 +146,7 @@ public class Server {
      * @return Not sure yet
      */
     public Object joinGame(Request req, Response res){
-        return this.GameHandler.handleJoinGame(req, res);
+        //return this.GameHandler.handleJoinGame(req, res);
         throw new RuntimeException("Server.joinGame() is not implemented!");
     }
     /**

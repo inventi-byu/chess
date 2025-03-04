@@ -5,7 +5,7 @@ public class CreateGameRequest {
     private String authorization;
     private String gameName;
 
-    public CreateGameRequest(String authorization){
+    public CreateGameRequest(String authorization, String gameName){
         this.authorization = authorization;
     }
 

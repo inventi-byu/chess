@@ -35,6 +35,7 @@ public class GameHandler {
         return new Gson().toJson(Map.of("games", result.getGames()));
     }
 
+    /*
     public String handleJoinGame(Request req, Response res){
         String authToken = req.headers("authorization");
         JoinGameRequest request = new Gson().fromJson(req.body(), JoinGameRequest.class);
@@ -43,4 +44,5 @@ public class GameHandler {
         res.status(result.getStatus());
         return "";
     }
+    */
 }
