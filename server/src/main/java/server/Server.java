@@ -49,10 +49,10 @@ public class Server {
         this.LogoutService = new LogoutService(this.authDAO, this.userDAO, this.gameDAO);
         //this.GameService = new GameService(this.authDAO, this.userDAO, this.gameDAO);
 
-        this.ClearHandler = new ClearHandler();
-        this.UserHandler = new UserHandler();
-        this.SessionHandler = new SessionHandler();
-        //this.GameHandler = new GameHandler();
+        this.ClearHandler = new ClearHandler(this.ClearService);
+        this.UserHandler = new UserHandler(this.UserService);
+        this.SessionHandler = new SessionHandler(this.LoginService, this.LogoutService);
+        //this.GameHandler = new GameHandler(this.GameService);
     }
 
     public int run(int desiredPort) {

@@ -10,7 +10,11 @@ import spark.Response;
 
 public class ClearHandler {
 
-    public ClearHandler(){}
+    private ClearService clearService;
+
+    public ClearHandler(ClearService clearService){
+        this.clearService = clearService;
+    }
 
     /**
      * Handles a clear request from http coming from the server endpoint
@@ -22,8 +26,7 @@ public class ClearHandler {
         call the service function and get the result, convert the result into a json, and return that.
          */
         ClearRequest request = new ClearRequest(req.requestMethod()); // There may be nothing in the body to convert.
-        ClearService service = new ClearService();
-        ClearResult result = service.clear(request);
+        ClearResult result = this.clearService.clear(request);
 
         // No message for successful clear requests
         res.status(result.getStatus());

@@ -11,12 +11,16 @@ import spark.Response;
 import com.google.gson.Gson;
 
 public class UserHandler {
-    public UserHandler(){}
+
+    private UserService userService;
+
+    public UserHandler(UserService userService){
+        this.userService = userService;
+    }
 
     public String handleRegister(Request req, Response res) throws ResponseException {
         UserData userdata = new Gson().fromJson(req.body(), UserData.class);
-        UserService service = new UserService();
-        RegisterResult result = service.register(new RegisterRequest(userdata));
+        RegisterResult result = this.userService.register(new RegisterRequest(userdata));
         res.status(result.getStatusCode());
         return new Gson().toJson(result.getAuthData()); // Return the body
     };
