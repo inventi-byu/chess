@@ -1,19 +1,22 @@
 package server;
 
-import com.google.gson.*;
 import dataaccess.MemoryAdminDAO;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
+
 import handler.ClearHandler;
 import handler.UserHandler;
 import handler.SessionHandler;
 import handler.GameHandler;
-import org.eclipse.jetty.server.Authentication;
+
 import service.ClearService;
-import service.RegisterRequest;
-import service.*;
+import service.UserService;
+import service.LoginService;
+import service.LogoutService;
+import service.GameService;
 import service.ResponseException;
+
 import spark.*;
 
 
@@ -34,8 +37,6 @@ public class Server {
     private UserHandler UserHandler;
     private SessionHandler SessionHandler;
     private GameHandler GameHandler;
-
-
 
     public Server(){
 
