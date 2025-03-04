@@ -13,12 +13,11 @@ import com.google.gson.Gson;
 public class UserHandler {
     public UserHandler(){}
 
-    public Response handleRegister(Request req, Response res) throws ResponseException {
+    public String handleRegister(Request req, Response res) throws ResponseException {
         UserData userdata = new Gson().fromJson(req.body(), UserData.class);
         UserService service = new UserService();
         RegisterResult result = service.register(new RegisterRequest(userdata));
         res.status(result.getStatusCode());
-        res.body(new Gson().toJson(result.getAuthData()));
-        return res;
+        return new Gson().toJson(result.getAuthData()); // Return the body
     };
 }

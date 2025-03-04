@@ -51,9 +51,7 @@ public class Server {
      */
     public Object registerUser(Request req, Response res) throws ResponseException {
         UserHandler handler = new UserHandler();
-        res = handler.handleRegister(req, res);
-        return "";
-        //throw new RuntimeException("Server.registerUser() is not implemented!");
+        return handler.handleRegister(req, res);
     }
     /**
      * Sends the login request information from the client to the handler.
