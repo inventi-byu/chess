@@ -17,6 +17,13 @@ public class UserService extends Service {
      */
     public RegisterResult register(RegisterRequest request) throws ResponseException {
         String username = request.getUserData().username();
+        String password = request.getUserData().password();
+        String email = request.getUserData().email();
+
+        // Make sure all the info needed to register was provided
+        if(username == null || password == null || email == null){
+            throw new ResponseException(400, "Error: bad request");
+        }
 
         if (this.userDAO.getUser(username) != null) {
             throw new ResponseException(403, "Error: already taken");
