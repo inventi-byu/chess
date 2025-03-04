@@ -25,7 +25,7 @@ public class Service {
         UserData userData = this.userDAO.getUser(username);
         if (userData != null){
             if (userData.password().equals(password)){
-                AuthData newAuthData = new AuthData(username, this.generateToken());
+                AuthData newAuthData = new AuthData(this.generateToken(), username);
                 this.authDAO.createAuth(newAuthData);
                 return newAuthData;
             }

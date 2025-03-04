@@ -5,4 +5,4 @@ package model;
  * @param username the username with whom to associate the authToken
  * @param authToken the authorization token of the user
  */
-public record AuthData(String username, String authToken) { }
+public record AuthData(String authToken, String username) { }

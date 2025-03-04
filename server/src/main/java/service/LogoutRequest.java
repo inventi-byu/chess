@@ -1,13 +1,13 @@
 package service;
 
 public class LogoutRequest {
-    private String authToken;
+    private String authorization;
 
-    public LogoutRequest(String authToken){
-        this.authToken = authToken;
+    public LogoutRequest(String authorization){
+        this.authorization = authorization;
     }
 
     public String getAuthToken(){
-        return this.authToken;
+        return this.authorization;
     }
 }

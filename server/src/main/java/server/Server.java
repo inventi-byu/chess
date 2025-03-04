@@ -64,7 +64,7 @@ public class Server {
         Spark.delete("/db", this::clear);
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::loginUser);
-        Spark.post("/session", this::logoutUser);
+        Spark.delete("/session", this::logoutUser);
         Spark.exception(ResponseException.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 

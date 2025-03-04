@@ -5,6 +5,9 @@ import spark.Request;
 import spark.Response;
 import com.google.gson.Gson;
 
+import java.util.Collection;
+import java.util.HashMap;
+
 public class SessionHandler {
 
     private LoginService loginService;
@@ -27,10 +30,16 @@ public class SessionHandler {
     }
 
     public String handleLogout(Request req, Response res) throws ResponseException {
-        LogoutRequest request = new Gson().fromJson(req.body(), LogoutRequest.class);
+        String authToken = req.headers("authorization");
+        if(authToken.isEmpty()){
+            throw new ResponseException(401, "Error: not authorized");
+        }
+        LogoutRequest request = new LogoutRequest(authToken);
         LogoutResult result = this.logoutService.logout(request);
+
         // Returns nothing but 200 status if working properly
         res.status(result.getStatus());
+
         return "";
     }
 }

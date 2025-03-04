@@ -50,6 +50,7 @@ public class MemoryAuthDAO implements AuthDAO {
     public boolean deleteAuth(AuthData authData){
         if(this.authExists(authData)){
             this.authDB.remove(authData.authToken());
+            return true;
         }
         return false;
     };

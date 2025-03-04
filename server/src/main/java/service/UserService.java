@@ -24,7 +24,7 @@ public class UserService extends Service {
 
         this.userDAO.createUser(request.getUserData());
 
-        AuthData newAuthData = new AuthData(username, this.generateToken());
+        AuthData newAuthData = new AuthData(this.generateToken(), username);
         this.authDAO.createAuth(newAuthData);
 
         return new RegisterResult(200, newAuthData);
