@@ -14,6 +14,11 @@ public class LoginService extends Service{
         super(authDAO, userDAO, gameDAO);
     }
 
+    /**
+     * Logs in a user by fetching a new authToken.
+     * @param request the LoginRequest passed in by the handler.
+     * @return a LoginResult with status code 200 and the authData returned authDAO.
+     */
     public LoginResult login(LoginRequest request) throws ResponseException {
         AuthData authData = this.authenticateWithCredentials(request.getUsername(), request.getPassword());
         // authenticateWithCredentials throws the errors

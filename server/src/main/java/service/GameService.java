@@ -20,6 +20,11 @@ public class GameService extends Service {
         super(authDAO, userDAO, gameDAO);
     }
 
+    /**
+     * Creates a game in the database.
+     * @param request the CreateGameRequest passed in by the handler.
+     * @return a CreateGameResult with status code 200.
+     */
     public CreateGameResult createGame(CreateGameRequest request){
         String gameName = request.getGameName();
 
@@ -31,6 +36,11 @@ public class GameService extends Service {
 
     }
 
+    /**
+     * Lists all the games in the database.
+     * @param request the ListGamesRequest passed in by the handler.
+     * @return a ListGamesResult with status code 200, and a list of all the games.
+     */
     public ListGamesResult listGames(ListGamesRequest request){
         String authToken = request.getAuthorization();
         this.authenticateWithToken(authToken);
@@ -39,6 +49,11 @@ public class GameService extends Service {
         return new ListGamesResult(200, games);
     }
 
+    /**
+     * Adds a user to a game in the database.
+     * @param request the JoinGameRequest passed in by the handler.
+     * @return a JoinGameResult with status code 200.
+     */
     public JoinGameResult joinGame(JoinGameRequest request){
         String authToken = request.getAuthorization();
         AuthData authData = this.authenticateWithToken(authToken);
@@ -49,7 +64,6 @@ public class GameService extends Service {
         gameDAO.addUserToGame(gameID, playerColor, authData.username());
         return new JoinGameResult(200);
     }
-
 }
 
 

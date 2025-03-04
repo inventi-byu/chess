@@ -9,10 +9,16 @@ import service.request.LogoutRequest;
 import service.result.LogoutResult;
 
 public class LogoutService extends Service {
+
     public LogoutService(AuthDAO authDAO, UserDAO userDAO, GameDAO gameDAO){
         super(authDAO, userDAO, gameDAO);
     }
 
+    /**
+     * Logs out a user.
+     * @param request the LogoutRequest passed in by the handler.
+     * @return a LogoutResult with status code 200.
+     */
     public LogoutResult logout(LogoutRequest request) throws ResponseException {
         // authenticateWithCredentials throws the errors
         AuthData authData = this.authenticateWithToken(request.getAuthToken());

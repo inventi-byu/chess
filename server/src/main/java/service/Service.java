@@ -18,10 +18,13 @@ public class Service {
         this.gameDAO= gameDAO;
     }
 
-    public String generateToken() {
-        return UUID.randomUUID().toString();
-    }
-
+    /**
+     * Authenticates a user by their credentials (i.e. username and password).
+     * @param username the user's username as a String.
+     * @param password the user's password as a String.
+     * @return the AuthData associated with the user if it exists (i.e. is valid).
+     * @throws ResponseException if the credentials were invalid.
+     */
     public AuthData authenticateWithCredentials(String username, String password) throws ResponseException {
         UserData userData = this.userDAO.getUser(username);
         if (userData != null){
@@ -36,6 +39,12 @@ public class Service {
         throw new ResponseException(401, "Error: unauthorized");
     }
 
+    /**
+     * Authenticates a user by an authToken.
+     * @param authToken the authToken allegedly associated with the user to verify.
+     * @return the AuthData associated with that authToken if it exits
+     * @throws ResponseException if the authToken is invalid.
+     */
     public AuthData authenticateWithToken(String authToken) throws ResponseException {
         // Verify that the user is authenticated
         AuthData authData = this.authDAO.getAuth(authToken);
@@ -47,5 +56,13 @@ public class Service {
         return authData;
         //throw new ResponseException(500, "Error: user could not be found");
         // NOTE: I don't think there is any reason for a 500 error to occur
+    }
+
+    /**
+     * Generates a unique authToken for a user.
+     * @return a String representing the unique authToken.
+     */
+    public String generateToken() {
+        return UUID.randomUUID().toString();
     }
 }

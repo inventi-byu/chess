@@ -13,10 +13,10 @@ public class UserService extends Service {
     }
 
     /**
-     * Registers a user
-     * @param request the RegisterRequest from th RegisterHandler
-     * @return RegisterResult of the result if valid result returned.
-     * @throws ResponseException
+     * Registers a user.
+     * @param request the RegisterRequest passed in by the handler.
+     * @return a RegisterResult with status code 200, and the new AuthData for that user.
+     * @throws ResponseException if registration failed.
      */
     public RegisterResult register(RegisterRequest request) throws ResponseException {
         String username = request.getUserData().username();
@@ -33,7 +33,6 @@ public class UserService extends Service {
         }
 
         this.userDAO.createUser(request.getUserData());
-
         AuthData newAuthData = new AuthData(this.generateToken(), username);
         this.authDAO.createAuth(newAuthData);
 
