@@ -3,7 +3,9 @@ package server;
 import com.google.gson.*;
 import handler.ClearHandler;
 import service.ClearService;
+import service.ResponseException;
 import spark.*;
+
 
 public class Server {
 
@@ -14,6 +16,7 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", this::clear);
+        Spark.exception(ResponseException.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
@@ -29,6 +32,12 @@ public class Server {
 
     public int port(){
         return Spark.port();
+    }
+
+
+    private void exceptionHandler(ResponseException exception, Request req, Response res) {
+        res.status(exception.getStatusCode());
+        res.body(exception.toJson());
     }
 
     /**
@@ -91,13 +100,9 @@ public class Server {
      * @param res the http clear response that the server should give.
      * @return Not sure yet
      */
-    public Object clear(Request req, Response res){
-        // TODO: Not sure if this is right but it will do for now.
+    public Object clear(Request req, Response res) throws ResponseException {
         ClearHandler handler = new ClearHandler();
         res = handler.handle(req, res);
-        // this may not work because res doesn't do anything?
-        // However, since the same res object in memory is passed into the function
-        // I assume instead of making a copy, this may work.
         return "";
     }
 }
