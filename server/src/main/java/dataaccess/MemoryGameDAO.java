@@ -2,10 +2,10 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.GameData;
+import model.GameMetaData;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 public class MemoryGameDAO implements GameDAO {
 
@@ -26,6 +26,14 @@ public class MemoryGameDAO implements GameDAO {
             }
         }
         return null;
+    }
+
+    public List<GameMetaData> getAllGames(){
+        ArrayList<GameMetaData> games = new ArrayList<GameMetaData>();
+        for (GameData game : gameDB){
+            games.add(new GameMetaData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName()));
+        }
+        return games;
     }
 
     public int addGame(String gameName){

@@ -10,5 +10,4 @@ public class ListGamesRequest {
     public String getAuthorization(){
         return this.authorization;
     }
-    
 }

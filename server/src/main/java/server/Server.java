@@ -67,6 +67,7 @@ public class Server {
         Spark.post("/session", this::loginUser);
         Spark.delete("/session", this::logoutUser);
         Spark.post("/game", this::createGame);
+        Spark.get("/game", this::listGames);
         Spark.exception(ResponseException.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
@@ -128,7 +129,6 @@ public class Server {
      */
     public Object listGames(Request req, Response res){
         return this.GameHandler.handleListGames(req, res);
-        throw new RuntimeException("Server.listGames() is not implemented!");
     }
     /**
      * Sends the create game request from the client to the handler.

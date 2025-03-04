@@ -32,6 +32,6 @@ public class GameHandler {
         ListGamesRequest request = new ListGamesRequest(authToken);
         ListGamesResult result = this.gameService.listGames(request);
         res.status(result.getStatus());
-        return new Gson().toJson(result.getGames());
+        return new Gson().toJson(Map.of("games", result.getGames()));
     }
 }
