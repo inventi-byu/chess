@@ -19,7 +19,6 @@ public class MemoryGameDAO implements GameDAO {
         this.lastID = 0;
     }
 
-
     public int addGame(String gameName){
         int newGameID = this.getNewID();
         GameData gameData = new GameData(newGameID, null, null, gameName, new ChessGame());

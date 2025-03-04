@@ -12,10 +12,6 @@ public class MemoryAdminDAO implements AdminDAO {
         this.gameDAO = gameDAO;
     }
 
-    /**
-     * Clears the in-memory "database".
-     * @return true if the database was successfully cleared.
-     */
     public boolean clear(){
         this.authDAO.clearAuthTable();
         this.userDAO.clearUserTable();

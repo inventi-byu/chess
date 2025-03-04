@@ -2,6 +2,7 @@ package dataaccess;
 import model.AuthData;
 
 public interface AuthDAO {
+
     /**
      * Retrives the AuthData associated with the authToken
      * @param authToken the token associated with the AuthData

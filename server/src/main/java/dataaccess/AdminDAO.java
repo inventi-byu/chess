@@ -1,6 +1,7 @@
 package dataaccess;
 
 public interface AdminDAO {
+
     /**
      * Clears the database for testing purposes (no authorization required).
      * @return true if the database was successfully cleared.
