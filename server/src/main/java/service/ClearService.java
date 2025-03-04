@@ -1,14 +1,16 @@
 package service;
 
-import dataaccess.MemoryAdminDAO;
+import dataaccess.*;
 
 public class ClearService extends Service {
 
-    public ClearService(){}
+    private AdminDAO adminDAO;
+    public ClearService(AuthDAO authDAO, UserDAO userDAO, GameDAO gameDAO, AdminDAO adminDAO){
+        super(authDAO, userDAO, gameDAO);
+    }
 
     public ClearResult clear(ClearRequest request) throws ResponseException {
-        MemoryAdminDAO adminDAO = new MemoryAdminDAO();
-        adminDAO.clear();
+        this.adminDAO.clear();
         return new ClearResult(200, "");
     }
 }

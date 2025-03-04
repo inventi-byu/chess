@@ -1,24 +1,32 @@
 package service;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import model.AuthData;
 import model.UserData;
 
 import java.util.UUID;
 
 public class Service {
+
+    protected AuthDAO authDAO;
+    protected UserDAO userDAO;
+    protected GameDAO gameDAO;
+
+    public Service(AuthDAO authDAO, UserDAO userDAO, GameDAO gameDAO){
+        this.authDAO = authDAO;
+        this.userDAO = userDAO;
+        this.gameDAO= gameDAO;
+    }
+
     public String generateToken() {
         return UUID.randomUUID().toString();
     }
 
     public AuthData authenticateWithCredentials(String username, String password) throws ResponseException {
-        MemoryUserDAO userDAO = new MemoryUserDAO();
-        UserData userData = userDAO.getUser(username);
+        UserData userData = this.userDAO.getUser(username);
         if (userData != null){
             if (userData.password().equals(password)){
                 AuthData newAuthData = new AuthData(username, this.generateToken());
-                MemoryAuthDAO authDAO = new MemoryAuthDAO();
-                authDAO.createAuth(newAuthData);
+                this.authDAO.createAuth(newAuthData);
                 return newAuthData;
             }
             // Invalid password, not authorized
@@ -29,8 +37,7 @@ public class Service {
 
     public AuthData authenticateWithToken(String authToken) throws ResponseException {
         // Verify that the user is authenticated
-        MemoryAuthDAO authDAO = new MemoryAuthDAO();
-        AuthData authData = authDAO.getAuth(authToken);
+        AuthData authData = this.authDAO.getAuth(authToken);
 
         if (authData == null) {
             // Invalid token, not authorized

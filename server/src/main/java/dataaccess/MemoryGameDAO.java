@@ -12,7 +12,7 @@ public class MemoryGameDAO implements GameDAO {
     }
 
 
-    public void clearAuthTable(){
+    public void clearGameTable(){
         this.gameDB = new Object();
         throw new RuntimeException("Not implemented");
     }

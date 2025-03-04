@@ -1,10 +1,15 @@
 package service;
 
+import dataaccess.AuthDAO;
+import dataaccess.GameDAO;
+import dataaccess.UserDAO;
 import model.AuthData;
 
 public class LoginService extends Service{
 
-    public LoginService(){}
+    public LoginService(AuthDAO authDAO, UserDAO userDAO, GameDAO gameDAO){
+        super(authDAO, userDAO, gameDAO);
+    }
 
     public LoginResult login(LoginRequest request) throws ResponseException {
         AuthData authData = this.authenticateWithCredentials(request.getUsername(), request.getPassword());

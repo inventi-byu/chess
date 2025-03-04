@@ -40,22 +40,19 @@ public class Server {
 
         this.authDAO = new MemoryAuthDAO();
         this.userDAO = new MemoryUserDAO();
-        this.adminDAO = new MemoryAdminDAO();
         this.gameDAO = new MemoryGameDAO();
+        this.adminDAO = new MemoryAdminDAO(this.authDAO, this.userDAO, this.gameDAO);
 
-        this.ClearService = new ClearService();
-        this.UserService = new UserService();
-        this.LoginService = new LoginService();
-        this.LogoutService = new LogoutService();
-        //this.GameService = new GameService();
+        this.ClearService = new ClearService(this.authDAO, this.userDAO, this.gameDAO);
+        this.UserService = new UserService(this.authDAO, this.userDAO, this.gameDAO);
+        this.LoginService = new LoginService(this.authDAO, this.userDAO, this.gameDAO);
+        this.LogoutService = new LogoutService(this.authDAO, this.userDAO, this.gameDAO);
+        //this.GameService = new GameService(this.authDAO, this.userDAO, this.gameDAO);
 
         this.ClearHandler = new ClearHandler();
         this.UserHandler = new UserHandler();
         this.SessionHandler = new SessionHandler();
         //this.GameHandler = new GameHandler();
-
-
-
     }
 
     public int run(int desiredPort) {
