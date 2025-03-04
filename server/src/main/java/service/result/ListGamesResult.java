@@ -21,6 +21,4 @@ public class ListGamesResult {
     public List<GameMetaData> getGames(){
         return this.games;
     }
-
-
 }
