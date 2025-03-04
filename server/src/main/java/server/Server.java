@@ -68,6 +68,7 @@ public class Server {
         Spark.delete("/session", this::logoutUser);
         Spark.post("/game", this::createGame);
         Spark.get("/game", this::listGames);
+        Spark.put("/game", this::joinGame);
         Spark.exception(ResponseException.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
@@ -146,8 +147,7 @@ public class Server {
      * @return Not sure yet
      */
     public Object joinGame(Request req, Response res){
-        //return this.GameHandler.handleJoinGame(req, res);
-        throw new RuntimeException("Server.joinGame() is not implemented!");
+        return this.GameHandler.handleJoinGame(req, res);
     }
     /**
      * Sends the http clear request from the client to the handler.
