@@ -40,7 +40,7 @@ public class MemoryGameDAO implements GameDAO {
 
     public boolean addUserToGame(int gameID, String playerColor, String username){
         GameData game = this.getGame(gameID);
-        if(game == null){
+        if(game == null || playerColor == null){
             throw new ResponseException(400, "Error: bad request");
         }
 
