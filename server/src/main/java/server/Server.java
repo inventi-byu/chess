@@ -18,10 +18,10 @@ import spark.*;
 
 public class Server {
 
-    private MemoryAuthDAO authDAO = new MemoryAuthDAO();
-    private MemoryUserDAO userDAO = new MemoryUserDAO();
-    private MemoryAdminDAO adminDAO = new MemoryAdminDAO();
-    private MemoryGameDAO gameDAO = new MemoryGameDAO();
+    private MemoryAuthDAO authDAO;
+    private MemoryUserDAO userDAO;
+    private MemoryAdminDAO adminDAO;
+    private MemoryGameDAO gameDAO;
 
     private ClearService ClearService;
     private UserService UserService;
@@ -43,7 +43,7 @@ public class Server {
         this.gameDAO = new MemoryGameDAO();
         this.adminDAO = new MemoryAdminDAO(this.authDAO, this.userDAO, this.gameDAO);
 
-        this.ClearService = new ClearService(this.authDAO, this.userDAO, this.gameDAO);
+        this.ClearService = new ClearService(this.authDAO, this.userDAO, this.gameDAO, this.adminDAO);
         this.UserService = new UserService(this.authDAO, this.userDAO, this.gameDAO);
         this.LoginService = new LoginService(this.authDAO, this.userDAO, this.gameDAO);
         this.LogoutService = new LogoutService(this.authDAO, this.userDAO, this.gameDAO);
@@ -96,8 +96,7 @@ public class Server {
      * @return Not sure yet
      */
     public Object registerUser(Request req, Response res) throws ResponseException {
-        UserHandler handler = new UserHandler();
-        return handler.handleRegister(req, res);
+        return this.UserHandler.handleRegister(req, res);
     }
 
     /**
@@ -107,8 +106,7 @@ public class Server {
      * @return Not sure yet
      */
     public Object loginUser(Request req, Response res){
-        SessionHandler handler = new SessionHandler();
-        return handler.handleLogin(req, res);
+        return this.SessionHandler.handleLogin(req, res);
         //throw new RuntimeException("Server.loginUser() is not implemented!");
     }
     /**
@@ -118,8 +116,7 @@ public class Server {
      * @return Not sure yet
      */
     public Object logoutUser(Request req, Response res){
-        SessionHandler handler = new SessionHandler();
-        return handler.handleLogout(req, res);
+        return this.SessionHandler.handleLogout(req, res);
     }
     /**
      * Sends the list games request from the client to the handler.
@@ -155,7 +152,6 @@ public class Server {
      * @return Not sure yet
      */
     public Object clear(Request req, Response res) throws ResponseException {
-        ClearHandler handler = new ClearHandler();
-        return handler.handle(req, res);
+        return this.ClearHandler.handle(req, res);
     }
 }
