@@ -13,6 +13,7 @@ create table user_table
 create table auth_table
 (
     user_id integer not null foreign key,
+    username VARCHAR(255) not null,
     auth_token VARCHAR(255) not null,
     foreign key(user_id) references user_table(id)
 );
