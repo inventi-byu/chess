@@ -16,7 +16,7 @@ public class ClearServiceTests {
         MemoryUserDAO userDAO = new MemoryUserDAO();
         MemoryGameDAO gameDAO = new MemoryGameDAO();
         this.adminDAO = new MemoryAdminDAO(authDAO, userDAO, gameDAO);
-        ClearService clearservice = new ClearService(adminDAO);
+        this.clearService = new ClearService(adminDAO);
     }
 
     @Test
