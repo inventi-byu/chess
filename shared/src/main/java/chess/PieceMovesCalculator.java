@@ -124,11 +124,11 @@ public class PieceMovesCalculator {
                     }
                 }
                 if(curPiece.isEnemy(this.piece)){
-                    if (piece.getPieceType() == ChessPiece.PieceType.PAWN){
-                        if (dirIsDiagonal && curPos.isPromotionEdge(piece.getTeamColor())) {
-                            moves = this.addPawnPromotionMoves(position, curPos, moves);
-                            break;
-                        }
+                    if (piece.getPieceType() == ChessPiece.PieceType.PAWN &&
+                            dirIsDiagonal && curPos.isPromotionEdge(piece.getTeamColor())
+                    ){
+                        moves = this.addPawnPromotionMoves(position, curPos, moves);
+                        break;
                     }
                     moves.add(new ChessMove(position, curPos, null));
                 }
