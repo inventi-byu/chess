@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import service.exception.ResponseException;
 import service.request.LoginRequest;
 import service.request.LogoutRequest;
 import service.request.RegisterRequest;
@@ -59,7 +60,13 @@ public class LoginServiceTests {
     @Test
     @DisplayName("Invalid Login Request")
     public void testLoginBadInput() {
+        ResponseException exception = Assertions.assertThrows(ResponseException.class, () ->this.loginService.login(new LoginRequest(
+                "fakeUser",
+                "fakepassword"))
+        );
 
+        Assertions.assertEquals(401, exception.getStatusCode());
+        Assertions.assertEquals("Error: unauthorized", exception.getMessage());
 
     }
 }
