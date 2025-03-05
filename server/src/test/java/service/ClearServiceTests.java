@@ -22,7 +22,7 @@ public class ClearServiceTests {
     @Test
     public void testClearDatabase(){
         Assertions.assertTrue(true);
-        ClearResult result = clearService.clear(new ClearRequest("delete"));
+        ClearResult result = clearService.clear(new ClearRequest());
         //Assertions.assertEquals(new ClearResult(200, ""), result);
     }
 }

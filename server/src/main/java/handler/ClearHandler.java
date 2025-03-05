@@ -20,7 +20,7 @@ public class ClearHandler extends Handler {
      * @param req the request as a Spark request.
      */
     public String handle(Request req, Response res) throws ResponseException  {
-        ClearRequest request = new ClearRequest(req.requestMethod()); // There may be nothing in the body to convert.
+        ClearRequest request = new ClearRequest(); // There may be nothing in the body to convert.
         ClearResult result = this.clearService.clear(request);
 
         // No message for successful clear requests
