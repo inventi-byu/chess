@@ -65,15 +65,6 @@ public class ChessPiece {
     }
 
     /**
-     * Tells if the given piece is a friend (has the same team color) to this piece.
-     * @param piece the piece to check for friendship.
-     * @return true if the piece is a friend (has the same team color).
-     */
-    public boolean isFriend(ChessPiece piece){
-        return this.getTeamColor() == piece.getTeamColor();
-    }
-
-    /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
      * danger
