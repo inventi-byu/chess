@@ -104,7 +104,7 @@ public class GameServiceTests {
     @Test
     @DisplayName("Invalid Join Game Request")
     public void testJoinGameBadInput(){
-        // Need to test bad authorization, bad game id, and color taken
+        // Create a game, save the result to get the gameID
         CreateGameResult createGameResult = this.gameService.createGame(new CreateGameRequest(this.authToken, "mygame"));
 
         // Invalid authorization
@@ -114,9 +114,9 @@ public class GameServiceTests {
         Assertions.assertEquals(401, authException.getStatusCode());
         Assertions.assertEquals("Error: unauthorized", authException.getMessage());
 
+        // Already Taken
         // Add a player to the game
         this.gameService.joinGame(new JoinGameRequest(this.authToken, "BLACK", createGameResult.getGameID()));
-
 
         ResponseException takenException = Assertions.assertThrows(ResponseException.class,
                 () -> this.gameService.joinGame(new JoinGameRequest(this.authToken, "BLACK", createGameResult.getGameID()))
@@ -124,14 +124,12 @@ public class GameServiceTests {
         Assertions.assertEquals(403, takenException.getStatusCode());
         Assertions.assertEquals("Error: already taken", takenException.getMessage());
 
-        // --------------------------------------------------
+        // Bad request
         ResponseException badRequestException = Assertions.assertThrows(ResponseException.class,
                 () -> this.gameService.joinGame(new JoinGameRequest(this.authToken, "BLACK", 909090))
         );
         Assertions.assertEquals(400, badRequestException.getStatusCode());
         Assertions.assertEquals("Error: bad request", badRequestException.getMessage());
-
-
     }
 
 }
