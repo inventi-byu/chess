@@ -18,4 +18,15 @@ public class CreateGameResult {
         return this.gameID;
     }
 
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof CreateGameResult){
+            CreateGameResult obj = (CreateGameResult)o;
+            if(this.getStatus() == obj.getStatus() && this.getGameID() == obj.getGameID()){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

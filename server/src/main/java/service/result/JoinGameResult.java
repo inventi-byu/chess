@@ -11,4 +11,5 @@ public class JoinGameResult {
     public int getStatus(){
         return this.status;
     }
+    
 }
