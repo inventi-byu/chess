@@ -76,13 +76,23 @@ public class GameServiceTests {
     @Test
     @DisplayName("Invalid Create Game Request")
     public void testCreateGameBadInput(){
-        ResponseException exception = Assertions.assertThrows(ResponseException.class,
+        // Unauthorized
+        ResponseException authException = Assertions.assertThrows(ResponseException.class,
                 () -> this.gameService.createGame(
                         new CreateGameRequest("FakeAUTHtoken9!", "mygame"))
         );
-        Assertions.assertEquals(401, exception.getStatusCode());
-        Assertions.assertEquals("Error: unauthorized", exception.getMessage());
+        Assertions.assertEquals(401, authException.getStatusCode());
+        Assertions.assertEquals("Error: unauthorized", authException.getMessage());
+
+        // Bad Request
+        ResponseException badRequestException = Assertions.assertThrows(ResponseException.class,
+                () -> this.gameService.createGame(
+                        new CreateGameRequest(this.authToken, ""))
+        );
+        Assertions.assertEquals(400, badRequestException.getStatusCode());
+        Assertions.assertEquals("Error: bad request", badRequestException.getMessage());
     }
+
 
     @Test
     @DisplayName("Valid Join Game Request")

@@ -5,6 +5,7 @@ import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameMetaData;
+import service.exception.ResponseException;
 import service.request.CreateGameRequest;
 import service.request.JoinGameRequest;
 import service.request.ListGamesRequest;
@@ -26,10 +27,13 @@ public class GameService extends Service {
      * @return a CreateGameResult with status code 200.
      */
     public CreateGameResult createGame(CreateGameRequest request){
-        String gameName = request.getGameName();
-
         String authToken = request.getAuthorization();
         this.authenticateWithToken(authToken);
+
+        String gameName = request.getGameName();
+        if(gameName.isEmpty()){
+            throw new ResponseException(400, "Error: bad request");
+        }
 
         int gameID = gameDAO.addGame(gameName);
         return new CreateGameResult(200, gameID);
