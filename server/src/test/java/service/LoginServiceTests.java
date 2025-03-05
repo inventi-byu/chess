@@ -35,7 +35,7 @@ public class LoginServiceTests {
         this.userService = new UserService(authDAO, userDAO, gameDAO);
 
         // Register the user then log them out to login
-        String username = "bobLikesChees";
+        String username = "bobLikesCheese";
         String password = "Wisconsin100";
         String email = "bob@bobisthebomb.com";
         this.userData = new UserData(username, password, email);

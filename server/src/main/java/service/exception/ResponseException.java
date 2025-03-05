@@ -1,5 +1,6 @@
 package service.exception;
 import com.google.gson.*;
+import service.result.LoginResult;
 
 import java.util.Map;
 
@@ -18,5 +19,16 @@ public class ResponseException extends RuntimeException {
 
     public int getStatusCode(){
         return this.statusCode;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof ResponseException){
+            ResponseException obj = (ResponseException) o;
+            if(this.getStatusCode() == obj.getStatusCode() && this.getMessage().equals(obj.getMessage())){
+                return true;
+            }
+        }
+        return false;
     }
 }
