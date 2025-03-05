@@ -3,7 +3,6 @@ package service;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
-import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,6 +59,4 @@ public class LogoutServiceTests {
         Assertions.assertEquals("Error: unauthorized", exception.getMessage());
 
     }
-
-
 }

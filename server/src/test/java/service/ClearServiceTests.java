@@ -1,7 +1,6 @@
 package service;
 import dataaccess.*;
 import org.junit.jupiter.api.*;
-import service.ClearService;
 import service.request.ClearRequest;
 import service.result.ClearResult;
 

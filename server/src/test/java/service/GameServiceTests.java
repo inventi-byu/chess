@@ -1,6 +1,5 @@
 package service;
 
-import dataaccess.MemoryAdminDAO;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
@@ -14,9 +13,7 @@ import service.exception.ResponseException;
 import service.request.*;
 import service.result.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameServiceTests {
 
