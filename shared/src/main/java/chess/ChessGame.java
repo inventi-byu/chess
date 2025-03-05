@@ -64,21 +64,21 @@ public class ChessGame {
                 return null;
             }
 
-            Collection<ChessMove> valid_moves = new ArrayList<ChessMove>();
-            Collection<ChessMove> piece_moves = piece.pieceMoves(this.board, startPosition);
+            Collection<ChessMove> validMoves = new ArrayList<ChessMove>();
+            Collection<ChessMove> pieceMoves = piece.pieceMoves(this.board, startPosition);
 
-            for (ChessMove move : piece_moves){
-                // Get the end_pos, and move the piece to its potential position after this move.
+            for (ChessMove move : pieceMoves){
+                // Get the endPos, and move the piece to its potential position after this move.
                 // Then find the piece's king on the possibleBoard.
-                ChessPosition end_pos = move.getEndPosition();
-                ChessBoard possibleBoard = this.getPossibleBoard(startPosition, end_pos);
-                ChessPosition king_pos = possibleBoard.getKingPosition(piece.getTeamColor());
+                ChessPosition endPos = move.getEndPosition();
+                ChessBoard possibleBoard = this.getPossibleBoard(startPosition, endPos);
+                ChessPosition kingPos = possibleBoard.getKingPosition(piece.getTeamColor());
                 // If that move did not put the king in danger, it is valid
-                if (!possibleBoard.pieceIsInDanger(king_pos)){
-                    valid_moves.add(move);
+                if (!possibleBoard.pieceIsInDanger(kingPos)){
+                    validMoves.add(move);
                 }
             }
-            return valid_moves;
+            return validMoves;
         }
 
         /**
@@ -98,21 +98,21 @@ public class ChessGame {
             get the possible board with moving that piece
             set this.board to the possible board
              */
-            TeamColor cur_team_turn = this.getTeamTurn();
-            ChessPosition piece_start_pos = move.getStartPosition();
-            ChessPiece piece = this.board.getPiece(piece_start_pos);
+            TeamColor curTeamTurn = this.getTeamTurn();
+            ChessPosition pieceStartPos = move.getStartPosition();
+            ChessPiece piece = this.board.getPiece(pieceStartPos);
             if (piece == null){
                 throw new InvalidMoveException("There is no piece there.");
             }
-            if (piece.getTeamColor() != cur_team_turn){
+            if (piece.getTeamColor() != curTeamTurn){
                 throw new InvalidMoveException("It is not this team's turn!");
             }
 
-            Collection<ChessMove> valid_moves = this.validMoves(piece_start_pos);
+            Collection<ChessMove> validMoves = this.validMoves(pieceStartPos);
 
             boolean isAValidMove = false;
-            for (ChessMove valid_move : valid_moves){
-                if (move.equals(valid_move)){
+            for (ChessMove validMove : validMoves){
+                if (move.equals(validMove)){
                     isAValidMove = true;
                 }
             }
@@ -126,9 +126,9 @@ public class ChessGame {
                 piece.setPieceType(promp);
             }
 
-            ChessBoard newBoard = this.getPossibleBoard(piece_start_pos, move.getEndPosition());
+            ChessBoard newBoard = this.getPossibleBoard(pieceStartPos, move.getEndPosition());
             this.board = newBoard;
-            if (cur_team_turn == TeamColor.WHITE){
+            if (curTeamTurn == TeamColor.WHITE){
                 this.setTeamTurn(TeamColor.BLACK);
             } else {
                 this.setTeamTurn(TeamColor.WHITE);
@@ -202,18 +202,18 @@ public class ChessGame {
                     it's a safe move so add it to the list
             return the safe move list
              */
-            ArrayList<ChessMove> safe_moves = new ArrayList<ChessMove>();
+            ArrayList<ChessMove> safeMoves = new ArrayList<ChessMove>();
             ChessPiece piece = this.board.getPiece(position);
-            Collection<ChessMove> piece_moves = piece.pieceMoves(this.board, position);
-            for (ChessMove move : piece_moves){
+            Collection<ChessMove> pieceMoves = piece.pieceMoves(this.board, position);
+            for (ChessMove move : pieceMoves){
                 // Put the piece in the new hypothetical end position of the move
                 ChessBoard possibleBoard = this.getPossibleBoard(position, move.getEndPosition());
-                Collection<ChessMove> enemy_moves = possibleBoard.getEnemyMovesHere(piece.getTeamColor(), move.getEndPosition());
-                if ( enemy_moves.isEmpty() ){
-                    safe_moves.add(move);
+                Collection<ChessMove> enemyMoves = possibleBoard.getEnemyMovesHere(piece.getTeamColor(), move.getEndPosition());
+                if ( enemyMoves.isEmpty() ){
+                    safeMoves.add(move);
                 }
             }
-            return safe_moves;
+            return safeMoves;
         }
 
         /**
@@ -230,11 +230,11 @@ public class ChessGame {
                 return true
             otherwise return false
              */
-            ChessPosition king_pos = this.board.getKingPosition(teamColor);
-            if (!this.board.pieceIsInDanger(king_pos)){
-                Collection<ChessPosition> piece_locations = this.board.getPieceLocations(teamColor);
-                for (ChessPosition piece_location : piece_locations) {
-                    Collection<ChessMove> moves = this.validMoves(piece_location);
+            ChessPosition kingPos = this.board.getKingPosition(teamColor);
+            if (!this.board.pieceIsInDanger(kingPos)){
+                Collection<ChessPosition> pieceLocations = this.board.getPieceLocations(teamColor);
+                for (ChessPosition pieceLocation : pieceLocations) {
+                    Collection<ChessMove> moves = this.validMoves(pieceLocation);
                     if(!moves.isEmpty()){
                         return false;
                     }
