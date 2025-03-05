@@ -123,10 +123,7 @@ public class PieceMovesCalculator {
                 if(curPiece.isEnemy(this.piece)){
                     if (piece.getPieceType() == ChessPiece.PieceType.PAWN){
                         if (dirIsDiagonal && curPos.isPromotionEdge(piece.getTeamColor())) {
-                            moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.QUEEN));
-                            moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.BISHOP));
-                            moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.ROOK));
-                            moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.KNIGHT));
+                            moves = this.addPawnPromotionMoves(position, curPos, moves);
                             break;
                         }
                     }
@@ -141,10 +138,7 @@ public class PieceMovesCalculator {
                     break;
                 }
                 if (curPos.isPromotionEdge(piece.getTeamColor())){
-                    moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.QUEEN));
-                    moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.BISHOP));
-                    moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.ROOK));
-                    moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.KNIGHT));
+                    moves = this.addPawnPromotionMoves(position, curPos, moves);
                     break;
                 }
             }
@@ -154,6 +148,14 @@ public class PieceMovesCalculator {
             i++;
         }
         return moves;
+    }
+
+    public ArrayList<ChessMove> addPawnPromotionMoves(ChessPosition startPosition, ChessPosition endPosition, ArrayList<ChessMove> movesList) {
+        movesList.add(new ChessMove(startPosition, endPosition, ChessPiece.PieceType.QUEEN));
+        movesList.add(new ChessMove(startPosition, endPosition, ChessPiece.PieceType.BISHOP));
+        movesList.add(new ChessMove(startPosition, endPosition, ChessPiece.PieceType.ROOK));
+        movesList.add(new ChessMove(startPosition, endPosition, ChessPiece.PieceType.KNIGHT));
+        return movesList;
     }
 
     public ChessPosition getNewPosition(ChessPosition oldPos, ChessMove.Direction dir) {
