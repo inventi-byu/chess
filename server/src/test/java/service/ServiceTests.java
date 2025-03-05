@@ -79,4 +79,10 @@ public class ServiceTests {
 
 
     }
+
+    @Test
+    @DisplayName("Test that generateToken() generates a String")
+    public void testGenerateToken() {
+        Assertions.assertEquals(String.class, this.service.generateToken().getClass());
+    }
 }

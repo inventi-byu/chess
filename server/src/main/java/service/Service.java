@@ -17,7 +17,7 @@ public class Service {
     public Service(AuthDAO authDAO, UserDAO userDAO, GameDAO gameDAO){
         this.authDAO = authDAO;
         this.userDAO = userDAO;
-        this.gameDAO= gameDAO;
+        this.gameDAO = gameDAO;
     }
 
     public Service(AdminDAO adminDAO){
