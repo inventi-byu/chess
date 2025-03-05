@@ -93,7 +93,6 @@ public class GameServiceTests {
         Assertions.assertEquals("Error: bad request", badRequestException.getMessage());
     }
 
-
     @Test
     @DisplayName("Valid Join Game Request")
     public void testJoinGameGoodInput(){
