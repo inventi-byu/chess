@@ -163,27 +163,29 @@ public class ChessGame {
             return false
              */
 
-            if (this.isInCheck(teamColor)){
-                if (this.safeMoves(this.board.getKingPosition(teamColor)).isEmpty() ){
-                    /*
-                    for every friendly piece
-                        find out if it can move in a way that the king is safe
-                        if it can
-                            we are not in checkmate
-                    we're in checkmate because we never passed the test above.
-                     */
-                    for (ChessPosition pieceLocation : this.board.getPieceLocations(teamColor)){
-                        ChessPiece piece = this.board.getPiece(pieceLocation);
-                        Collection<ChessMove> moves = piece.pieceMoves(this.board, pieceLocation);
-                        for (ChessMove move : moves){
-                            ChessBoard possibleBoard = this.getPossibleBoard(move.getStartPosition(), move.getEndPosition());
-                            if (!possibleBoard.pieceIsInDanger(possibleBoard.getKingPosition(teamColor))){
-                                return false;
-                            }
+            if (!this.isInCheck(teamColor)) {
+                return false;
+            }
+
+            if (this.safeMoves(this.board.getKingPosition(teamColor)).isEmpty() ){
+                /*
+                for every friendly piece
+                    find out if it can move in a way that the king is safe
+                    if it can
+                        we are not in checkmate
+                we're in checkmate because we never passed the test above.
+                 */
+                for (ChessPosition pieceLocation : this.board.getPieceLocations(teamColor)){
+                    ChessPiece piece = this.board.getPiece(pieceLocation);
+                    Collection<ChessMove> moves = piece.pieceMoves(this.board, pieceLocation);
+                    for (ChessMove move : moves){
+                        ChessBoard possibleBoard = this.getPossibleBoard(move.getStartPosition(), move.getEndPosition());
+                        if (!possibleBoard.pieceIsInDanger(possibleBoard.getKingPosition(teamColor))){
+                            return false;
                         }
                     }
-                    return true;
                 }
+                return true;
             }
             return false;
         }
