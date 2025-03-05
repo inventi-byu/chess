@@ -63,8 +63,8 @@ public class ChessBoard {
      */
     public boolean pieceIsInDanger(ChessPosition position){
         ChessPiece piece = this.getPiece(position);
-        Collection<ChessMove> enemy_moves = this.getEnemyMovesHere(piece.getTeamColor(), position);
-        return !(enemy_moves.isEmpty());
+        Collection<ChessMove> enemyMoves = this.getEnemyMovesHere(piece.getTeamColor(), position);
+        return !(enemyMoves.isEmpty());
     }
 
     /**
@@ -76,12 +76,12 @@ public class ChessBoard {
     public ChessPosition getKingPosition(ChessGame.TeamColor teamColor){
         for (int i = 1; i < 9; i++){
             for (int j = 1; j < 9; j++){
-                ChessPosition cur_pos = new ChessPosition(i, j);
-                ChessPiece king_copy =  new ChessPiece(teamColor, ChessPiece.PieceType.KING);
-                ChessPiece cur_piece = this.getPiece(cur_pos);
-                if (cur_piece != null){
-                    if (cur_piece.equals(king_copy)){
-                        return cur_pos;
+                ChessPosition curPos = new ChessPosition(i, j);
+                ChessPiece kingCopy =  new ChessPiece(teamColor, ChessPiece.PieceType.KING);
+                ChessPiece curPiece = this.getPiece(curPos);
+                if (curPiece != null){
+                    if (curPiece.equals(kingCopy)){
+                        return curPos;
                     }
                 }
             }
@@ -95,22 +95,22 @@ public class ChessBoard {
      * @return an ArrayList of all the piece ChessPositions for the specified team.
      */
     public ArrayList<ChessPosition> getPieceLocations(ChessGame.TeamColor teamColor) {
-        ArrayList<ChessPosition> piece_locations = new ArrayList<ChessPosition>();
+        ArrayList<ChessPosition> pieceLocations = new ArrayList<ChessPosition>();
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
-                ChessPosition cur_pos = new ChessPosition(i,j);
-                if (this.isPieceHere(cur_pos)){
-                    ChessPiece cur_piece = this.getPiece(cur_pos);
+                ChessPosition curPos = new ChessPosition(i,j);
+                if (this.isPieceHere(curPos)){
+                    ChessPiece curPiece = this.getPiece(curPos);
 
                     // If this piece is the color we want to get...add it to the list.
-                    if (cur_piece.getTeamColor() == teamColor){
-                        piece_locations.add(cur_pos);
+                    if (curPiece.getTeamColor() == teamColor){
+                        pieceLocations.add(curPos);
                     }
 
                 }
             }
         }
-        return piece_locations;
+        return pieceLocations;
     }
 
     /**
@@ -120,26 +120,26 @@ public class ChessBoard {
      * @return An ArrayList of all moves of the enemy of teamColor that end at that position.
      */
     public Collection<ChessMove> getEnemyMovesHere(ChessGame.TeamColor teamColor, ChessPosition position) {
-        ArrayList<ChessMove> enemy_moves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> enemyMoves = new ArrayList<ChessMove>();
 
-        ChessGame.TeamColor enemy_color = null;
+        ChessGame.TeamColor enemyColor = null;
         if (teamColor == ChessGame.TeamColor.WHITE){
-            enemy_color = ChessGame.TeamColor.BLACK;
+            enemyColor = ChessGame.TeamColor.BLACK;
         } else{
-            enemy_color = ChessGame.TeamColor.WHITE;
+            enemyColor = ChessGame.TeamColor.WHITE;
         }
 
-        ArrayList<ChessPosition> enemy_locations = this.getPieceLocations(enemy_color);
-        for (ChessPosition enemy_location : enemy_locations){
-            ChessPiece cur_enemy_piece = this.getPiece(enemy_location);
-            Collection<ChessMove> moves = cur_enemy_piece.pieceMoves(this, enemy_location);
+        ArrayList<ChessPosition> enemyLocations = this.getPieceLocations(enemyColor);
+        for (ChessPosition enemyLocation : enemyLocations){
+            ChessPiece curEenemyPiece = this.getPiece(enemyLocation);
+            Collection<ChessMove> moves = curEenemyPiece.pieceMoves(this, enemyLocation);
             for (ChessMove move : moves){
                 if (move.getEndPosition().equals(position)) {
-                    enemy_moves.add(move);
+                    enemyMoves.add(move);
                 }
             }
         }
-        return enemy_moves;
+        return enemyMoves;
     }
 
     /**
@@ -199,10 +199,10 @@ public class ChessBoard {
         ChessBoard newBoard = new ChessBoard();
         for (int i = 1; i < 9; i++){
             for (int j = 1; j < 9; j++){
-                ChessPosition cur_pos = new ChessPosition(i,j);
-                ChessPiece cur_piece = this.getPiece(cur_pos);
-                if (cur_piece != null){
-                    newBoard.addPiece(cur_pos, cur_piece);
+                ChessPosition curPos = new ChessPosition(i,j);
+                ChessPiece curPiece = this.getPiece(curPos);
+                if (curPiece != null){
+                    newBoard.addPiece(curPos, curPiece);
                 }
             }
         }
@@ -235,15 +235,15 @@ public class ChessBoard {
         for (int i = 8; i > 0; i--){
             sb.append('|');
             for (int j = 1; j < 9; j++){
-                ChessPosition cur_pos = new ChessPosition(i,j);
-                ChessPiece cur_piece = this.getPiece(cur_pos);
+                ChessPosition curPos = new ChessPosition(i,j);
+                ChessPiece curPiece = this.getPiece(curPos);
                 // If there is no piece there, add a space.
-                if (cur_piece == null) {
+                if (curPiece == null) {
                     sb.append(" |");
                     continue;
                 }
-                if (cur_piece.getTeamColor() == ChessGame.TeamColor.WHITE){
-                    switch (cur_piece.getPieceType()){
+                if (curPiece.getTeamColor() == ChessGame.TeamColor.WHITE){
+                    switch (curPiece.getPieceType()){
                         case ChessPiece.PieceType.KING:
                             sb.append("K|");
                             break;
@@ -265,7 +265,7 @@ public class ChessBoard {
                     }
                 } else {
                     // Team is Black
-                    switch (cur_piece.getPieceType()){
+                    switch (curPiece.getPieceType()){
                         case ChessPiece.PieceType.KING:
                             sb.append("k|");
                             break;
