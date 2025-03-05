@@ -96,7 +96,10 @@ public class PieceMovesCalculator {
 
         ChessPosition curPos = new ChessPosition(position.getRow(), position.getColumn());
         boolean noLimit = (limit == 0);
-        boolean dirIsDiagonal = (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul || direction == ChessMove.Direction.DIAGdl || direction == ChessMove.Direction.DIAGdr);
+        boolean dirIsDiagonal = (
+                direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul ||
+                direction == ChessMove.Direction.DIAGdl || direction == ChessMove.Direction.DIAGdr
+        );
         int i = 0;
 
         // While it is in bounds, and there are either no limits or it is in limit
