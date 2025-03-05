@@ -94,71 +94,71 @@ public class PieceMovesCalculator {
 
         ArrayList<ChessMove> moves = new ArrayList<ChessMove>();
 
-        ChessPosition cur_pos = new ChessPosition(position.getRow(), position.getColumn());
-        boolean no_limit = (limit == 0);
-        boolean dir_is_diagonal = (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul || direction == ChessMove.Direction.DIAGdl || direction == ChessMove.Direction.DIAGdr);
+        ChessPosition curPos = new ChessPosition(position.getRow(), position.getColumn());
+        boolean noLimit = (limit == 0);
+        boolean dirIsDiagonal = (direction == ChessMove.Direction.DIAGur || direction == ChessMove.Direction.DIAGul || direction == ChessMove.Direction.DIAGdl || direction == ChessMove.Direction.DIAGdr);
         int i = 0;
 
         // While it is in bounds, and there are either no limits or it is in limit
-        while (cur_pos.isInBounds() && (no_limit || i < limit) ) {
+        while (curPos.isInBounds() && (noLimit || i < limit) ) {
 
-            cur_pos = this.getNewPosition(cur_pos, direction);
+            curPos = this.getNewPosition(curPos, direction);
 
             // If the new position is off the board, don't use it
-            if (!cur_pos.isInBounds()){
+            if (!curPos.isInBounds()){
                 break;
             }
 
             // The position is in bounds, get the piece
-            ChessPiece cur_piece = board.getPiece(cur_pos);
+            ChessPiece curPiece = board.getPiece(curPos);
             // If there's an enemy, keep that move and stop then break
             // Otherwise just break
-            if (cur_piece != null){
+            if (curPiece != null){
                 if(piece.getPieceType() == ChessPiece.PieceType.PAWN) {
                     if (direction == ChessMove.Direction.UP || direction == ChessMove.Direction.DOWN) {
                         // It can't move forward if there is a piece in the way
                         break;
                     }
                 }
-                if(cur_piece.isEnemy(this.piece)){
+                if(curPiece.isEnemy(this.piece)){
                     if (piece.getPieceType() == ChessPiece.PieceType.PAWN){
-                        if (dir_is_diagonal && cur_pos.isPromotionEdge(piece.getTeamColor())) {
-                            moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.QUEEN));
-                            moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.BISHOP));
-                            moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.ROOK));
-                            moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.KNIGHT));
+                        if (dirIsDiagonal && curPos.isPromotionEdge(piece.getTeamColor())) {
+                            moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.QUEEN));
+                            moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.BISHOP));
+                            moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.ROOK));
+                            moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.KNIGHT));
                             break;
                         }
                     }
-                    moves.add(new ChessMove(position, cur_pos, null));
+                    moves.add(new ChessMove(position, curPos, null));
                 }
                 break;
             }
 
             // Pawns can't move to an empty square diagonally, only if there's an enemy piece there
             if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
-                if (dir_is_diagonal) {
+                if (dirIsDiagonal) {
                     break;
                 }
-                if (cur_pos.isPromotionEdge(piece.getTeamColor())){
-                    moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.QUEEN));
-                    moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.BISHOP));
-                    moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.ROOK));
-                    moves.add(new ChessMove(position, cur_pos, ChessPiece.PieceType.KNIGHT));
+                if (curPos.isPromotionEdge(piece.getTeamColor())){
+                    moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.QUEEN));
+                    moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.BISHOP));
+                    moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.ROOK));
+                    moves.add(new ChessMove(position, curPos, ChessPiece.PieceType.KNIGHT));
                     break;
                 }
             }
             // There is no piece so you can move there
-            moves.add(new ChessMove(position, cur_pos, null));
+            moves.add(new ChessMove(position, curPos, null));
             // Increment move counter
             i++;
         }
         return moves;
     }
 
-    public ChessPosition getNewPosition(ChessPosition old_pos, ChessMove.Direction dir) {
-        int row = old_pos.getRow();
-        int col = old_pos.getColumn();
+    public ChessPosition getNewPosition(ChessPosition oldPos, ChessMove.Direction dir) {
+        int row = oldPos.getRow();
+        int col = oldPos.getColumn();
 
         switch (dir) {
             case ChessMove.Direction.UP:
