@@ -7,19 +7,22 @@ import service.result.ClearResult;
 
 public class ClearServiceTests {
 
+    MemoryAdminDAO adminDAO;
+    ClearService clearService;
+
     @BeforeEach
     void setUp(){
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
         MemoryUserDAO userDAO = new MemoryUserDAO();
         MemoryGameDAO gameDAO = new MemoryGameDAO();
-        AdminDAO adminDAO = new MemoryAdminDAO(authDAO, userDAO, gameDAO);
+        this.adminDAO = new MemoryAdminDAO(authDAO, userDAO, gameDAO);
         ClearService clearservice = new ClearService(adminDAO);
     }
+
     @Test
     public void testClearDatabase(){
         Assertions.assertTrue(true);
-        // ClearService clearservice = new ClearService();
-        //ClearResult result = clearservice.clear(new ClearRequest("delete"));
+        ClearResult result = clearService.clear(new ClearRequest("delete"));
         //Assertions.assertEquals(new ClearResult(200, ""), result);
     }
 }

@@ -28,7 +28,7 @@ public class UserHandler extends Handler {
     public String handleRegister(Request req, Response res) throws ResponseException {
         UserData userdata = new Gson().fromJson(req.body(), UserData.class);
         RegisterResult result = this.userService.register(new RegisterRequest(userdata));
-        res.status(result.getStatusCode());
+        res.status(result.getStatus());
         return new Gson().toJson(result.getAuthData()); // Return the body
     };
 }

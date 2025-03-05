@@ -12,7 +12,7 @@ public class RegisterResult {
         this.authData = authData;
     }
 
-    public int getStatusCode(){
+    public int getStatus(){
         return this.status;
     }
 
@@ -32,7 +32,7 @@ public class RegisterResult {
     public boolean equals(Object o){
         if (o instanceof RegisterResult){
             RegisterResult obj = (RegisterResult)o;
-            if(this.getStatusCode() == obj.getStatusCode() && this.authData.equals(obj.authData)){
+            if(this.getStatus() == obj.getStatus() && this.authData.equals(obj.authData)){
                 return true;
             }
         }

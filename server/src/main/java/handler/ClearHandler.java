@@ -20,10 +20,6 @@ public class ClearHandler extends Handler {
      * @param req the request as a Spark request.
      */
     public String handle(Request req, Response res) throws ResponseException  {
-        /*
-        Convert json to a request
-        call the service function and get the result, convert the result into a json, and return that.
-         */
         ClearRequest request = new ClearRequest(req.requestMethod()); // There may be nothing in the body to convert.
         ClearResult result = this.clearService.clear(request);
 

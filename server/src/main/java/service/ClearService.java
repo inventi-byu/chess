@@ -6,7 +6,7 @@ import service.request.ClearRequest;
 import service.result.ClearResult;
 
 public class ClearService extends Service {
-    
+
     public ClearService(AdminDAO adminDAO){
         super(adminDAO);
     }
@@ -18,6 +18,6 @@ public class ClearService extends Service {
      */
     public ClearResult clear(ClearRequest request) {
         this.adminDAO.clear();
-        return new ClearResult(200, "");
+        return new ClearResult(200);
     }
 }

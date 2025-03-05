@@ -3,28 +3,31 @@ package service.result;
 public class ClearResult {
 
     private int status;
-    private String message;
 
-    public ClearResult(int status, String message){
+    public ClearResult(int status){
         this.status = status;
-        this.message = message;
     }
 
     public int getStatus(){
         return this.status;
     }
 
-    public String getMessage(){
-        return this.message;
+    @Override
+    public String toString(){
+        return ("ClearResult(status = " +
+                status
+                );
     }
 
     @Override
-
-    public String toString(){
-        return ("ClearResult(status = " +
-                status + ", message = " +
-                message
-                );
+    public boolean equals(Object o){
+        if (o instanceof ClearResult){
+            ClearResult obj = (ClearResult)o;
+            if(this.getStatus() == obj.getStatus()){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
