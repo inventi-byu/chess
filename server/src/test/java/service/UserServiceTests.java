@@ -39,26 +39,33 @@ public class UserServiceTests {
         Assertions.assertEquals(expectedStatus, result.getStatus());
         Assertions.assertEquals(username, result.getAuthData().username());
         Assertions.assertEquals(String.class, result.getAuthData().authToken().getClass());
-
     }
 
     @Test
     @DisplayName("Invalid Register Request")
     public void testRegisterBadInput() {
-
         String username = "forgetfulJoe";
         String password = null;
         String email = "joe@aol.com";
-        UserData goodUser = new UserData(username, password, email);
+        UserData badRequestUser = new UserData(username, password, email);
 
-        int expectedStatusCode = 400;
-        String expectedMessage = "Error: bad request";
+        RegisterRequest badRequest = new RegisterRequest(badRequestUser);
 
-        RegisterRequest request = new RegisterRequest(goodUser);
-        ResponseException exception = Assertions.assertThrows(ResponseException.class, () -> this.userService.register(request));
-        Assertions.assertEquals(expectedStatusCode, exception.getStatusCode());
-        Assertions.assertEquals(expectedMessage, exception.getMessage());
+        ResponseException badRequestException = Assertions.assertThrows(ResponseException.class, () -> this.userService.register(badRequest));
+        Assertions.assertEquals(400, badRequestException.getStatusCode());
+        Assertions.assertEquals("Error: bad request", badRequestException.getMessage());
 
+
+        // Test Already Taken
+        UserData anotherGoodUser = new UserData(username, "MyPassword!", email);
+        this.userService.register(new RegisterRequest(anotherGoodUser));
+
+        UserData takenUser = new UserData(username, "A different password", "joeMyOtherEmail@aol.com");
+        RegisterRequest takenRequest = new RegisterRequest(takenUser);
+
+        ResponseException takenException = Assertions.assertThrows(ResponseException.class, () -> this.userService.register(takenRequest));
+        Assertions.assertEquals(403, takenException.getStatusCode());
+        Assertions.assertEquals("Error: already taken", takenException.getMessage());
     }
 
 }
