@@ -11,14 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.exception.ResponseException;
-import service.request.ClearRequest;
-import service.request.CreateGameRequest;
-import service.request.ListGamesRequest;
-import service.request.RegisterRequest;
-import service.result.ClearResult;
-import service.result.CreateGameResult;
-import service.result.ListGamesResult;
-import service.result.RegisterResult;
+import service.request.*;
+import service.result.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -96,12 +90,41 @@ public class GameServiceTests {
     @Test
     @DisplayName("Valid Join Game Request")
     public void testJoinGameGoodInput(){
-
+        CreateGameResult createGameResult = this.gameService.createGame(new CreateGameRequest(this.authToken, "mygame"));
+        JoinGameResult result = this.gameService.joinGame(new JoinGameRequest(this.authToken, "BLACK", createGameResult.getGameID()));
+        Assertions.assertEquals(200, result.getStatus());
     }
 
     @Test
     @DisplayName("Invalid Join Game Request")
     public void testJoinGameBadInput(){
+        // Need to test bad authorization, bad game id, and color taken
+        CreateGameResult createGameResult = this.gameService.createGame(new CreateGameRequest(this.authToken, "mygame"));
+
+        // Invalid authorization
+        ResponseException authException = Assertions.assertThrows(ResponseException.class,
+                () -> this.gameService.joinGame(new JoinGameRequest("FaKeAuTh!", "BLACK", createGameResult.getGameID()))
+        );
+        Assertions.assertEquals(401, authException.getStatusCode());
+        Assertions.assertEquals("Error: unauthorized", authException.getMessage());
+
+        // Add a player to the game
+        this.gameService.joinGame(new JoinGameRequest(this.authToken, "BLACK", createGameResult.getGameID()));
+
+
+        ResponseException takenException = Assertions.assertThrows(ResponseException.class,
+                () -> this.gameService.joinGame(new JoinGameRequest(this.authToken, "BLACK", createGameResult.getGameID()))
+        );
+        Assertions.assertEquals(403, takenException.getStatusCode());
+        Assertions.assertEquals("Error: already taken", takenException.getMessage());
+
+        // --------------------------------------------------
+        ResponseException badRequestException = Assertions.assertThrows(ResponseException.class,
+                () -> this.gameService.joinGame(new JoinGameRequest(this.authToken, "BLACK", 909090))
+        );
+        Assertions.assertEquals(400, badRequestException.getStatusCode());
+        Assertions.assertEquals("Error: bad request", badRequestException.getMessage());
+
 
     }
 
