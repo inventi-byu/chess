@@ -27,16 +27,16 @@ public class Server {
     private MemoryAdminDAO adminDAO;
     private MemoryGameDAO gameDAO;
 
-    private ClearService ClearService;
-    private UserService UserService;
-    private LoginService LoginService;
-    private LogoutService LogoutService;
-    private GameService GameService;
+    private ClearService clearService;
+    private UserService userService;
+    private LoginService loginService;
+    private LogoutService logoutService;
+    private GameService gameService;
 
-    private ClearHandler ClearHandler;
-    private UserHandler UserHandler;
-    private SessionHandler SessionHandler;
-    private GameHandler GameHandler;
+    private ClearHandler clearHandler;
+    private UserHandler userHandler;
+    private SessionHandler sessionHandler;
+    private GameHandler gameHandler;
 
     public Server(){
 
@@ -45,16 +45,16 @@ public class Server {
         this.gameDAO = new MemoryGameDAO();
         this.adminDAO = new MemoryAdminDAO(this.authDAO, this.userDAO, this.gameDAO);
 
-        this.ClearService = new ClearService(this.adminDAO);
-        this.UserService = new UserService(this.authDAO, this.userDAO, this.gameDAO);
-        this.LoginService = new LoginService(this.authDAO, this.userDAO, this.gameDAO);
-        this.LogoutService = new LogoutService(this.authDAO, this.userDAO, this.gameDAO);
-        this.GameService = new GameService(this.authDAO, this.userDAO, this.gameDAO);
+        this.clearService = new ClearService(this.adminDAO);
+        this.userService = new UserService(this.authDAO, this.userDAO, this.gameDAO);
+        this.loginService = new LoginService(this.authDAO, this.userDAO, this.gameDAO);
+        this.logoutService = new LogoutService(this.authDAO, this.userDAO, this.gameDAO);
+        this.gameService = new GameService(this.authDAO, this.userDAO, this.gameDAO);
 
-        this.ClearHandler = new ClearHandler(this.ClearService);
-        this.UserHandler = new UserHandler(this.UserService);
-        this.SessionHandler = new SessionHandler(this.LoginService, this.LogoutService);
-        this.GameHandler = new GameHandler(this.GameService);
+        this.clearHandler = new ClearHandler(this.clearService);
+        this.userHandler = new UserHandler(this.userService);
+        this.sessionHandler = new SessionHandler(this.loginService, this.logoutService);
+        this.gameHandler = new GameHandler(this.gameService);
     }
 
     public int run(int desiredPort) {
@@ -100,7 +100,7 @@ public class Server {
      * @return JSON string of the RegisterUserResult body.
      */
     public Object registerUser(Request req, Response res) throws ResponseException {
-        return this.UserHandler.handleRegister(req, res);
+        return this.userHandler.handleRegister(req, res);
     }
 
     /**
@@ -110,7 +110,7 @@ public class Server {
      * @return JSON string of the LoginUserResult body.
      */
     public Object loginUser(Request req, Response res){
-        return this.SessionHandler.handleLogin(req, res);
+        return this.sessionHandler.handleLogin(req, res);
         //throw new RuntimeException("Server.loginUser() is not implemented!");
     }
 
@@ -121,7 +121,7 @@ public class Server {
      * @return JSON string of the LogoutUserResult body.
      */
     public Object logoutUser(Request req, Response res){
-        return this.SessionHandler.handleLogout(req, res);
+        return this.sessionHandler.handleLogout(req, res);
     }
 
     /**
@@ -131,7 +131,7 @@ public class Server {
      * @return JSON string of the ListGamesResult body.
      */
     public Object listGames(Request req, Response res){
-        return this.GameHandler.handleListGames(req, res);
+        return this.gameHandler.handleListGames(req, res);
     }
 
     /**
@@ -141,7 +141,7 @@ public class Server {
      * @return JSON string of the CreateGameResult body.
      */
     public Object createGame(Request req, Response res){
-        return this.GameHandler.handleCreateGame(req, res);
+        return this.gameHandler.handleCreateGame(req, res);
     }
 
     /**
@@ -151,7 +151,7 @@ public class Server {
      * @return JSON string of the JoinGameResult body.
      */
     public Object joinGame(Request req, Response res){
-        return this.GameHandler.handleJoinGame(req, res);
+        return this.gameHandler.handleJoinGame(req, res);
     }
 
     /**
@@ -161,6 +161,6 @@ public class Server {
      * @return JSON string of the ClearResult body.
      */
     public Object clear(Request req, Response res) throws ResponseException {
-        return this.ClearHandler.handle(req, res);
+        return this.clearHandler.handle(req, res);
     }
 }
