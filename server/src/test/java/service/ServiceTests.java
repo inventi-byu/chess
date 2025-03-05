@@ -22,7 +22,6 @@ public class ServiceTests {
     @DisplayName("Valid Authenticate With Credentials Call")
     public void testAuthenticateWithCredentialsGoodInput() {
 
-
     }
 
     @Test
