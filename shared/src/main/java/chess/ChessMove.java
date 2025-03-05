@@ -78,7 +78,11 @@ public class ChessMove {
 
     @Override
     public String toString(){
-        return ("ChessMove{ {" + this.getStartPosition().getRow() + ", " + this.getStartPosition().getColumn() + "} to {" + this.getEndPosition().getRow() + ", " + this.getEndPosition().getColumn() + "} }");
+        return ("ChessMove{ {" +
+                this.getStartPosition().getRow() + ", " +
+                this.getStartPosition().getColumn() + "} to {" +
+                this.getEndPosition().getRow() + ", " +
+                this.getEndPosition().getColumn() + "} }");
     }
 
 }
