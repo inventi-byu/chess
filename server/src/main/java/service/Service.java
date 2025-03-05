@@ -12,10 +12,16 @@ public class Service {
     protected UserDAO userDAO;
     protected GameDAO gameDAO;
 
+    protected AdminDAO adminDAO;
+
     public Service(AuthDAO authDAO, UserDAO userDAO, GameDAO gameDAO){
         this.authDAO = authDAO;
         this.userDAO = userDAO;
         this.gameDAO= gameDAO;
+    }
+
+    public Service(AdminDAO adminDAO){
+        this.adminDAO = adminDAO;
     }
 
     /**

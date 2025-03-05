@@ -6,12 +6,9 @@ import service.request.ClearRequest;
 import service.result.ClearResult;
 
 public class ClearService extends Service {
-
-    private AdminDAO adminDAO;
-
-    public ClearService(AuthDAO authDAO, UserDAO userDAO, GameDAO gameDAO, AdminDAO adminDAO){
-        super(authDAO, userDAO, gameDAO);
-        this.adminDAO = adminDAO;
+    
+    public ClearService(AdminDAO adminDAO){
+        super(adminDAO);
     }
 
     /**

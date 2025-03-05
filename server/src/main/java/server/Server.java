@@ -45,7 +45,7 @@ public class Server {
         this.gameDAO = new MemoryGameDAO();
         this.adminDAO = new MemoryAdminDAO(this.authDAO, this.userDAO, this.gameDAO);
 
-        this.ClearService = new ClearService(this.authDAO, this.userDAO, this.gameDAO, this.adminDAO);
+        this.ClearService = new ClearService(this.adminDAO);
         this.UserService = new UserService(this.authDAO, this.userDAO, this.gameDAO);
         this.LoginService = new LoginService(this.authDAO, this.userDAO, this.gameDAO);
         this.LogoutService = new LogoutService(this.authDAO, this.userDAO, this.gameDAO);
