@@ -1,15 +1,13 @@
 package server;
 
-import dataaccess.MemoryAdminDAO;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 
 import handler.ClearHandler;
 import handler.UserHandler;
 import handler.SessionHandler;
 import handler.GameHandler;
 
+import org.mindrot.jbcrypt.BCrypt;
 import service.ClearService;
 import service.UserService;
 import service.LoginService;
@@ -58,6 +56,9 @@ public class Server {
     }
 
     public int run(int desiredPort) {
+
+
+        BCrypt.hashpw("hi", BCrypt.gensalt());
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
