@@ -5,7 +5,8 @@ drop table if exists game_table;
 create table user_table
 (
     id integer not null primary key auto_increment,
-    name varchar(255) not null,
+    username varchar(255) not null,
+    password varchar(255) not null,
     email_address varchar(255) not null
 );
 
