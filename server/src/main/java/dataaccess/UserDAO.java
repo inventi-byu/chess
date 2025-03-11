@@ -1,5 +1,6 @@
 package dataaccess;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 public interface UserDAO {
 
@@ -14,4 +15,7 @@ public interface UserDAO {
      * @return the UserData associated with the username.
      */
     public UserData getUser(String username);
+
+
+
 }

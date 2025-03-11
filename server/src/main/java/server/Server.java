@@ -164,4 +164,11 @@ public class Server {
     public Object clear(Request req, Response res) throws ResponseException {
         return this.clearHandler.handle(req, res);
     }
+
+    /**
+     * Creates the database and tables.
+     */
+    public void createDatabase() {
+        throw new RuntimeException("Not implmented.");
+    }
 }
