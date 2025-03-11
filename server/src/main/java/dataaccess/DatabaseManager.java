@@ -70,5 +70,12 @@ public class DatabaseManager {
         }
     }
 
-
+    /**
+     * Excutes a given SQL command.
+     * @param commannd the SQL command as a string
+     * @return a String representing the response from the database.
+     */
+    static String execute(String commannd){
+        throw new RuntimeException("Not implemented.");
+    }
 }
