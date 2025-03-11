@@ -7,7 +7,7 @@ import javax.xml.crypto.Data;
 
 public class MySQLUserDao implements UserDAO {
 
-    public boolean createUser(UserData userData) throws DataAccessException{
+    public boolean createUser(UserData userData){
         // Add user to the database
         // Return true
 
@@ -30,12 +30,4 @@ public class MySQLUserDao implements UserDAO {
         throw new RuntimeException("Not implemented.");
     };
 
-    /**
-     * Hashes a user's password with the bcyrpt algorithm for storing the database.
-     * @param password the user's password as a String
-     * @return the hashed password as a String
-     */
-    public String hashUserPassword(String password){
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
 }

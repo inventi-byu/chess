@@ -2,6 +2,7 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import service.exception.ResponseException;
 
 import java.util.UUID;
@@ -34,7 +35,7 @@ public class Service {
     public AuthData authenticateWithCredentials(String username, String password) throws ResponseException {
         UserData userData = this.userDAO.getUser(username);
         if (userData != null){
-            if (userData.password().equals(password)){
+            if (BCrypt.checkpw(password, userData.password())){
                 AuthData newAuthData = new AuthData(this.generateToken(), username);
                 this.authDAO.createAuth(newAuthData);
                 return newAuthData;
@@ -71,4 +72,5 @@ public class Service {
     public String generateToken() {
         return UUID.randomUUID().toString();
     }
+
 }

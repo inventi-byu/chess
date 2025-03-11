@@ -15,7 +15,8 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     public boolean createUser(UserData userData){
-        this.userDB.add(userData);
+        UserData hashedUserData = new UserData(userData.username(), this.hashUserPassword(userData.password()), userData.email());
+        this.userDB.add(hashedUserData);
         return true;
     }
 
