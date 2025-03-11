@@ -16,7 +16,7 @@ public class MySQLUserDao implements UserDAO {
         String email = userData.email();
 
         // Execute SQL command to add the user to the database.
-        // If succesful, return true,
+        // If successful, return true,
         // If failed, throw database exception
 
         throw new RuntimeException("MySQLUserDAO not implemented.");
