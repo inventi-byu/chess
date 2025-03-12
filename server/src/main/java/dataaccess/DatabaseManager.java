@@ -1,7 +1,12 @@
 package dataaccess;
 
+import service.exception.ResponseException;
+
 import java.sql.*;
 import java.util.Properties;
+
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.sql.Types.NULL;
 
 public class DatabaseManager {
     private static final String DATABASE_NAME;
@@ -71,11 +76,33 @@ public class DatabaseManager {
     }
 
     /**
-     * Excutes a given SQL command.
-     * @param commannd the SQL command as a string
-     * @return a String representing the response from the database.
+     * Executes SQL statement for INSERT, UPDATE, and DELETE with given parameters passed in.
+     * @param statement the SQL statement with placeholders (?) for parameters (must include a table to operate on).
+     * @param params the actual parameters to pass in
+     * @return an int representing keys generated. If there were no keys generated return 0.
+     * @throws ResponseException if the command fails.
      */
-    static String execute(String commannd){
-        throw new RuntimeException("Not implemented.");
+    static int updateDB(String statement, Object... params) throws DataAccessException{
+        try(var connection = DatabaseManager.getConnection()){
+            try(var db = connection.prepareStatement(statement, RETURN_GENERATED_KEYS)){
+                for (int i = 0; i < params.length; i++){
+                    var param = params[i];
+                    if (param instanceof String obj) db.setString(i+1, obj);
+                    else if (param instanceof Integer obj) db.setInt(i+1, obj);
+                    else if (param == null) db.setNull(i+1, NULL);
+                }
+                db.executeUpdate();
+
+                var genKeys = db.getGeneratedKeys();
+                // If something was produced.
+                if(genKeys.next()){
+                    return genKeys.getInt(1); // SQL is 1-indexed, not 0-indexed
+                }
+                return 0;
+            }
+        } catch (Exception exception){
+            throw new DataAccessException(String.format("Failed to execute: %s. Error Message: %s", statement, exception));
+        }
     }
+
 }
