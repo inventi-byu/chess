@@ -13,7 +13,7 @@ public class MySQLUserDAO implements UserDAO {
         String hashedPassword = this.hashUserPassword(userData.password());
         String email = userData.email();
 
-        String statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        String statement = "INSERT INTO user_table (username, password, email) VALUES (?, ?, ?)";
 
         try {
             DatabaseManager.updateDB(statement, username, hashedPassword, email);
@@ -28,7 +28,7 @@ public class MySQLUserDAO implements UserDAO {
         // Perform a search by username
         // Get the user data associated with that username (username, password, email)
 
-        String statement = "SELECT username, password, email FROM users WHERE username=?";
+        String statement = "SELECT username, password, email FROM user_table WHERE username=?";
 
         try {
             var data = DatabaseManager.queryDB(statement, username);
@@ -40,7 +40,7 @@ public class MySQLUserDAO implements UserDAO {
             // TODO: This may just need to be return null to work with userservice code
             throw new ResponseException(500, String.format("Could not find. Message from database: %s", exception));
         }
-        
+
     };
 
 }

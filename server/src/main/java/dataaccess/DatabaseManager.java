@@ -43,10 +43,18 @@ public class DatabaseManager {
      */
     static void createDatabase() throws DataAccessException {
         try {
+            // Create the database
             var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
+            }
+
+            // Drop all the tables and recreate them
+            for (String createStatement : DatabaseManager.createStatements){
+                try (var preparedStatement = conn.prepareStatement(createStatement)){
+                    preparedStatement.executeUpdate();
+                }
             }
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
@@ -123,4 +131,39 @@ public class DatabaseManager {
             throw new DataAccessException(String.format("Failed to execute query: %s. Error Message: %s", statement, exception));
         }
     }
+
+
+    static private final String[] createStatements = {
+            "drop table if exists user_table;",
+            "drop table if exists auth_table;",
+            "drop table if exists game_table;",
+            """
+            CREATE TABLE user_table
+            (
+                id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                username VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                email_address VARCHAR(255) NOT NULL
+            );
+            """,
+            """
+            CREATE TABLE auth_table
+            (
+                    user_id INTEGER NOT NULL,
+                    username VARCHAR(255) NOT NULL,
+                    auth_token VARCHAR(255) NOT NULL,
+                    FOREIGN KEY(user_id) REFERENCES user_table(id)
+            );
+            """,
+            """
+            CREATE TABLE game_table
+            (
+                game_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                white_username VARCHAR(255),
+                black_username VARCHAR(255),
+                gameName VARCHAR(255) NOT NULL,
+                game MEDIUMTEXT
+            );
+            """
+    };
 }
