@@ -14,8 +14,9 @@ import service.request.RegisterRequest;
 import service.result.RegisterResult;
 
 // TODO: Change this code so it is not the same as UserService Tests
-public class UserDAOTests {
 
+public class UserDAOTests {
+/*
     private UserService userService;
 
     @BeforeEach
@@ -69,5 +70,5 @@ public class UserDAOTests {
         Assertions.assertEquals(403, takenException.getStatusCode());
         Assertions.assertEquals("Error: already taken", takenException.getMessage());
     }
-
+*/
 }
