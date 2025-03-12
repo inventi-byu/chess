@@ -40,8 +40,7 @@ public class MySQLUserDAO implements UserDAO {
             // TODO: This may just need to be return null to work with userservice code
             throw new ResponseException(500, String.format("Could not find. Message from database: %s", exception));
         }
-
-        throw new RuntimeException("Not implemented.");
+        
     };
 
 }

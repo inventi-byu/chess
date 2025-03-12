@@ -2,30 +2,30 @@ drop table if exists user_table;
 drop table if exists auth_table;
 drop table if exists game_table;
 
-create table user_table
+CREATE TABLE user_table
 (
-    id integer not null primary key auto_increment,
-    username varchar(255) not null,
-    password varchar(255) not null,
-    email_address varchar(255) not null
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email_address VARCHAR(255) NOT NULL
 );
 
 
-create table auth_table
+CREATE TABLE auth_table
 (
-    user_id integer not null foreign key,
-    username VARCHAR(255) not null,
-    auth_token VARCHAR(255) not null,
-    foreign key(user_id) references user_table(id)
+    user_id INTEGER NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    auth_token VARCHAR(255) NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES user_table(id)
 );
 
-create table game_table
+CREATE TABLE game_table
 (
-    game_id integer not null primary key auto_increment,
-    white_username varchar(255),
+    game_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    white_username VARCHAR(255),
     black_username VARCHAR(255),
-    gameName VARCHAR(255) not null,
-    game MEDIUMBLOB
+    gameName VARCHAR(255) NOT NULL,
+    game MEDIUMTEXT
 );
 
 /*

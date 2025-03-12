@@ -101,8 +101,26 @@ public class DatabaseManager {
                 return 0;
             }
         } catch (Exception exception){
-            throw new DataAccessException(String.format("Failed to execute: %s. Error Message: %s", statement, exception));
+            throw new DataAccessException(String.format("Failed to execute update: %s. Error Message: %s", statement, exception));
         }
     }
 
+    static ResultSet queryDB(String statement, Object... params) throws DataAccessException {
+        try (var connection = DatabaseManager.getConnection()) {
+            try (var db = connection.prepareStatement(statement)) {
+                for (int i = 0; i < params.length; i++) {
+                    var param = params[i];
+                    if (param instanceof String obj) db.setString(i + 1, obj);
+                    else if (param instanceof Integer obj) db.setInt(i + 1, obj);
+                    else if (param == null) db.setNull(i + 1, NULL);
+                }
+                try (var response = db.executeQuery()) {
+                    assert response != null;
+                    return response;
+                }
+            }
+        } catch (Exception exception) {
+            throw new DataAccessException(String.format("Failed to execute query: %s. Error Message: %s", statement, exception));
+        }
+    }
 }
