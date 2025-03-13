@@ -54,7 +54,14 @@ public class GameDAOTests {
 
     @Test
     public void getGameTestBadInput(){
-        throw new RuntimeException("Not implemented.");
+        String gameName = "myGame";
+        int gameID = this.gameDAO.addGame(gameName);
+        Assertions.assertEquals(1, gameID);
+
+        int fakeID = 24234324;
+        GameData actualGameData = this.gameDAO.getGame(fakeID);
+
+        Assertions.assertNull(actualGameData);
     }
 
     @Test
