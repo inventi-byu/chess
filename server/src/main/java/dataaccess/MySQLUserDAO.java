@@ -36,13 +36,18 @@ public class MySQLUserDAO implements UserDAO {
         try {
             String[] expectedLabels = {"username", "password", "email_address"};
             ArrayList<String> data = DatabaseManager.queryDB(statement, expectedLabels, username);
+
+            if(data.isEmpty()){
+                return null;
+            }
+
             return new UserData(
                     data.get(0),
                     data.get(1),
                     data.get(2)
             );
         } catch (DataAccessException exception){
-            return null;
+            throw new ResponseException(500, String.format("Error: Something went wrong. Message: %s", exception));
         }
     }
 

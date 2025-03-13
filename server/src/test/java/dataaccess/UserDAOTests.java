@@ -83,6 +83,14 @@ public class UserDAOTests {
 
     @Test
     public void getUserTestBadInput(){
-        throw new RuntimeException("Not implemented.");
+        String username = "bobsmith100";
+        String password = "mysecurepassword";
+        String email = "bob@bob.com";
+
+        UserData userData = new UserData(username, password, email);
+        Assertions.assertTrue(this.userDAO.createUser(userData));
+
+        UserData actualUserData = this.userDAO.getUser("userThatDoesntExist");
+        Assertions.assertNull(actualUserData);
     }
 }
