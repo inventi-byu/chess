@@ -1,5 +1,6 @@
 package dataaccess;
 
+import model.GameData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,11 @@ public class GameDAOTests {
 
     @Test
     public void getGameTestGoodInput(){
-        throw new RuntimeException("Not implemented.");
+        String gameName = "myGame";
+        int gameID = this.gameDAO.addGame(gameName);
+        Assertions.assertEquals(1, gameID);
+        GameData gameData = this.gameDAO.getGame(gameID);
+        Assertions.assertEquals(gameName, gameData.gameName());
     }
 
     @Test
