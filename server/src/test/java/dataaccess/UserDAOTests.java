@@ -19,6 +19,8 @@ import spark.utils.Assert;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import static dataaccess.DatabaseManager.*;
+
 // TODO: Change this code so it is not the same as UserService Tests
 
 public class UserDAOTests {
@@ -44,9 +46,13 @@ public class UserDAOTests {
         UserData userData = new UserData(username, password, email);
         Assertions.assertTrue(this.userDAO.createUser(userData));
 
-        String statement = "SELECT username, password, email_address FROM user_table;";
+        String statement = "SELECT " +
+                USER_TABLE_USERNAME + ", " +
+                USER_TABLE_PASSWORD + ", " +
+                USER_TABLE_EMAIL + " FROM " +
+                USER_TABLE + ";";
         try {
-            String[] expectedLabels = {"username", "password", "email_address"};
+            String[] expectedLabels = {USER_TABLE_USERNAME, USER_TABLE_PASSWORD, USER_TABLE_EMAIL};
             ArrayList<String> results = DatabaseManager.queryDB(statement, expectedLabels);
             String actualUsername = results.get(0);
             String actualPassword = results.get(1);

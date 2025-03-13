@@ -6,6 +6,8 @@ import service.exception.ResponseException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import static dataaccess.DatabaseManager.*;
+
 public class DatabaseManagerTests {
 
     @Test
@@ -13,9 +15,9 @@ public class DatabaseManagerTests {
         try {
             DatabaseManager.createDatabase();
             String[] statements = {
-                    "SELECT * FROM user_table;",
-                    "SELECT * FROM auth_table;",
-                    "SELECT * FROM game_table;"
+                    "SELECT * FROM " + USER_TABLE + ";",
+                    "SELECT * FROM " + AUTH_TABLE + ";",
+                    "SELECT * FROM " + GAME_TABLE + ";",
             };
             for (String statement : statements) {
                 ArrayList<String> results = DatabaseManager.queryDB(statement, null);
