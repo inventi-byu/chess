@@ -69,7 +69,7 @@ public class Service {
      * Generates a unique authToken for a user.
      * @return a String representing the unique authToken.
      */
-    public String generateToken() {
+    public static String generateToken() {
         return UUID.randomUUID().toString();
     }
 

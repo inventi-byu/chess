@@ -6,8 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 import service.exception.ResponseException;
-import spark.utils.Assert;
-
 import java.util.ArrayList;
 
 import static dataaccess.DatabaseManager.*;
