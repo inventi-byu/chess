@@ -3,6 +3,7 @@ package dataaccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.exception.ResponseException;
 
 public class GameDAOTests {
 
@@ -11,7 +12,7 @@ public class GameDAOTests {
     @BeforeEach
     void setup(){
         this.gameDAO = new MySQLGameDAO();
-        
+
         try {
             DatabaseManager.createDatabase();
         } catch (Exception exception) {
@@ -26,7 +27,14 @@ public class GameDAOTests {
 
     @Test
     public void addGameTestBadInput(){
-        throw new RuntimeException("Not implemented.");
+        ResponseException exception = Assertions.assertThrows(ResponseException.class, () -> this.gameDAO.addGame(null));
+        Assertions.assertEquals("Could not add game. Message from database: " +
+                "dataaccess.DataAccessException: Failed to execute update: " +
+                "INSERT INTO game_table (white_username, black_username, game_name, game) VALUES (?, ?, ?, ?). " +
+                "Error Message: java.sql.SQLIntegrityConstraintViolationException: " +
+                "Column 'game_name' cannot be null",
+                exception.getMessage()
+        );
     }
 
     @Test

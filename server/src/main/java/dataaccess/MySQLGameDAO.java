@@ -29,7 +29,7 @@ public class MySQLGameDAO implements GameDAO {
             return gameID;
 
         } catch (DataAccessException exception){
-            throw new ResponseException(500, String.format("Could not create user. Message from database: %s", exception));
+            throw new ResponseException(500, String.format("Could not add game. Message from database: %s", exception));
         }
     }
 
