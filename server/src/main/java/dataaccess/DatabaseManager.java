@@ -50,12 +50,14 @@ public class DatabaseManager {
                 preparedStatement.executeUpdate();
             }
 
-            // Drop all the tables and recreate them
+            //DatabaseManager.clearDatabase();
+            // Drop all tables and recreate them
             for (String createStatement : DatabaseManager.createStatements){
                 try (var preparedStatement = conn.prepareStatement(createStatement)){
                     preparedStatement.executeUpdate();
                 }
             }
+            conn.close();
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
@@ -153,9 +155,10 @@ public class DatabaseManager {
 
 
     static private final String[] createStatements = {
-            "drop table if exists user_table;",
+            "use chess",
             "drop table if exists auth_table;",
             "drop table if exists game_table;",
+            "drop table if exists user_table;",
             """
             CREATE TABLE user_table
             (
