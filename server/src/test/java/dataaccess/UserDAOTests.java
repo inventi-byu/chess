@@ -84,10 +84,10 @@ public class UserDAOTests {
     @Test
     public void getUserTestBadInput(){
         String username = "bobsmith100";
-        String password = "mysecurepassword";
+        String password = null;
         String email = "bob@bob.com";
 
-        UserData userData = new UserData(username, password, email);
+        UserData userData = new UserData(username, null, email);
         Assertions.assertTrue(this.userDAO.createUser(userData));
 
         UserData actualUserData = this.userDAO.getUser("userThatDoesntExist");

@@ -15,6 +15,24 @@ public class DatabaseManager {
     private static final String PASSWORD;
     private static final String CONNECTION_URL;
 
+
+    // These are constants to use in SQL statements so the implementation below can be changed
+    // Without having to alter the code
+    public static final String USER_TABLE = "user_table";
+    public static final String AUTH_TABLE = "auth_table";
+    public static final String GAME_TABLE = "game_table";
+
+    public static final String USER_TABLE_USERNAME = "username";
+    public static final String USER_TABLE_PASSWORD = "password";
+    public static final String USER_TABLE_EMAIL = "email_address";
+    public static final String AUTH_TABLE_USERNAME = USER_TABLE_USERNAME;
+    public static final String AUTH_TABLE_AUTH_TOKEN = "auth_token";
+    public static final String GAME_TABLE_GAME_ID = "game_id";
+    public static final String GAME_TABLE_WHITE_USERNAME = "white_username";
+    public static final String GAME_TABLE_BLACK_USERNAME = "black_username";
+    public static final String GAME_TABLE_GAME_NAME = "game_name";
+    public static final String GAME_TABLE_GAME = "game";
+
     /*
      * Load the database information for the db.properties file.
      */
@@ -171,37 +189,28 @@ public class DatabaseManager {
 
 
     static private final String[] createStatements = {
-            "use chess",
-            "drop table if exists auth_table;",
-            "drop table if exists game_table;",
-            "drop table if exists user_table;",
-            """
-            CREATE TABLE user_table
-            (
-                id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                username VARCHAR(255) NOT NULL,
-                password VARCHAR(255) NOT NULL,
-                email_address VARCHAR(255) NOT NULL
-            );
-            """,
-            """
-            CREATE TABLE auth_table
-            (
-                    user_id INTEGER NOT NULL,
-                    username VARCHAR(255) NOT NULL,
-                    auth_token VARCHAR(255) NOT NULL,
-                    FOREIGN KEY(user_id) REFERENCES user_table(id)
-            );
-            """,
-            """
-            CREATE TABLE game_table
-            (
-                game_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                white_username VARCHAR(255),
-                black_username VARCHAR(255),
-                gameName VARCHAR(255) NOT NULL,
-                game MEDIUMTEXT
-            );
-            """
+            "USE CHESS",
+            "DROP TABLE IF EXISTS " + AUTH_TABLE + ";",
+            "DROP TABLE IF EXISTS " + GAME_TABLE + ";",
+            "DROP TABLE IF EXISTS " + USER_TABLE + ";",
+            "CREATE TABLE user_table(" +
+                    USER_TABLE_USERNAME + " VARCHAR(255) NOT NULL PRIMARY KEY," +
+                    USER_TABLE_PASSWORD + " VARCHAR(255) NOT NULL," +
+                    USER_TABLE_EMAIL + " VARCHAR(255) NOT NULL" +
+                    ");",
+            "CREATE TABLE auth_table(" +
+                    AUTH_TABLE_USERNAME + " VARCHAR(255) NOT NULL," +
+                    AUTH_TABLE_AUTH_TOKEN + " VARCHAR(255) NOT NULL," +
+                    "FOREIGN KEY(" + AUTH_TABLE_USERNAME + ") REFERENCES user_table(" + USER_TABLE_USERNAME + ")" +
+                    ");",
+            "CREATE TABLE game_table(" +
+                    GAME_TABLE_GAME_ID + " INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT," +
+                    GAME_TABLE_WHITE_USERNAME + " VARCHAR(255)," +
+                    GAME_TABLE_BLACK_USERNAME + " VARCHAR(255)," +
+                    GAME_TABLE_GAME_NAME + " VARCHAR(255) NOT NULL," +
+                    GAME_TABLE_GAME + " MEDIUMTEXT," +
+                    "FOREIGN KEY(" + GAME_TABLE_WHITE_USERNAME +  ") REFERENCES user_table(" + USER_TABLE_USERNAME + ")," +
+                    "FOREIGN KEY(" + GAME_TABLE_BLACK_USERNAME + ") REFERENCES user_table(" + USER_TABLE_USERNAME + ")" +
+                    ");"
     };
 }
