@@ -92,7 +92,8 @@ public class GameDAOTests {
 
     @Test
     public void getAllGamesTestBadInput(){
-        throw new RuntimeException("Not implemented.");
+        List<GameMetaData> games = this.gameDAO.getAllGames();
+        Assertions.assertTrue(games.isEmpty());
     }
 
     @Test
