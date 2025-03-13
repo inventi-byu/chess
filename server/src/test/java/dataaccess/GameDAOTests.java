@@ -2,10 +2,13 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.GameData;
+import model.GameMetaData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.exception.ResponseException;
+
+import java.util.List;
 
 public class GameDAOTests {
 
@@ -66,7 +69,25 @@ public class GameDAOTests {
 
     @Test
     public void getAllGamesTestGoodInput(){
-        throw new RuntimeException("Not implemented.");
+
+        int[] gameIDArray = new int[4];
+        String[] gameNameArray = new String[4];
+
+        for (int i = 0; i < 4; i++){
+            String gameName = "theBestGame_" + i;
+            gameIDArray[i] = this.gameDAO.addGame(gameName);
+        }
+
+        List<GameMetaData> games = this.gameDAO.getAllGames();
+
+        int i = 0;
+        for (GameMetaData gameMetaData : games){
+            GameMetaData expectedGameMetaData = new GameMetaData(gameIDArray[i], null, null, gameNameArray[i]);
+            Assertions.assertEquals(expectedGameMetaData, gameMetaData);
+            i++;
+        }
+        // Make sure that all the games were actually listed, and not just some
+        Assertions.assertEquals(gameNameArray.length, i+1);
     }
 
     @Test
