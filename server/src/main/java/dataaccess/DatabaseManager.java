@@ -61,6 +61,25 @@ public class DatabaseManager {
         }
     }
 
+    static void clearDatabase() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection();){
+            // Drop all the tables
+            for (String createStatement : DatabaseManager.clearStatements){
+                try (var preparedStatement = conn.prepareStatement(createStatement)){
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
+        }
+    }
+
+    private static final String[] clearStatements = {
+            "drop table if exists auth_table;",
+            "drop table if exists game_table;",
+            "drop table if exists user_table;",
+    };
+
     /**
      * Create a connection to the database and sets the catalog based upon the
      * properties specified in db.properties. Connections to the database should
