@@ -59,14 +59,29 @@ public class UserDAOTests {
         }
 
     }
+
+    @Test
     public void createUserTestBadInput(){
         throw new RuntimeException("Not implemented.");
     }
 
+    @Test
     public void getUserTestGoodInput(){
-        throw new RuntimeException("Not implemented.");
+        String username = "bobsmith100";
+        String password = "mysecurepassword";
+        String email = "bob@bob.com";
+        UserData userData = new UserData(username, password, email);
+        Assertions.assertTrue(this.userDAO.createUser(userData));
+
+        UserData actualUserData = this.userDAO.getUser(username);
+        Assertions.assertNotNull(actualUserData);
+
+        Assertions.assertEquals(username, actualUserData.username());
+        Assertions.assertTrue(BCrypt.checkpw(password, actualUserData.password()));
+        Assertions.assertEquals(email, actualUserData.email());
     }
 
+    @Test
     public void getUserTestBadInput(){
         throw new RuntimeException("Not implemented.");
     }

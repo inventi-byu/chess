@@ -3,11 +3,14 @@ package dataaccess;
 import model.UserData;
 import service.exception.ResponseException;
 
+import java.util.ArrayList;
+
 public class MySQLUserDAO implements UserDAO {
 
     public boolean createUser(UserData userData){
         // Add user to the database
         // Return true
+        // Remember that the UserService handles all the logic for making sure this will be a valid thing to do
 
         String username = userData.username();
         String hashedPassword = this.hashUserPassword(userData.password());
@@ -28,20 +31,19 @@ public class MySQLUserDAO implements UserDAO {
         // Perform a search by username
         // Get the user data associated with that username (username, password, email)
 
-        String statement = "SELECT username, password, email FROM user_table WHERE username=?";
+        String statement = "SELECT username, password, email_address FROM user_table WHERE username=?";
 
         try {
             String[] expectedLabels = {"username", "password", "email_address"};
-            var data = DatabaseManager.queryDB(statement, expectedLabels, username);
-            // TODO: convert the data into UserData;
-            // Return the user data
-            throw new RuntimeException("Converting user data not implemented.");
-
+            ArrayList<String> data = DatabaseManager.queryDB(statement, expectedLabels, username);
+            return new UserData(
+                    data.get(0),
+                    data.get(1),
+                    data.get(2)
+            );
         } catch (DataAccessException exception){
-            // TODO: This may just need to be return null to work with userservice code
-            throw new ResponseException(500, String.format("Could not find. Message from database: %s", exception));
+            return null;
         }
-
     }
 
 }
