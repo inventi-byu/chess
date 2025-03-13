@@ -1,18 +1,27 @@
 package dataaccess;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class GameDAOTests {
 
+    GameDAO gameDAO;
+
     @BeforeEach
     void setup(){
-        throw new RuntimeException("Not implemented.");
+        this.gameDAO = new MySQLGameDAO();
+        
+        try {
+            DatabaseManager.createDatabase();
+        } catch (Exception exception) {
+            throw new RuntimeException(String.format("Failed to create database. Message: %s"), exception);
+        }
     }
 
     @Test
     public void addGameTestGoodInput(){
-        throw new RuntimeException("Not implemented.");
+        Assertions.assertEquals(1, this.gameDAO.addGame("myFirstGame"));
     }
 
     @Test
