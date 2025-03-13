@@ -39,7 +39,17 @@ public class MySQLAuthDAO implements AuthDAO {
     };
 
     public boolean deleteAuth(AuthData authData){
-        throw new RuntimeException("Not implemented.");
+        if(this.authExists(authData)){
+            String statement = "DELETE FROM " + AUTH_TABLE + " WHERE " + AUTH_TABLE_USERNAME + "=?;";
+
+            try {
+                DatabaseManager.updateDB(statement, authData.username());
+                return true;
+            } catch (DataAccessException exception){
+                throw new ResponseException(500, String.format("Could not delete auth. Message from database: %s", exception));
+            }
+        }
+        return false;
     }
 
     // Remember authExists is still a function

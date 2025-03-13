@@ -114,7 +114,24 @@ public class AuthDAOTests {
 
     @Test
     public void deleteAuthTestGoodInput(){
-        throw new RuntimeException("Not implemented.");
+        String authToken = Service.generateToken();
+        AuthData authData = new AuthData(authToken, this.username);
+        Assertions.assertTrue(this.authDAO.createAuth(authData));
+
+        Assertions.assertTrue(this.authDAO.deleteAuth(authData));
+
+        // Just do a double check on the database to see if anything was added (there should be nothing there)
+        String statement = "SELECT " +
+                AUTH_TABLE_USERNAME + ", " +
+                AUTH_TABLE_AUTH_TOKEN +
+                " FROM " + AUTH_TABLE + ";";
+        try {
+            String[] expectedLabels = {AUTH_TABLE_USERNAME, AUTH_TABLE_AUTH_TOKEN};
+            ArrayList<String> results = DatabaseManager.queryDB(statement, expectedLabels);
+            Assertions.assertTrue(results.isEmpty());
+        } catch (Exception ex) {
+            throw new RuntimeException(String.format("deleteAuth Good Input Test failed. Message: %s", ex));
+        }
     }
 
     @Test
