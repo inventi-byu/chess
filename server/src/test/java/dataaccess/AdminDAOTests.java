@@ -7,6 +7,7 @@ import service.ClearService;
 import service.exception.ResponseException;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class AdminDAOTests {
 
@@ -26,7 +27,8 @@ public class AdminDAOTests {
                 "SELECT * FROM game_table;"
         };
         for (String statement : statements){
-            try (ResultSet results = DatabaseManager.queryDB(statement);){
+            try {
+                ArrayList<String> results = DatabaseManager.queryDB(statement);
             } catch (Exception exception){
                 switch (statement){
                     case "SELECT * FROM user_table;" ->

@@ -3,6 +3,7 @@ package dataaccess;
 import service.exception.ResponseException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -134,7 +135,16 @@ public class DatabaseManager {
         }
     }
 
-    static ResultSet queryDB(String statement, Object... params) throws DataAccessException {
+    /**
+     * Makes a query to the database and returns any results as string (methods that call this
+     * must handle converting strings into whatever datatype they need.
+     * @param statement the SQL command statement to run.
+     * @param labels the column labels expected in the result.
+     * @param params the parameters to fill in where wildcards were left in the SQL statement, in order of appearance
+     * @return an ArrayList<String> of all the results from the result set, irrespective of their actual datatype.
+     * @throws DataAccessException if there was en exception thrown while trying to access the database with these commands.
+     */
+    static ArrayList<String> queryDB(String statement, String[] labels,  Object... params) throws DataAccessException {
         try (var connection = DatabaseManager.getConnection()) {
             try (var db = connection.prepareStatement(statement)) {
                 for (int i = 0; i < params.length; i++) {
@@ -145,7 +155,11 @@ public class DatabaseManager {
                 }
                 try (var response = db.executeQuery()) {
                     assert response != null;
-                    return response;
+                    ArrayList<String> results = new ArrayList<String>();
+                    if (response.next()){
+                        results.add(response.getString());
+                    }
+                    return results;
                 }
             }
         } catch (Exception exception) {

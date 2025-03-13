@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import service.exception.ResponseException;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class DatabaseManagerTests {
 
@@ -17,11 +18,10 @@ public class DatabaseManagerTests {
                     "SELECT * FROM game_table;"
             };
             for (String statement : statements) {
-                try (ResultSet results = DatabaseManager.queryDB(statement);) {
-                    // This seems trivial, but basically if no errors are thrown by those statements
-                    // it means that the tables were succesfully created
-                    Assertions.assertTrue(true);
-                }
+                ArrayList<String> results = DatabaseManager.queryDB(statement);
+                // This seems trivial, but basically if no errors are thrown by those statements
+                // it means that the tables were succesfully created
+                Assertions.assertTrue(results.isEmpty());
             }
         } catch (Exception exception) {
             throw new ResponseException(500, String.format("createDatabase Test failed! Error Message: %s", exception));

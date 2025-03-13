@@ -4,27 +4,59 @@ import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import model.UserData;
+import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mindrot.jbcrypt.BCrypt;
 import service.UserService;
 import service.exception.ResponseException;
 import service.request.RegisterRequest;
 import service.result.RegisterResult;
+import spark.utils.Assert;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 // TODO: Change this code so it is not the same as UserService Tests
 
 public class UserDAOTests {
 
+    UserDAO userDAO;
+
     @BeforeEach
     void setup(){
+        this.userDAO = new MySQLUserDAO();
 
+        try {
+            DatabaseManager.createDatabase();
+        } catch (Exception exception) {
+            throw new RuntimeException(String.format("Failed to create database. Message: %s"), exception);
+        }
     }
 
     @Test
     public void createUserTestGoodInput(){
-        throw new RuntimeException("Not implemented.");
+        String username = "bobsmith100";
+        String password = "mysecurepassword";
+        String email = "bob@bob.com";
+        UserData userData = new UserData(username, password, email);
+        Assertions.assertTrue(this.userDAO.createUser(userData));
+
+        String statement = "SELECT username, password, email_address FROM user_table;";
+        try {
+            ArrayList<String> results = DatabaseManager.queryDB(statement);
+            String actualUsername = results.get(0);
+            String actualPassword = results.get(1);
+            String actualEmail = results.get(2);
+            Assertions.assertEquals(username, actualUsername);
+            Assertions.assertTrue(BCrypt.checkpw(password, actualPassword));
+            Assertions.assertEquals(email, actualEmail);
+        } catch (Exception exception){
+            throw new RuntimeException(String.format("createUser Good Input Test failed. Message: %s", exception));
+        }
+
     }
     public void createUserTestBadInput(){
         throw new RuntimeException("Not implemented.");
