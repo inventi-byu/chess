@@ -5,10 +5,8 @@ import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mindrot.jbcrypt.BCrypt;
 import service.Service;
 import service.exception.ResponseException;
-import spark.utils.Assert;
 
 import java.util.ArrayList;
 
@@ -46,6 +44,7 @@ public class AuthDAOTests {
         AuthData authData = new AuthData(authToken, this.username);
         Assertions.assertTrue(this.authDAO.createAuth(authData));
 
+        // Make sure the Auth Data is in the database
         String statement = "SELECT " +
                 AUTH_TABLE_USERNAME + ", " +
                 AUTH_TABLE_AUTH_TOKEN +
@@ -136,6 +135,28 @@ public class AuthDAOTests {
 
     @Test
     public void deleteAuthTestBadInput(){
-        throw new RuntimeException("Not implemented.");
+        // Auth doesn't exist
+        String authToken = Service.generateToken();
+        AuthData authData = new AuthData(authToken, this.username);
+        Assertions.assertTrue(this.authDAO.createAuth(authData));
+
+        AuthData nonExistentAuthData = new AuthData("FaKeToKeN", "fakeUsername");
+        Assertions.assertFalse(this.authDAO.deleteAuth(nonExistentAuthData));
+
+        // Make sure the Auth Data is still in the database
+        String statement = "SELECT " +
+                AUTH_TABLE_USERNAME + ", " +
+                AUTH_TABLE_AUTH_TOKEN +
+                " FROM " + AUTH_TABLE + ";";
+        try {
+            String[] expectedLabels = {AUTH_TABLE_USERNAME, AUTH_TABLE_AUTH_TOKEN};
+            ArrayList<String> results = DatabaseManager.queryDB(statement, expectedLabels);
+            String actualUsername = results.get(0);
+            String actualAuthToken = results.get(1);
+            Assertions.assertEquals(this.username, actualUsername);
+            Assertions.assertEquals(authToken, actualAuthToken);
+        } catch (Exception exception){
+            throw new RuntimeException(String.format("deleteAuth Bad Input Test failed. Message: %s", exception));
+        }
     }
 }
