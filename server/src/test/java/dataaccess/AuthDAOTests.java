@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 import service.Service;
+import service.exception.ResponseException;
 import spark.utils.Assert;
 
 import java.util.ArrayList;
@@ -63,8 +64,30 @@ public class AuthDAOTests {
 
     @Test
     public void createAuthTestBadInput(){
-        // User doesn't exist
-        throw new RuntimeException("Not implemented.");
+        String authToken = Service.generateToken();
+        AuthData authData = new AuthData(authToken, null);
+
+        ResponseException exception  = Assertions.assertThrows(ResponseException.class, () -> this.authDAO.createAuth(authData));
+        Assertions.assertEquals("Could not create auth. Message from database: " +
+                        "dataaccess.DataAccessException: Failed to execute update: " +
+                        "INSERT INTO auth_table (username, auth_token) VALUES (?, ?);. " +
+                        "Error Message: java.sql.SQLIntegrityConstraintViolationException: " +
+                        "Column 'username' cannot be null",
+                exception.getMessage()
+        );
+
+        // Just do a double check on the database to see if anything was added (there should be nothing there)
+        String statement = "SELECT " +
+                AUTH_TABLE_USERNAME + ", " +
+                AUTH_TABLE_AUTH_TOKEN +
+                " FROM " + AUTH_TABLE + ";";
+        try {
+            String[] expectedLabels = {AUTH_TABLE_USERNAME, AUTH_TABLE_AUTH_TOKEN};
+            ArrayList<String> results = DatabaseManager.queryDB(statement, expectedLabels);
+            Assertions.assertTrue(results.isEmpty());
+        } catch (Exception ex){
+            throw new RuntimeException(String.format("createAuth Bad Input Test failed. Message: %s", ex));
+        }
     }
 
     @Test

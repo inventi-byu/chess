@@ -34,7 +34,7 @@ public class MySQLAuthDAO implements AuthDAO {
             DatabaseManager.updateDB(statement, authData.username(), authData.authToken());
             return true;
         } catch (DataAccessException exception){
-            throw new ResponseException(500, String.format("Could not create user. Message from database: %s", exception));
+            throw new ResponseException(500, String.format("Could not create auth. Message from database: %s", exception));
         }
     };
 

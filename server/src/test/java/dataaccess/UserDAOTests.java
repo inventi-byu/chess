@@ -77,7 +77,7 @@ public class UserDAOTests {
             ArrayList<String> results = DatabaseManager.queryDB(statement, expectedLabels);
             Assertions.assertTrue(results.isEmpty());
         } catch (Exception ex){
-            throw new RuntimeException(String.format("createUser Good Input Test failed. Message: %s", ex));
+            throw new RuntimeException(String.format("createUser Bad Input Test failed. Message: %s", ex));
         }
     }
 
