@@ -3,10 +3,7 @@ package dataaccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.ClearService;
-import service.exception.ResponseException;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class AdminDAOTests {
