@@ -4,8 +4,10 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
 import model.GameMetaData;
+import model.UserData;
 import service.exception.ResponseException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static dataaccess.DatabaseManager.*;
@@ -34,7 +36,34 @@ public class MySQLGameDAO implements GameDAO {
     }
 
     public GameData getGame(int gameID){
-        throw new RuntimeException("Not implemented.");
+
+        String statement = "SELECT " +
+                GAME_TABLE_GAME_ID + ", " +
+                GAME_TABLE_WHITE_USERNAME + ", " +
+                GAME_TABLE_BLACK_USERNAME + ", " +
+                GAME_TABLE_GAME_NAME + ", " +
+                GAME_TABLE_GAME +
+                " FROM " + GAME_TABLE +
+                " WHERE " + GAME_TABLE_GAME_ID + "=?;";
+
+        try {
+            String[] expectedLabels = {GAME_TABLE_GAME_ID, GAME_TABLE_WHITE_USERNAME, GAME_TABLE_BLACK_USERNAME, GAME_TABLE_GAME_NAME, GAME_TABLE_GAME};
+            ArrayList<String> data = DatabaseManager.queryDB(statement, expectedLabels, gameID);
+
+            if(data.isEmpty()){
+                return null;
+            }
+
+            return new GameData(
+                    Integer.parseInt(data.get(0)),
+                    data.get(1),
+                    data.get(2),
+                    data.get(3),
+                    new Gson().fromJson(data.get(4), ChessGame.class)
+            );
+        } catch (DataAccessException exception){
+            throw new ResponseException(500, String.format("Error: Something went wrong getting the game. Message: %s", exception));
+        }
     }
 
     public List<GameMetaData> getAllGames(){

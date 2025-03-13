@@ -37,7 +37,8 @@ public class MySQLUserDAO implements UserDAO {
                 USER_TABLE_USERNAME + ", " +
                 USER_TABLE_PASSWORD + ", " +
                 USER_TABLE_EMAIL +
-                " FROM user_table WHERE " + USER_TABLE_USERNAME + "=?;";
+                " FROM " + USER_TABLE +
+                " WHERE " + USER_TABLE_USERNAME + "=?;";
 
         try {
             String[] expectedLabels = {USER_TABLE_USERNAME, USER_TABLE_PASSWORD, USER_TABLE_EMAIL};

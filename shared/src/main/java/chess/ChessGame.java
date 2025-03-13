@@ -281,4 +281,14 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return this.board;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof ChessGame){
+            ChessGame obj = (ChessGame)o;
+            // Remember it checks the board and the current team turn for equality!
+            return this.board.equals(obj.getBoard()) && this.getTeamTurn() == obj.getTeamTurn();
+        }
+        return false;
+    }
 }

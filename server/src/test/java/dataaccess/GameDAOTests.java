@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.GameData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,8 +44,12 @@ public class GameDAOTests {
         String gameName = "myGame";
         int gameID = this.gameDAO.addGame(gameName);
         Assertions.assertEquals(1, gameID);
-        GameData gameData = this.gameDAO.getGame(gameID);
-        Assertions.assertEquals(gameName, gameData.gameName());
+
+        GameData actualGameData = this.gameDAO.getGame(gameID);
+
+        GameData expectedGameData = new GameData(gameID, null, null, gameName, new ChessGame());
+        Assertions.assertEquals(expectedGameData, actualGameData);
+
     }
 
     @Test
