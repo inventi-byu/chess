@@ -96,9 +96,9 @@ public class DatabaseManager {
     }
 
     private static final String[] clearStatements = {
-            "drop table if exists auth_table;",
-            "drop table if exists game_table;",
-            "drop table if exists user_table;",
+            "DROP TABLE IF EXISTS " + AUTH_TABLE + ";",
+            "DROP TABLE IF EXISTS " + GAME_TABLE + ";",
+            "DROP TABLE IF EXISTS " + USER_TABLE + ";"
     };
 
     /**
