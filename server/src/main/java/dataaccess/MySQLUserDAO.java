@@ -5,6 +5,8 @@ import service.exception.ResponseException;
 
 import java.util.ArrayList;
 
+import static dataaccess.DatabaseManager.*;
+
 public class MySQLUserDAO implements UserDAO {
 
     public boolean createUser(UserData userData){
@@ -16,7 +18,7 @@ public class MySQLUserDAO implements UserDAO {
         String hashedPassword = this.hashUserPassword(userData.password());
         String email = userData.email();
 
-        String statement = "INSERT INTO user_table (username, password, email_address) VALUES (?, ?, ?)";
+        String statement = "INSERT INTO " + USER_TABLE + "(" + USER_TABLE_USERNAME + ", " + USER_TABLE_PASSWORD + ", " + USER_TABLE_EMAIL + ") VALUES (?, ?, ?)";
 
         try {
             DatabaseManager.updateDB(statement, username, hashedPassword, email);
@@ -31,10 +33,14 @@ public class MySQLUserDAO implements UserDAO {
         // Perform a search by username
         // Get the user data associated with that username (username, password, email)
 
-        String statement = "SELECT username, password, email_address FROM user_table WHERE username=?";
+        String statement = "SELECT " +
+                USER_TABLE_USERNAME + ", " +
+                USER_TABLE_PASSWORD + ", " +
+                USER_TABLE_EMAIL +
+                " FROM user_table WHERE " + USER_TABLE_USERNAME + "=?;";
 
         try {
-            String[] expectedLabels = {"username", "password", "email_address"};
+            String[] expectedLabels = {USER_TABLE_USERNAME, USER_TABLE_PASSWORD, USER_TABLE_EMAIL};
             ArrayList<String> data = DatabaseManager.queryDB(statement, expectedLabels, username);
 
             if(data.isEmpty()){

@@ -1,27 +1,16 @@
 package dataaccess;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
-import service.UserService;
 import service.exception.ResponseException;
-import service.request.RegisterRequest;
-import service.result.RegisterResult;
 import spark.utils.Assert;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import static dataaccess.DatabaseManager.*;
-
-// TODO: Change this code so it is not the same as UserService Tests
 
 public class UserDAOTests {
 
@@ -68,7 +57,30 @@ public class UserDAOTests {
 
     @Test
     public void createUserTestBadInput(){
-        throw new RuntimeException("Not implemented.");
+        String username = null;
+        String password = "mysecurepassword";
+        String email = "bob@bob.com";
+        UserData userData = new UserData(username, password, email);
+        ResponseException exception  = Assertions.assertThrows(ResponseException.class, () -> this.userDAO.createUser(userData));
+        Assertions.assertEquals("Could not create user. Message from database: " +
+                "dataaccess.DataAccessException: Failed to execute update: INSERT INTO user_table(username, password, email_address) " +
+                "VALUES (?, ?, ?). Error Message: java.sql.SQLIntegrityConstraintViolationException: " +
+                "Column 'username' cannot be null",
+                exception.getMessage());
+
+        // Just do a double check on the database to see if anything was added (there should be nothing there)
+        String statement = "SELECT " +
+                USER_TABLE_USERNAME + ", " +
+                USER_TABLE_PASSWORD + ", " +
+                USER_TABLE_EMAIL + " FROM " +
+                USER_TABLE + ";";
+        try {
+            String[] expectedLabels = {USER_TABLE_USERNAME, USER_TABLE_PASSWORD, USER_TABLE_EMAIL};
+            ArrayList<String> results = DatabaseManager.queryDB(statement, expectedLabels);
+            Assertions.assertTrue(results.isEmpty());
+        } catch (Exception ex){
+            throw new RuntimeException(String.format("createUser Good Input Test failed. Message: %s", ex));
+        }
     }
 
     @Test
@@ -90,7 +102,7 @@ public class UserDAOTests {
     @Test
     public void getUserTestBadInput(){
         String username = "bobsmith100";
-        String password = null;
+        String password = "mysecurepassword";
         String email = "bob@bob.com";
 
         UserData userData = new UserData(username, null, email);
