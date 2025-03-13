@@ -31,7 +31,8 @@ public class MySQLUserDAO implements UserDAO {
         String statement = "SELECT username, password, email FROM user_table WHERE username=?";
 
         try {
-            var data = DatabaseManager.queryDB(statement, username);
+            String[] expectedLabels = {"username", "password", "email_address"};
+            var data = DatabaseManager.queryDB(statement, expectedLabels, username);
             // TODO: convert the data into UserData;
             // Return the user data
             throw new RuntimeException("Converting user data not implemented.");

@@ -157,7 +157,9 @@ public class DatabaseManager {
                     assert response != null;
                     ArrayList<String> results = new ArrayList<String>();
                     if (response.next()){
-                        results.add(response.getString());
+                        for (String label : labels) {
+                            results.add(response.getString(label));
+                        }
                     }
                     return results;
                 }

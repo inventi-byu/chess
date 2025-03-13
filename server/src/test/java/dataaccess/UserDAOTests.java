@@ -46,7 +46,8 @@ public class UserDAOTests {
 
         String statement = "SELECT username, password, email_address FROM user_table;";
         try {
-            ArrayList<String> results = DatabaseManager.queryDB(statement);
+            String[] expectedLabels = {"username", "password", "email_address"};
+            ArrayList<String> results = DatabaseManager.queryDB(statement, expectedLabels);
             String actualUsername = results.get(0);
             String actualPassword = results.get(1);
             String actualEmail = results.get(2);

@@ -28,7 +28,7 @@ public class AdminDAOTests {
         };
         for (String statement : statements){
             try {
-                ArrayList<String> results = DatabaseManager.queryDB(statement);
+                ArrayList<String> results = DatabaseManager.queryDB(statement, null);
             } catch (Exception exception){
                 switch (statement){
                     case "SELECT * FROM user_table;" ->

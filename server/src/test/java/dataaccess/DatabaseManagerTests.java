@@ -18,7 +18,7 @@ public class DatabaseManagerTests {
                     "SELECT * FROM game_table;"
             };
             for (String statement : statements) {
-                ArrayList<String> results = DatabaseManager.queryDB(statement);
+                ArrayList<String> results = DatabaseManager.queryDB(statement, null);
                 // This seems trivial, but basically if no errors are thrown by those statements
                 // it means that the tables were succesfully created
                 Assertions.assertTrue(results.isEmpty());
