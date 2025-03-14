@@ -74,7 +74,11 @@ public class MemoryGameDAO implements GameDAO {
         return games;
     }
 
-
+    /**
+     * Gets a new gameID to use for creating games. Should only be accessed by the GameDAO class.
+     * This is only used in the in-memory implementation, as the database creates ids for us in the MySQL implementation.
+     * @return the new gameID as an int.
+     */
     public int getNewID(){
         // Increment lastID, then return the incremented value
         return ++this.lastID;

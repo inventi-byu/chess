@@ -35,10 +35,4 @@ public interface GameDAO {
      * @return true if the user was added to the game.
      */
     public boolean addUserToGame(int gameID, String playerColor, String username);
-
-    /**
-     * Gets a new gameID to use for creating games. Should only be accessed by the GameDAO class.
-     * @return the new gameID as an int.
-     */
-    public int getNewID();
 }

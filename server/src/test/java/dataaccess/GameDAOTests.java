@@ -107,10 +107,4 @@ public class GameDAOTests {
     public void addUserToGameTestBadInput(){
         throw new RuntimeException("Not implemented.");
     }
-
-    @Test
-    public void getNewIDTest(){
-        // May be handled by the database automatically
-        throw new RuntimeException("Not implemented.");
-    }
 }
