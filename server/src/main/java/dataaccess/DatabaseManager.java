@@ -190,7 +190,7 @@ public class DatabaseManager {
 
 
     static private final String[] createStatements = {
-            "USE CHESS",
+            "USE " + DATABASE_NAME,
             "DROP TABLE IF EXISTS " + AUTH_TABLE + ";",
             "DROP TABLE IF EXISTS " + GAME_TABLE + ";",
             "DROP TABLE IF EXISTS " + USER_TABLE + ";",
