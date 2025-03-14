@@ -104,6 +104,29 @@ public class DatabaseManager {
     }
 
     /**
+     * Clears the database by deleting everything in the tables.
+     * @throws DataAccessException if something went wrong executing the clear statements.
+     */
+    static void clearDatabase() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection();){
+            // DELETE all data in the tables
+            for (String clearStatement : DatabaseManager.CLEAR_STATEMENTS){
+                try (var preparedStatement = conn.prepareStatement(clearStatement)){
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
+        }
+    }
+
+    static String[] CLEAR_STATEMENTS = {
+            "DELETE FROM " + AUTH_TABLE,
+            "DELETE FROM " + GAME_TABLE,
+            "DELETE FROM " + USER_TABLE
+    };
+
+    /**
      * Create a connection to the database and sets the catalog based upon the
      * properties specified in db.properties. Connections to the database should
      * be short-lived, and you must close the connection when you are done with it.
@@ -133,27 +156,17 @@ public class DatabaseManager {
      * @throws ResponseException if the command fails.
      */
     static int updateDB(String statement, Object... params) throws DataAccessException{
-        try(var connection = DatabaseManager.getConnection()){
-            try(var db = connection.prepareStatement(statement, RETURN_GENERATED_KEYS)){
-                for (int i = 0; i < params.length; i++){
-                    var param = params[i];
-                    if (param instanceof String obj){
-                        db.setString(i+1, obj);
-                    } else if (param instanceof Integer obj) {
-                        db.setInt(i+1, obj);
-                    } else if (param == null) {
-                        db.setNull(i+1, NULL);
-                    }
-                }
-                db.executeUpdate();
+        try(var connection = DatabaseManager.getConnection(); var db = connection.prepareStatement(statement, RETURN_GENERATED_KEYS)){
+            DatabaseManager.setStatementParameters(db, params);
+            db.executeUpdate();
 
-                var genKeys = db.getGeneratedKeys();
-                // If something was produced.
-                if(genKeys.next()){
-                    return genKeys.getInt(1); // SQL is 1-indexed, not 0-indexed
-                }
-                return 0;
+            var genKeys = db.getGeneratedKeys();
+            // If something was produced.
+            if(genKeys.next()){
+                return genKeys.getInt(1); // SQL is 1-indexed, not 0-indexed
             }
+            return 0;
+
         } catch (Exception exception){
             throw new DataAccessException(String.format("Failed to execute update: %s. Error Message: %s", statement, exception));
         }
@@ -170,16 +183,7 @@ public class DatabaseManager {
      */
     static ArrayList<String> queryDB(String statement, String[] labels,  Object... params) throws DataAccessException {
         try (var connection = DatabaseManager.getConnection(); var db = connection.prepareStatement(statement)) {
-            for (int i = 0; i < params.length; i++) {
-                var param = params[i];
-                if (param instanceof String obj) {
-                    db.setString(i + 1, obj);
-                } else if (param instanceof Integer obj) {
-                    db.setInt(i + 1, obj);
-                } else if (param == null) {
-                    db.setNull(i + 1, NULL);
-                }
-            }
+            DatabaseManager.setStatementParameters(db, params);
             try (var response = db.executeQuery()) {
                 assert response != null;
                 ArrayList<String> results = new ArrayList<String>();
@@ -192,6 +196,25 @@ public class DatabaseManager {
             }
         } catch (Exception exception) {
             throw new DataAccessException(String.format("Failed to execute query: %s. Error Message: %s", statement, exception));
+        }
+    }
+
+    /**
+     * Replaces placeholders in SQL statement with parameter values passed in.
+     * @param preparedStatement the PreparedStatement whose placeholders will be updated with the parameters specified.
+     * @param params the parameters with which to replace the placeholders.
+     * @throws SQLException if there is an error while setting the parameters of the PreparedStatement with the values specificed.
+     */
+    static void setStatementParameters(PreparedStatement preparedStatement, Object... params) throws SQLException {
+        for (int i = 0; i < params.length; i++) {
+            var param = params[i];
+            if (param instanceof String obj) {
+                preparedStatement.setString(i + 1, obj);
+            } else if (param instanceof Integer obj) {
+                preparedStatement.setInt(i + 1, obj);
+            } else if (param == null) {
+                preparedStatement.setNull(i + 1, NULL);
+            }
         }
     }
 
