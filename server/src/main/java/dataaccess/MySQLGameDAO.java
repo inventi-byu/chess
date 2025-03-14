@@ -4,15 +4,12 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
 import model.GameMetaData;
-import model.UserData;
 import service.exception.ResponseException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import static dataaccess.DatabaseManager.*;
-import static dataaccess.DatabaseManager.USER_TABLE_EMAIL;
 
 public class MySQLGameDAO implements GameDAO {
 
