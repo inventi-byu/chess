@@ -174,7 +174,7 @@ public class DatabaseManager {
                 try (var response = db.executeQuery()) {
                     assert response != null;
                     ArrayList<String> results = new ArrayList<String>();
-                    if (response.next()){
+                    while(response.next()){
                         for (String label : labels) {
                             results.add(response.getString(label));
                         }

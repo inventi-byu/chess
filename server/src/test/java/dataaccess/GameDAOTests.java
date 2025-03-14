@@ -76,6 +76,7 @@ public class GameDAOTests {
         for (int i = 0; i < 4; i++){
             String gameName = "theBestGame_" + i;
             gameIDArray[i] = this.gameDAO.addGame(gameName);
+            gameNameArray[i] = gameName;
         }
 
         List<GameMetaData> games = this.gameDAO.getAllGames();
@@ -87,7 +88,8 @@ public class GameDAOTests {
             i++;
         }
         // Make sure that all the games were actually listed, and not just some
-        Assertions.assertEquals(gameNameArray.length, i+1);
+        // Just i and not i++ because i++ is at the end, so it will be the actual length
+        Assertions.assertEquals(gameNameArray.length, i);
     }
 
     @Test
