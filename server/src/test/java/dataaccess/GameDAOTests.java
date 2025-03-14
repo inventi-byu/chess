@@ -187,14 +187,22 @@ public class GameDAOTests {
         // TESTS
 
         // ADD USER THAT DOESN'T EXIST (taken color is handled by the GameService)
-
-
         int otherChosenGameIdIndex = 1;
         int otherChosenGameID = gameIDArray[otherChosenGameIdIndex];
         String fakeUser = "FakeUser3000";
 
-        ResponseException exceptionUserNoExist = Assertions.assertThrows(ResponseException.class, () -> this.gameDAO.addUserToGame(otherChosenGameID, "WHITE", fakeUser));
-        Assertions.assertEquals("some message", exceptionUserNoExist.getMessage());
-
+        ResponseException exceptionUserNoExist = Assertions.assertThrows(ResponseException.class,
+                () -> this.gameDAO.addUserToGame(otherChosenGameID, "WHITE", fakeUser)
+        );
+        Assertions.assertEquals("Could not add user FakeUser3000 to game id=2 as WHITE player. " +
+                "Message from database: " +
+                "dataaccess.DataAccessException: " +
+                "Failed to execute update: UPDATE game_table SET white_username=? WHERE game_id=?;. " +
+                "Error Message: java.sql.SQLIntegrityConstraintViolationException: " +
+                "Cannot add or update a child row: a foreign key constraint fails " +
+                "(`chess`.`game_table`, CONSTRAINT `game_table_ibfk_1` " +
+                "FOREIGN KEY (`white_username`) REFERENCES `user_table` (`username`))",
+                exceptionUserNoExist.getMessage()
+        );
     }
 }
