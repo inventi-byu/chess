@@ -69,38 +69,44 @@ public class DatabaseManager {
                 preparedStatement.executeUpdate();
             }
 
-            //DatabaseManager.clearDatabase();
-            // Drop all tables and recreate them
-            for (String createStatement : DatabaseManager.createStatements){
-                try (var preparedStatement = conn.prepareStatement(createStatement)){
-                    preparedStatement.executeUpdate();
+            // Check to see if there is stuff in the database or not
+            String[] checkStatements = {
+                    "SELECT * FROM user_table;",
+                    "SELECT * FROM auth_table;",
+                    "SELECT * FROM game_table;"
+            };
+            for (String checkStatement : checkStatements) {
+                try {
+                    ArrayList<String> results = DatabaseManager.queryDB(checkStatement, null);
+                } catch (Exception exception) {
+                    DatabaseManager.resetDatabase();
+                    conn.close();
                 }
             }
-            conn.close();
+
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
     }
 
-    static void clearDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-//        try (var conn = DatabaseManager.getConnection();){
-//            // Drop all the tables
-//            for (String createStatement : DatabaseManager.clearStatements){
-//                try (var preparedStatement = conn.prepareStatement(createStatement)){
-//                    preparedStatement.executeUpdate();
-//                }
-//            }
-//        } catch (SQLException exception) {
-//            throw new DataAccessException(exception.getMessage());
-//        }
+    static void resetDatabase() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection();){
+            // Drop all the tables
+            for (String createStatement : DatabaseManager.createStatements){
+                try (var preparedStatement = conn.prepareStatement(createStatement)){
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
+        }
     }
 
-    private static final String[] clearStatements = {
-            "DROP TABLE IF EXISTS " + AUTH_TABLE + ";",
-            "DROP TABLE IF EXISTS " + GAME_TABLE + ";",
-            "DROP TABLE IF EXISTS " + USER_TABLE + ";"
-    };
+//    private static final String[] clearStatements = {
+//            "DROP TABLE IF EXISTS " + AUTH_TABLE + ";",
+//            "DROP TABLE IF EXISTS " + GAME_TABLE + ";",
+//            "DROP TABLE IF EXISTS " + USER_TABLE + ";"
+//    };
 
     /**
      * Create a connection to the database and sets the catalog based upon the
