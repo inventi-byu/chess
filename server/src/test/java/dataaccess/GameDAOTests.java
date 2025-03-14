@@ -8,8 +8,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.exception.ResponseException;
+import spark.utils.Assert;
 
 import java.util.List;
+
+import static chess.ChessGame.TeamColor.WHITE;
 
 public class GameDAOTests {
 
@@ -103,12 +106,20 @@ public class GameDAOTests {
 
     @Test
     public void addUserToGameTestGoodInput(){
+        // Add two users to play the game
         String username = "bobsmith100";
         String password = "mysecurepassword";
         String email = "bob@bob.com";
         UserData userData = new UserData(username, password, email);
         Assertions.assertTrue(this.userDAO.createUser(userData));
 
+        String otherUsername = "friendofbob";
+        String otherPassword = "supersecure";
+        String otherEmail = "friend@friendsofbob.org";
+        UserData otherUserData = new UserData(otherUsername, otherPassword, otherEmail);
+        Assertions.assertTrue(this.userDAO.createUser(otherUserData));
+
+        // Add some games
         int[] gameIDArray = new int[4];
         String[] gameNameArray = new String[4];
 
@@ -118,13 +129,72 @@ public class GameDAOTests {
             gameNameArray[i] = gameName;
         }
 
+        // Make sure all the games were properly added
+        List<GameMetaData> games = this.gameDAO.getAllGames();
+        Assertions.assertEquals(gameNameArray.length, games.size());
 
+        // Test
+        int chosenGameID = 0;
+        // This expects a string for the player color
+        Assertions.assertTrue(this.gameDAO.addUserToGame(gameIDArray[chosenGameID], "WHITE", username));
+        Assertions.assertTrue(this.gameDAO.addUserToGame(gameIDArray[chosenGameID], "BLACK", otherUsername));
 
-        throw new RuntimeException("Not implemented.");
+        // Double check database to see if the data persisted
+        GameData updatedGameMetaData = this.gameDAO.getGame(chosenGameID);
+        Assertions.assertEquals(username, updatedGameMetaData.whiteUsername());
+        Assertions.assertEquals(otherUsername, updatedGameMetaData.blackUsername());
     }
 
     @Test
     public void addUserToGameTestBadInput(){
-        throw new RuntimeException("Not implemented.");
+        // Add two users to play the game
+        String username = "bobsmith100";
+        String password = "mysecurepassword";
+        String email = "bob@bob.com";
+        UserData userData = new UserData(username, password, email);
+        Assertions.assertTrue(this.userDAO.createUser(userData));
+
+        String otherUsername = "friendofbob";
+        String otherPassword = "supersecure";
+        String otherEmail = "friend@friendsofbob.org";
+        UserData otherUserData = new UserData(otherUsername, otherPassword, otherEmail);
+        Assertions.assertTrue(this.userDAO.createUser(otherUserData));
+
+        // Add some games
+        int[] gameIDArray = new int[4];
+        String[] gameNameArray = new String[4];
+
+        for (int i = 0; i < 4; i++){
+            String gameName = "theBestGame_" + i;
+            gameIDArray[i] = this.gameDAO.addGame(gameName);
+            gameNameArray[i] = gameName;
+        }
+
+        // Make sure all the games were properly added
+        List<GameMetaData> games = this.gameDAO.getAllGames();
+        Assertions.assertEquals(gameNameArray.length, games.size());
+
+        // Add the users to the game
+        int chosenGameID = 1;
+        // This expects a string for the player color
+        Assertions.assertTrue(this.gameDAO.addUserToGame(gameIDArray[chosenGameID], "WHITE", username));
+        Assertions.assertTrue(this.gameDAO.addUserToGame(gameIDArray[chosenGameID], "BLACK", otherUsername));
+
+        // Double check database to see if the data persisted
+        GameData updatedGameMetaData = this.gameDAO.getGame(chosenGameID);
+        Assertions.assertEquals(username, updatedGameMetaData.whiteUsername());
+        Assertions.assertEquals(otherUsername, updatedGameMetaData.blackUsername());
+
+        // TESTS
+
+        // ADD USER THAT DOESN'T EXIST (taken color is handled by the GameService)
+
+
+        int otherGameID = 2;
+        String fakeUser = "FakeUser3000";
+
+        ResponseException exceptionUserNoExist = Assertions.assertThrows(ResponseException.class, () -> this.gameDAO.addUserToGame(otherGameID, "WHITE", fakeUser));
+        Assertions.assertEquals("some message", exceptionUserNoExist.getMessage());
+
     }
 }
