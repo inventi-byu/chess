@@ -110,7 +110,7 @@ public class DatabaseManager {
     static void clearDatabase() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection();){
             // DELETE all data in the tables
-            for (String clearStatement : DatabaseManager.CLEAR_STATEMENTS){
+            for (String clearStatement : DatabaseManager.clearStatements){
                 try (var preparedStatement = conn.prepareStatement(clearStatement)){
                     preparedStatement.executeUpdate();
                 }
@@ -120,7 +120,7 @@ public class DatabaseManager {
         }
     }
 
-    static String[] CLEAR_STATEMENTS = {
+    static String[] clearStatements = {
             "DELETE FROM " + AUTH_TABLE,
             "DELETE FROM " + GAME_TABLE,
             "DELETE FROM " + USER_TABLE
