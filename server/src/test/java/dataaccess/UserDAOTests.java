@@ -21,7 +21,7 @@ public class UserDAOTests {
         try {
             DatabaseManager.createDatabase();
         } catch (Exception exception) {
-            throw new RuntimeException(String.format("Failed to create database. Message: %s"), exception);
+            throw new RuntimeException("Failed to create database. Message: %s", exception);
         }
     }
 
