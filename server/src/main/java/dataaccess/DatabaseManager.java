@@ -169,28 +169,26 @@ public class DatabaseManager {
      * @throws DataAccessException if there was en exception thrown while trying to access the database with these commands.
      */
     static ArrayList<String> queryDB(String statement, String[] labels,  Object... params) throws DataAccessException {
-        try (var connection = DatabaseManager.getConnection()) {
-            try (var db = connection.prepareStatement(statement)) {
-                for (int i = 0; i < params.length; i++) {
-                    var param = params[i];
-                    if (param instanceof String obj) {
-                        db.setString(i + 1, obj);
-                    } else if (param instanceof Integer obj) {
-                        db.setInt(i + 1, obj);
-                    } else if (param == null) {
-                        db.setNull(i + 1, NULL);
+        try (var connection = DatabaseManager.getConnection(); var db = connection.prepareStatement(statement)) {
+            for (int i = 0; i < params.length; i++) {
+                var param = params[i];
+                if (param instanceof String obj) {
+                    db.setString(i + 1, obj);
+                } else if (param instanceof Integer obj) {
+                    db.setInt(i + 1, obj);
+                } else if (param == null) {
+                    db.setNull(i + 1, NULL);
+                }
+            }
+            try (var response = db.executeQuery()) {
+                assert response != null;
+                ArrayList<String> results = new ArrayList<String>();
+                while(response.next()){
+                    for (String label : labels) {
+                        results.add(response.getString(label));
                     }
                 }
-                try (var response = db.executeQuery()) {
-                    assert response != null;
-                    ArrayList<String> results = new ArrayList<String>();
-                    while(response.next()){
-                        for (String label : labels) {
-                            results.add(response.getString(label));
-                        }
-                    }
-                    return results;
-                }
+                return results;
             }
         } catch (Exception exception) {
             throw new DataAccessException(String.format("Failed to execute query: %s. Error Message: %s", statement, exception));
