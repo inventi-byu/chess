@@ -20,13 +20,6 @@ import spark.*;
 
 public class Server {
 
-    /*
-    private MemoryAuthDAO authDAO;
-    private MemoryUserDAO userDAO;
-    private MemoryAdminDAO adminDAO;
-    private MemoryGameDAO gameDAO;
-     */
-
     private AuthDAO authDAO;
     private UserDAO userDAO;
     private AdminDAO adminDAO;
@@ -44,13 +37,6 @@ public class Server {
     private GameHandler gameHandler;
 
     public Server(){
-
-        /*
-        this.authDAO = new MemoryAuthDAO();
-        this.userDAO = new MemoryUserDAO();
-        this.gameDAO = new MemoryGameDAO();
-        this.adminDAO = new MemoryAdminDAO(this.authDAO, this.userDAO, this.gameDAO);
-        */
 
         this.authDAO = new MySQLAuthDAO();
         this.userDAO = new MySQLUserDAO();

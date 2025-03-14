@@ -10,7 +10,11 @@ import static dataaccess.DatabaseManager.*;
 public class MySQLAuthDAO implements AuthDAO {
 
     public AuthData getAuth(String authToken){
-        String statement = "SELECT " + AUTH_TABLE_USERNAME + ", " + AUTH_TABLE_AUTH_TOKEN + " FROM " + AUTH_TABLE + " WHERE " + AUTH_TABLE_AUTH_TOKEN + "=?;";
+        String statement = "SELECT " +
+                AUTH_TABLE_USERNAME + ", "
+                + AUTH_TABLE_AUTH_TOKEN +
+                " FROM " + AUTH_TABLE +
+                " WHERE " + AUTH_TABLE_AUTH_TOKEN + "=?;";
 
         try {
             String[] expectedLabels = {AUTH_TABLE_USERNAME, AUTH_TABLE_AUTH_TOKEN};

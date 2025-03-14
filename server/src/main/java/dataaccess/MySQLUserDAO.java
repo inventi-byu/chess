@@ -18,7 +18,11 @@ public class MySQLUserDAO implements UserDAO {
         String hashedPassword = this.hashUserPassword(userData.password());
         String email = userData.email();
 
-        String statement = "INSERT INTO " + USER_TABLE + "(" + USER_TABLE_USERNAME + ", " + USER_TABLE_PASSWORD + ", " + USER_TABLE_EMAIL + ") VALUES (?, ?, ?)";
+        String statement = "INSERT INTO " +
+                USER_TABLE + "(" +
+                USER_TABLE_USERNAME + ", "
+                + USER_TABLE_PASSWORD + ", "
+                + USER_TABLE_EMAIL + ") VALUES (?, ?, ?)";
 
         try {
             DatabaseManager.updateDB(statement, username, hashedPassword, email);

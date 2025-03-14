@@ -14,8 +14,8 @@ import static dataaccess.DatabaseManager.*;
 public class MySQLGameDAO implements GameDAO {
 
     public int addGame(String gameName){
-        String white_username = null;
-        String black_username = null;
+        String whiteUsername = null;
+        String blackUsername = null;
         String game = new Gson().toJson(new ChessGame());
 
         String statement = "INSERT INTO " + GAME_TABLE + " (" +
@@ -25,7 +25,7 @@ public class MySQLGameDAO implements GameDAO {
                 GAME_TABLE_GAME + ") VALUES (?, ?, ?, ?)";
 
         try {
-            int gameID = DatabaseManager.updateDB(statement, white_username, black_username, gameName, game);
+            int gameID = DatabaseManager.updateDB(statement, whiteUsername, blackUsername, gameName, game);
             return gameID;
 
         } catch (DataAccessException exception){
@@ -45,7 +45,14 @@ public class MySQLGameDAO implements GameDAO {
                 " WHERE " + GAME_TABLE_GAME_ID + "=?;";
 
         try {
-            String[] expectedLabels = {GAME_TABLE_GAME_ID, GAME_TABLE_WHITE_USERNAME, GAME_TABLE_BLACK_USERNAME, GAME_TABLE_GAME_NAME, GAME_TABLE_GAME};
+            String[] expectedLabels = {
+                    GAME_TABLE_GAME_ID,
+                    GAME_TABLE_WHITE_USERNAME,
+                    GAME_TABLE_BLACK_USERNAME,
+                    GAME_TABLE_GAME_NAME,
+                    GAME_TABLE_GAME
+            };
+
             ArrayList<String> data = DatabaseManager.queryDB(statement, expectedLabels, gameID);
 
             if(data.isEmpty()){
@@ -118,7 +125,13 @@ public class MySQLGameDAO implements GameDAO {
             return true;
 
         } catch (DataAccessException exception){
-            throw new ResponseException(500, String.format("Could not add user %s to game id=%s as %s player. Message from database: %s", username, gameID, playerColor, exception));
+            throw new ResponseException(500, String.format("Could not add user %s to game id=%s as %s player. " +
+                    "Message from database: %s",
+                    username,
+                    gameID,
+                    playerColor,
+                    exception)
+            );
         }
     }
 }

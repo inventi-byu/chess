@@ -92,7 +92,7 @@ public class DatabaseManager {
     static void resetDatabase() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection();){
             // Drop all the tables
-            for (String createStatement : DatabaseManager.createStatements){
+            for (String createStatement : DatabaseManager.CREATE_STATEMENTS){
                 try (var preparedStatement = conn.prepareStatement(createStatement)){
                     preparedStatement.executeUpdate();
                 }
@@ -101,12 +101,6 @@ public class DatabaseManager {
             throw new DataAccessException(exception.getMessage());
         }
     }
-
-//    private static final String[] clearStatements = {
-//            "DROP TABLE IF EXISTS " + AUTH_TABLE + ";",
-//            "DROP TABLE IF EXISTS " + GAME_TABLE + ";",
-//            "DROP TABLE IF EXISTS " + USER_TABLE + ";"
-//    };
 
     /**
      * Create a connection to the database and sets the catalog based upon the
@@ -142,9 +136,13 @@ public class DatabaseManager {
             try(var db = connection.prepareStatement(statement, RETURN_GENERATED_KEYS)){
                 for (int i = 0; i < params.length; i++){
                     var param = params[i];
-                    if (param instanceof String obj) db.setString(i+1, obj);
-                    else if (param instanceof Integer obj) db.setInt(i+1, obj);
-                    else if (param == null) db.setNull(i+1, NULL);
+                    if (param instanceof String obj){
+                        db.setString(i+1, obj);
+                    } else if (param instanceof Integer obj) {
+                        db.setInt(i+1, obj);
+                    } else if (param == null) {
+                        db.setNull(i+1, NULL);
+                    }
                 }
                 db.executeUpdate();
 
@@ -174,9 +172,13 @@ public class DatabaseManager {
             try (var db = connection.prepareStatement(statement)) {
                 for (int i = 0; i < params.length; i++) {
                     var param = params[i];
-                    if (param instanceof String obj) db.setString(i + 1, obj);
-                    else if (param instanceof Integer obj) db.setInt(i + 1, obj);
-                    else if (param == null) db.setNull(i + 1, NULL);
+                    if (param instanceof String obj) {
+                        db.setString(i + 1, obj);
+                    } else if (param instanceof Integer obj) {
+                        db.setInt(i + 1, obj);
+                    } else if (param == null) {
+                        db.setNull(i + 1, NULL);
+                    }
                 }
                 try (var response = db.executeQuery()) {
                     assert response != null;
@@ -195,7 +197,7 @@ public class DatabaseManager {
     }
 
 
-    static private final String[] createStatements = {
+    static private final String[] CREATE_STATEMENTS = {
             "USE " + DATABASE_NAME,
             "DROP TABLE IF EXISTS " + AUTH_TABLE + ";",
             "DROP TABLE IF EXISTS " + GAME_TABLE + ";",
