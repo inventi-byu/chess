@@ -107,6 +107,21 @@ public class MySQLGameDAO implements GameDAO {
     }
 
     public boolean addUserToGame(int gameID, String playerColor, String username){
-        throw new RuntimeException("Not implemented.");
+        String statement = null;
+        switch (playerColor){
+            case "WHITE" -> statement = "UPDATE " + GAME_TABLE + " SET " +
+                    GAME_TABLE_WHITE_USERNAME +
+                    "=? WHERE " + GAME_TABLE_GAME_ID + "=?;";
+            case "BLACK" -> statement = "UPDATE " + GAME_TABLE + " SET " +
+                    GAME_TABLE_BLACK_USERNAME +
+                    "=? WHERE " + GAME_TABLE_GAME_ID + "=?;";
+        }
+        try {
+            DatabaseManager.updateDB(statement, username, gameID);
+            return true;
+
+        } catch (DataAccessException exception){
+            throw new ResponseException(500, String.format("Could not add user %s to game id=%s as %s player. Message from database: %s", username, gameID, playerColor, exception));
+        }
     }
 }

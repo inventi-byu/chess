@@ -8,11 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.exception.ResponseException;
-import spark.utils.Assert;
 
 import java.util.List;
-
-import static chess.ChessGame.TeamColor.WHITE;
 
 public class GameDAOTests {
 
@@ -134,10 +131,11 @@ public class GameDAOTests {
         Assertions.assertEquals(gameNameArray.length, games.size());
 
         // Test
-        int chosenGameID = 0;
+        int chosenGameIDIndex = 0;
+        int chosenGameID = gameIDArray[chosenGameIDIndex];
         // This expects a string for the player color
-        Assertions.assertTrue(this.gameDAO.addUserToGame(gameIDArray[chosenGameID], "WHITE", username));
-        Assertions.assertTrue(this.gameDAO.addUserToGame(gameIDArray[chosenGameID], "BLACK", otherUsername));
+        Assertions.assertTrue(this.gameDAO.addUserToGame(chosenGameID, "WHITE", username));
+        Assertions.assertTrue(this.gameDAO.addUserToGame(chosenGameID, "BLACK", otherUsername));
 
         // Double check database to see if the data persisted
         GameData updatedGameMetaData = this.gameDAO.getGame(chosenGameID);
@@ -175,10 +173,11 @@ public class GameDAOTests {
         Assertions.assertEquals(gameNameArray.length, games.size());
 
         // Add the users to the game
-        int chosenGameID = 1;
+        int chosenGameIDIndex = 0;
+        int chosenGameID = gameIDArray[chosenGameIDIndex];
         // This expects a string for the player color
-        Assertions.assertTrue(this.gameDAO.addUserToGame(gameIDArray[chosenGameID], "WHITE", username));
-        Assertions.assertTrue(this.gameDAO.addUserToGame(gameIDArray[chosenGameID], "BLACK", otherUsername));
+        Assertions.assertTrue(this.gameDAO.addUserToGame(chosenGameID, "WHITE", username));
+        Assertions.assertTrue(this.gameDAO.addUserToGame(chosenGameID, "BLACK", otherUsername));
 
         // Double check database to see if the data persisted
         GameData updatedGameMetaData = this.gameDAO.getGame(chosenGameID);
@@ -190,10 +189,11 @@ public class GameDAOTests {
         // ADD USER THAT DOESN'T EXIST (taken color is handled by the GameService)
 
 
-        int otherGameID = 2;
+        int otherChosenGameIdIndex = 1;
+        int otherChosenGameID = gameIDArray[otherChosenGameIdIndex];
         String fakeUser = "FakeUser3000";
 
-        ResponseException exceptionUserNoExist = Assertions.assertThrows(ResponseException.class, () -> this.gameDAO.addUserToGame(otherGameID, "WHITE", fakeUser));
+        ResponseException exceptionUserNoExist = Assertions.assertThrows(ResponseException.class, () -> this.gameDAO.addUserToGame(otherChosenGameID, "WHITE", fakeUser));
         Assertions.assertEquals("some message", exceptionUserNoExist.getMessage());
 
     }
