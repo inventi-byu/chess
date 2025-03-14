@@ -4,6 +4,7 @@ import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
+import model.GameData;
 import model.GameMetaData;
 import service.exception.ResponseException;
 import service.request.CreateGameRequest;
@@ -65,15 +66,34 @@ public class GameService extends Service {
         int gameID = request.getGameID();
         String playerColor = request.getPlayerColor();
 
+        // Make sure ID is valid
+        GameData gameToJoin = gameDAO.getGame(gameID);
+
+        if (gameToJoin == null){
+            throw new ResponseException(400, "Error: bad request");
+        }
+
         if (playerColor == null){
             throw new ResponseException(400, "Error: bad request");
         }
 
-        if (playerColor.equals("WHITE") || playerColor.equals("BLACK")){
-            gameDAO.addUserToGame(gameID, playerColor, authData.username());
-            return new JoinGameResult(200);
+        switch (playerColor){
+            case "WHITE":
+                if (gameToJoin.whiteUsername() != null){
+                    throw new ResponseException(403, "Error: already taken");
+                }
+                gameDAO.addUserToGame(gameID, playerColor, authData.username());
+                return new JoinGameResult(200);
+            case "BLACK":
+                if (gameToJoin.blackUsername() != null){
+                    throw new ResponseException(403, "Error: already taken");
+                }
+                gameDAO.addUserToGame(gameID, playerColor, authData.username());
+                return new JoinGameResult(200);
+            default:
+                throw new ResponseException(400, "Error: bad request");
         }
-        throw new ResponseException(400, "Error: bad request");
+
     }
 }
 

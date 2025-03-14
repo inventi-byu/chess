@@ -20,7 +20,7 @@ public class LogoutService extends Service {
      * @return a LogoutResult with status code 200.
      */
     public LogoutResult logout(LogoutRequest request) throws ResponseException {
-        // authenticateWithCredentials throws the errors
+        // authenticateWithToken throws the errors
         AuthData authData = this.authenticateWithToken(request.getAuthToken());
         if (this.authDAO.deleteAuth(authData)){
             return new LogoutResult(200);

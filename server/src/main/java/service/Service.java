@@ -36,7 +36,7 @@ public class Service {
         UserData userData = this.userDAO.getUser(username);
         if (userData != null){
             if (BCrypt.checkpw(password, userData.password())){
-                AuthData newAuthData = new AuthData(this.generateToken(), username);
+                AuthData newAuthData = new AuthData(Service.generateToken(), username);
                 this.authDAO.createAuth(newAuthData);
                 return newAuthData;
             }

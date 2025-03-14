@@ -26,6 +26,7 @@ public class MySQLAuthDAO implements AuthDAO {
 
     public boolean createAuth(AuthData authData){
         if(this.authExists(authData)){
+            //this.deleteAuth(authData);
             return false;
         }
         String statement = "INSERT INTO " + AUTH_TABLE + " (" + AUTH_TABLE_USERNAME + ", " + AUTH_TABLE_AUTH_TOKEN + ") VALUES (?, ?);";
@@ -40,10 +41,10 @@ public class MySQLAuthDAO implements AuthDAO {
 
     public boolean deleteAuth(AuthData authData){
         if(this.authExists(authData)){
-            String statement = "DELETE FROM " + AUTH_TABLE + " WHERE " + AUTH_TABLE_USERNAME + "=?;";
+            String statement = "DELETE FROM " + AUTH_TABLE + " WHERE " + AUTH_TABLE_AUTH_TOKEN + "=?;";
 
             try {
-                DatabaseManager.updateDB(statement, authData.username());
+                DatabaseManager.updateDB(statement, authData.authToken());
                 return true;
             } catch (DataAccessException exception){
                 throw new ResponseException(500, String.format("Could not delete auth. Message from database: %s", exception));
