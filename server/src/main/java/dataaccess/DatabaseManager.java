@@ -60,7 +60,7 @@ public class DatabaseManager {
     /**
      * Creates the database if it does not already exist.
      */
-    static void createDatabase() throws DataAccessException {
+    public static void createDatabase() throws DataAccessException {
         try {
             // Create the database
             var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
@@ -83,16 +83,17 @@ public class DatabaseManager {
     }
 
     static void clearDatabase() throws DataAccessException {
-        try (var conn = DatabaseManager.getConnection();){
-            // Drop all the tables
-            for (String createStatement : DatabaseManager.clearStatements){
-                try (var preparedStatement = conn.prepareStatement(createStatement)){
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException exception) {
-            throw new DataAccessException(exception.getMessage());
-        }
+        DatabaseManager.createDatabase();
+//        try (var conn = DatabaseManager.getConnection();){
+//            // Drop all the tables
+//            for (String createStatement : DatabaseManager.clearStatements){
+//                try (var preparedStatement = conn.prepareStatement(createStatement)){
+//                    preparedStatement.executeUpdate();
+//                }
+//            }
+//        } catch (SQLException exception) {
+//            throw new DataAccessException(exception.getMessage());
+//        }
     }
 
     private static final String[] clearStatements = {

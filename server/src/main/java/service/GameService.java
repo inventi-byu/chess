@@ -65,8 +65,15 @@ public class GameService extends Service {
         int gameID = request.getGameID();
         String playerColor = request.getPlayerColor();
 
-        gameDAO.addUserToGame(gameID, playerColor, authData.username());
-        return new JoinGameResult(200);
+        if (playerColor == null){
+            throw new ResponseException(400, "Error: bad request");
+        }
+
+        if (playerColor.equals("WHITE") || playerColor.equals("BLACK")){
+            gameDAO.addUserToGame(gameID, playerColor, authData.username());
+            return new JoinGameResult(200);
+        }
+        throw new ResponseException(400, "Error: bad request");
     }
 }
 
