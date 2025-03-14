@@ -3,6 +3,7 @@ package dataaccess;
 import chess.ChessGame;
 import model.GameData;
 import model.GameMetaData;
+import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,10 +14,12 @@ import java.util.List;
 public class GameDAOTests {
 
     GameDAO gameDAO;
+    UserDAO userDAO;
 
     @BeforeEach
     void setup(){
         this.gameDAO = new MySQLGameDAO();
+        this.userDAO = new MySQLUserDAO();
 
         try {
             DatabaseManager.createDatabase();
@@ -89,7 +92,7 @@ public class GameDAOTests {
         }
         // Make sure that all the games were actually listed, and not just some
         // Just i and not i++ because i++ is at the end, so it will be the actual length
-        Assertions.assertEquals(gameNameArray.length, i);
+        Assertions.assertEquals(gameNameArray.length, games.size());
     }
 
     @Test
@@ -100,6 +103,23 @@ public class GameDAOTests {
 
     @Test
     public void addUserToGameTestGoodInput(){
+        String username = "bobsmith100";
+        String password = "mysecurepassword";
+        String email = "bob@bob.com";
+        UserData userData = new UserData(username, password, email);
+        Assertions.assertTrue(this.userDAO.createUser(userData));
+
+        int[] gameIDArray = new int[4];
+        String[] gameNameArray = new String[4];
+
+        for (int i = 0; i < 4; i++){
+            String gameName = "theBestGame_" + i;
+            gameIDArray[i] = this.gameDAO.addGame(gameName);
+            gameNameArray[i] = gameName;
+        }
+
+
+
         throw new RuntimeException("Not implemented.");
     }
 
