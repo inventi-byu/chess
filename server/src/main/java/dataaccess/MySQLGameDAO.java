@@ -109,9 +109,4 @@ public class MySQLGameDAO implements GameDAO {
     public boolean addUserToGame(int gameID, String playerColor, String username){
         throw new RuntimeException("Not implemented.");
     }
-
-    public int getNewID(){
-        // NOTE: This might be handled automatically by the database!
-        throw new RuntimeException("Not implemented.");
-    }
 }
