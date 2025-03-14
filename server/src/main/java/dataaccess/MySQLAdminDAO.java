@@ -5,6 +5,7 @@ import service.exception.ResponseException;
 public class MySQLAdminDAO implements AdminDAO {
     public boolean clear(){
         try{
+            // TODO: DELETE the table as * with no where clause instead of dropping and recreating the tables
             DatabaseManager.resetDatabase();
             return true;
         } catch (Exception exception){

@@ -14,6 +14,7 @@ public class DatabaseManagerTests {
     public void createDatabaseTest() {
         try {
             DatabaseManager.createDatabase();
+            DatabaseManager.resetDatabase();
             String[] statements = {
                     "SELECT * FROM " + USER_TABLE + ";",
                     "SELECT * FROM " + AUTH_TABLE + ";",

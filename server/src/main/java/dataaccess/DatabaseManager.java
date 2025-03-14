@@ -77,7 +77,8 @@ public class DatabaseManager {
             };
             for (String checkStatement : checkStatements) {
                 try {
-                    ArrayList<String> results = DatabaseManager.queryDB(checkStatement, null);
+                    String[] labels = {};
+                    ArrayList<String> results = DatabaseManager.queryDB(checkStatement, labels);
                 } catch (Exception exception) {
                     DatabaseManager.resetDatabase();
                     conn.close();

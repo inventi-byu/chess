@@ -26,9 +26,9 @@ public class GameDAOTests {
         this.gameDAO = new MySQLGameDAO();
         this.userDAO = new MySQLUserDAO();
 
-
         try {
             DatabaseManager.createDatabase();
+            DatabaseManager.resetDatabase();
         } catch (Exception exception) {
             throw new RuntimeException(String.format("Failed to create database. Message: %s"), exception);
         }

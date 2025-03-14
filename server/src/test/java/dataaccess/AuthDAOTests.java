@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import service.Service;
 import service.exception.ResponseException;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 
 import static dataaccess.DatabaseManager.*;
@@ -28,13 +29,14 @@ public class AuthDAOTests {
         this.userDAO = new MySQLUserDAO();
         try {
             DatabaseManager.createDatabase();
+            DatabaseManager.resetDatabase();
             this.username = "bobsmith100";
             this.password = "mysecurepassword";
             this.email = "bob@bob.com";
             UserData userData = new UserData(this.username, this.password, this.email);
             Assertions.assertTrue(this.userDAO.createUser(userData));
         } catch (Exception exception) {
-            throw new RuntimeException(String.format("Failed to create database. Message: %s"), exception);
+            throw new RuntimeException(String.format("Failed to create database. Message: %s", exception));
         }
     }
 
