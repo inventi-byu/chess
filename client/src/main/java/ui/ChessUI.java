@@ -7,6 +7,9 @@ import java.util.Map;
 
 public class ChessUI {
 
+    private String menuBGColor;
+    private String menuTextColor;
+
     private String emptyColor;
     private String bgColor;
     private String boardLetterColor;
@@ -15,8 +18,11 @@ public class ChessUI {
     private String whitePieceColor;
     private String blackPieceColor;
 
-    public HashMap<String, String> defaultColors = new HashMap<>(7);
+    public HashMap<String, String> defaultColors = new HashMap<>(9);
+
     {
+        this.defaultColors.put("menuBGColor", EscapeSequences.SET_BG_COLOR_BLACK);
+        this.defaultColors.put("menuTextColor", EscapeSequences.SET_TEXT_COLOR_WHITE);
         this.defaultColors.put("emptyColor", EscapeSequences.SET_BG_COLOR_BLACK);
         this.defaultColors.put("bgColor", EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         this.defaultColors.put("boardLetterColor", EscapeSequences.SET_TEXT_COLOR_BLACK);
@@ -31,6 +37,9 @@ public class ChessUI {
 
     public ChessUI (ServerFacade serverFacade, Map<String, String> colors){
         this.serverFacade = serverFacade;
+
+        this.menuBGColor = colors.get("menuBGColor");
+        this.menuTextColor = colors.get("menuTextColor");
         this.emptyColor = colors.get("emptyColor");
         this.bgColor = colors.get("bgColor");
         this.boardLetterColor = colors.get("boardLetterColor");
