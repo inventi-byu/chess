@@ -79,13 +79,29 @@ public class ChessUI {
      * @return
      */
     public void displayChessBoard(ChessBoard board){
+        this.print(getBoardGraphic(board));
+    }
 
+    /**
+     * Prints a given string to the console.
+     * @param buf the String to print to the console (the buffer to print).
+     */
+    private void print(String buf) {
+        throw new RuntimeException("Not implemented.");
+    }
+
+    /**
+     * Creates a String that will be used to display the board (with colors, pieces, etc).
+     * @param board the ChessBoard to print.
+     * @return the String that represents the board image to display as console output.
+     */
+    private String getBoardGraphic(ChessBoard board){
         StringBuilder sb = new StringBuilder();
         int startRow = 0;
         int numRows = 10;
         String emptySpace = "   "; // An empty tile, either three spaces or an m space
         String space = " "; // A space, either a space or an m space
-        for (int i = 0; i < numRows + startRow){
+        for (int i = 0; i < (numRows + startRow); i++){
             switch (i){
                 case 0:
                     break;
@@ -110,24 +126,9 @@ public class ChessUI {
             }
         }
 
-        this.print(getBoardGraphic(board));
-    }
-
-    /**
-     * Prints a given string to the console.
-     * @param buf the String to print to the console (the buffer to print).
-     */
-    private void print(String buf) {
         throw new RuntimeException("Not implemented.");
-    }
+        //return sb.toString();
 
-    /**
-     * Creates a String that will be used to display the board (with colors, pieces, etc).
-     * @param board the ChessBoard to print.
-     * @return the String that represents the board image to display as console output.
-     */
-    private String getBoardGraphic(ChessBoard board){
-        throw new RuntimeException("Not implemented.");
     }
 
 }
