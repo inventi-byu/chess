@@ -99,11 +99,27 @@ public class ChessUI {
         StringBuilder sb = new StringBuilder();
         int startRow = 0;
         int numRows = 10;
+        String[] boardLabelsForward = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        String[] boardLabels = {"h", "g", "f", "e", "d", "c", "b", "a"};
+
         String emptySpace = "   "; // An empty tile, either three spaces or an m space
         String space = " "; // A space, either a space or an m space
         for (int i = 0; i < (numRows + startRow); i++){
             switch (i){
+                // Both 0 and 9 have the same string
                 case 0:
+                case 9:
+                    sb.append(this.bgColor);
+                    sb.append(this.boardLetterColor);
+                    sb.append(emptySpace);
+                    for (String label : boardLabels){
+                        sb.append(space);
+                        sb.append(label);
+                        sb.append(space);
+                    }
+                    sb.append(emptySpace);
+                    sb.append(this.emptyColor);
+                    sb.append("\n");
                     break;
                 case 1:
                     break;
@@ -120,8 +136,6 @@ public class ChessUI {
                 case 7:
                     break;
                 case 8:
-                    break;
-                case 9:
                     break;
             }
         }
