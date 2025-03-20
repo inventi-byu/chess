@@ -79,6 +79,37 @@ public class ChessUI {
      * @return
      */
     public void displayChessBoard(ChessBoard board){
+
+        StringBuilder sb = new StringBuilder();
+        int startRow = 0;
+        int numRows = 10;
+        String emptySpace = "   "; // An empty tile, either three spaces or an m space
+        String space = " "; // A space, either a space or an m space
+        for (int i = 0; i < numRows + startRow){
+            switch (i){
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    break;
+            }
+        }
+
         this.print(getBoardGraphic(board));
     }
 
