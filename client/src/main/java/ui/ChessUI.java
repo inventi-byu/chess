@@ -32,7 +32,6 @@ public class ChessUI {
         this.defaultColors.put("blackPieceColor", EscapeSequences.SET_TEXT_COLOR_BLACK);
     }
 
-
     private ServerFacade serverFacade;
 
     public ChessUI (ServerFacade serverFacade, Map<String, String> colors){
@@ -50,9 +49,15 @@ public class ChessUI {
     }
     public void run(){
         /*
-        while command is not quite
+        while command is not quit
+            display main menu
+            switch between help, quit, login, register
          */
-        while command != "quit")
+        throw new RuntimeException("Not implemented.");
+    }
+
+    public void mainMenu(){
+        System.out.printf("");
         throw new RuntimeException("Not implemented.");
     }
     public void help(){
