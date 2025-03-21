@@ -17,7 +17,9 @@ public class ChessUI {
 
     private String menuBGColor;
     private String menuTextColor;
-    private String menuLoggedInTextColor;
+    private String menuTextColorLoggedIn;
+    private String menuTextColorPostLogin;
+    private String menuTextColorGame;
 
     private String emptyColor;
     private String bgColor;
@@ -37,7 +39,10 @@ public class ChessUI {
 
         this.menuBGColor = EscapeSequences.SET_BG_COLOR_BLACK;
         this.menuTextColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
-        this.menuLoggedInTextColor = EscapeSequences.SET_TEXT_COLOR_GREEN;
+        this.menuTextColorLoggedIn = EscapeSequences.SET_TEXT_COLOR_GREEN;
+        this.menuTextColorPostLogin = EscapeSequences.SET_TEXT_COLOR_MAGENTA;
+        this.menuTextColorGame = EscapeSequences.SET_BG_COLOR_DARK_GREEN;
+
         this.emptyColor = EscapeSequences.SET_BG_COLOR_BLACK;
         this.bgColor = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
         this.boardLetterColor = EscapeSequences.SET_TEXT_COLOR_BLACK;
@@ -78,13 +83,36 @@ public class ChessUI {
                     case "register":
                         this.println("Successfully registered. You are now logged in.");
                         this.displayPostLoginMenu();
+                        this.displayHelpPostLogin();
                         break;
                     case "login":
                         this.println("Successfully logged in.");
                         this.displayPostLoginMenu();
+                        this.displayHelpPostLogin();
                         break;
+
+                    case "create":
+                        this.println("Create not implemented");
+                        break;
+                    case "list":
+                        this.println("List not implemented");
+                        break;
+                    case "join":
+                        this.displayGameMenu(client.getBoard(), client.getTeamColor());
+                        break;
+                    case "observe":
+                        this.println("Observe not implemented");
+                        break;
+
                     default:
-                        this.println(result);
+                        if(client.getMenuState().equals(ChessClient.STATE_POSTLOGIN)){
+                            this.println( (this.menuTextColorPostLogin + result) );
+                        } else if ((client.getMenuState().equals(ChessClient.STATE_GAME))){
+                            this.println( (this.menuTextColorGame + result) );
+                        } else {
+                            this.println( (this.menuTextColor + result) );
+                        }
+
                 }
 
             } catch (Exception ex){
@@ -95,8 +123,11 @@ public class ChessUI {
 
     public void displayPostLoginMenu(){
         this.print(
+                this.menuTextColorPostLogin + this.menuTextColorPostLogin +
                 """
-                PostLogin Menu not implemented :(
+                
+                Welcome to Chess! To start, choose an option below:
+                
                 """
         );
     }
@@ -111,10 +142,14 @@ public class ChessUI {
         );
     }
 
+    public void displayGameMenu(ChessBoard board, ChessGame.TeamColor perspective) {
+        this.displayChessBoard(board, perspective);
+    }
+
     public void displayPrompt(){
         if (this.client.getLoginStatus().equals(ChessClient.STATUS_LOGGED_IN)){
             this.print(
-                    this.menuBGColor + this.menuTextColor + "[ " + this.menuLoggedInTextColor + this.client.getLoginStatus() + this.menuTextColor + " ]" + " >>> "
+                    this.menuBGColor + this.menuTextColor + "[ " + this.menuTextColorLoggedIn + this.client.getLoginStatus() + this.menuTextColor + " ]" + " >>> "
             );
         } else {
             this.print(
@@ -136,6 +171,7 @@ public class ChessUI {
 
     public void displayHelpPostLogin() {
         this.print(
+                this.menuTextColorPostLogin +
                 """
                 create <NAME> - Create a game
                 list - List all games.
@@ -148,23 +184,11 @@ public class ChessUI {
         );
     }
 
-    public void quit() {
-        throw new RuntimeException("Not implemented.");
-    }
-
-    public void login() {
-        throw new RuntimeException("Not implemented.");
-    }
-
-    public void register() {
-        throw new RuntimeException("Not implemented.");
-    }
-
     /**
-     * Returns the
+     * Displays the given ChessBoard.
      *
-     * @param board
-     * @return
+     * @param board the ChessBoard to display.
+     * @param perspective the TeamColor from whose perspective to draw the board (that color will be on the bottom).
      */
     public void displayChessBoard(ChessBoard board, ChessGame.TeamColor perspective) {
         this.print(getBoardGraphic(board, perspective));
@@ -204,7 +228,6 @@ public class ChessUI {
         int startRow = 0;
         int numRows = 10;
         String[] boardLabels = {"a", "b", "c", "d", "e", "f", "g", "h"};
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
         String emptySpace = "   "; // An empty tile, either three spaces or an m space
         String space = " "; // A space, either a space or an m space
@@ -265,9 +288,6 @@ public class ChessUI {
         String emptySpace = "   "; // An empty tile, either three spaces or an m space
         String space = " "; // A space, either a space or an m space
 
-        // if perspective is black
-        //this.drawBlackBoardGraphic(board);
-        // this is for black
         for (int i = 0; i < (numRows + startRow); i++) {
             switch (i) {
                 // Both 0 and 9 have the same string
@@ -315,7 +335,6 @@ public class ChessUI {
 
         return sb.toString();
     }
-
 
     private StringBuilder drawTile(StringBuilder sb, ChessBoard board, String space, int row, int col) {
         ChessPosition curPos = new ChessPosition(row, col);

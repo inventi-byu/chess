@@ -60,11 +60,13 @@ public class ChessClient {
 
             case "register":
                 this.loginStatus = STATUS_LOGGED_IN;
+                this.setMenuState(STATE_POSTLOGIN);
                 result = "register";
                 break;
 
             case "login":
                 this.loginStatus = STATUS_LOGGED_IN;
+                this.setMenuState(STATE_POSTLOGIN);
                 result = "login";
                 break;
 
@@ -86,6 +88,7 @@ public class ChessClient {
 
             case "logout":
                 this.setLoginStatus(STATUS_LOGGED_OUT);
+                this.setMenuState(STATE_PRELOGIN);
                 result = "Logout not implemented. :(";
                 break;
 
