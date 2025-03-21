@@ -3,6 +3,7 @@ package client;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessPiece;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ui.ChessUI;
@@ -12,33 +13,27 @@ import java.util.HashMap;
 
 public class ChessUITests {
 
+    ChessBoard board;
     ServerFacade serverFacade;
+    ChessClient client;
     ChessUI chessUI;
 
     @BeforeEach
     void setup(){
+        ChessBoard board = new ChessBoard();
+        board.resetBoard();
         serverFacade = new ServerFacade();
-        chessUI = new ChessUI(serverFacade);
+        client = new ChessClient(serverFacade);
+        chessUI = new ChessUI(serverFacade, client);
     }
 
     @Test
     public void printChessBoardWhiteTest(){
-        ChessBoard board = new ChessBoard();
-        board.resetBoard();
-        ServerFacade serverFacade = new ServerFacade();
-        HashMap<String, String> colors = new HashMap<>();
-        ChessUI chessUI = new ChessUI(serverFacade);
-
         chessUI.displayChessBoard(board, ChessGame.TeamColor.WHITE);
     }
 
     @Test
     public void printChessBoardBlackTest(){
-        ChessBoard board = new ChessBoard();
-        board.resetBoard();
-        ServerFacade serverFacade = new ServerFacade();
-        ChessUI chessUI = new ChessUI(serverFacade);
-
         chessUI.displayChessBoard(board, ChessGame.TeamColor.BLACK);
     }
 

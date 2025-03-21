@@ -18,7 +18,7 @@ public class ChessClient {
     public String getLoginStatus(){
         return this.loginStatus;
     }
-    
+
     public boolean isLoggedIn(){
         return this.loginStatus.equals(STATUS_LOGGED_IN);
     }

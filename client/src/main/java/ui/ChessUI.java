@@ -30,8 +30,9 @@ public class ChessUI {
 
     private ServerFacade serverFacade;
 
-    public ChessUI(ServerFacade serverFacade) {
+    public ChessUI(ServerFacade serverFacade, ChessClient client) {
         this.serverFacade = serverFacade;
+        this.client = client;
 
         this.menuBGColor = EscapeSequences.SET_BG_COLOR_BLACK;
         this.menuTextColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
@@ -56,13 +57,16 @@ public class ChessUI {
 
         Scanner scanner = new Scanner(System.in);
         String result = "";
-        while (!result.equals("quit")){
+        int x = 9;
+        while (x !=0 /*!result.equals("quit")*/){
             this.displayPrompt();
             String line = scanner.nextLine();
 
             try{
-                result = this.eval(line);
-
+                //result = this.eval(line);
+                x = 0;
+            } catch (Exception ex){
+                this.print(ex.toString());
             }
         }
         throw new RuntimeException("Not implemented.");
@@ -79,7 +83,7 @@ public class ChessUI {
 
     public void displayPrompt(){
         this.print(
-                this.client.getLoginStatus() + this.menuBGColor + this.menuTextColor + ">>> "
+                this.menuBGColor + this.menuTextColor + "[ " +  this.client.getLoginStatus() + " ]" + " >>> "
         );
     }
 
