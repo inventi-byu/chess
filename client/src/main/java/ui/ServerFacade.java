@@ -2,7 +2,7 @@ package ui;
 
 public class ServerFacade {
     public ServerFacade(){
-        throw new RuntimeException("Not implemented.");
+        //throw new RuntimeException("Not implemented.");
     }
 
     /**

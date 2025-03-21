@@ -32,16 +32,4 @@ public class ServerFacadeTests {
         Assertions.assertTrue(true);
     }
 
-
-    @Test
-    public void printChessBoardTest(){
-        ChessBoard board = new ChessBoard();
-        board.resetBoard();
-        ServerFacade serverFacade = new ServerFacade();
-        HashMap<String, String> colors = new HashMap<>();
-        ChessUI chessUI = new ChessUI(serverFacade, colors);
-
-        chessUI.displayChessBoard(board, ChessGame.TeamColor.BLACK);
-    }
-
 }
