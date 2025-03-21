@@ -7,7 +7,6 @@ import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 public class ChessUI {
 
@@ -51,7 +50,7 @@ public class ChessUI {
         throw new RuntimeException("Not implemented.");
     }
 
-    public void preLoginMenu() {
+    public void displayPreLoginMenu() {
         StringBuilder sb = new StringBuilder();
         sb.append("====== Welcome to Chess ======\n");
         sb.append("Type \"help\" to get started!");

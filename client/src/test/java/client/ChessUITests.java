@@ -33,7 +33,9 @@ public class ChessUITests {
     }
 
     @Test
-    public void displayPreloginMenu(){
-
+    public void displayDisplayPreLoginMenu(){
+        ServerFacade serverFacade = new ServerFacade();
+        ChessUI chessUI = new ChessUI(serverFacade);
+        chessUI.displayPreLoginMenu();
     }
 }
