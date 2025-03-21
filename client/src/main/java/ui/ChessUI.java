@@ -5,6 +5,8 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,41 +22,25 @@ public class ChessUI {
     private String blackTileColor;
     private String whitePieceColor;
     private String blackPieceColor;
-
-    public HashMap<String, String> defaultColors = new HashMap<>(9);
-
-    {
-        this.defaultColors.put("menuBGColor", EscapeSequences.SET_BG_COLOR_BLACK);
-        this.defaultColors.put("menuTextColor", EscapeSequences.SET_TEXT_COLOR_WHITE);
-        this.defaultColors.put("emptyColor", EscapeSequences.SET_BG_COLOR_BLACK);
-        this.defaultColors.put("bgColor", EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-        this.defaultColors.put("boardLetterColor", EscapeSequences.SET_TEXT_COLOR_BLACK);
-        this.defaultColors.put("whiteTileColor", EscapeSequences.SET_BG_COLOR_WHITE);
-        this.defaultColors.put("blackTileColor", EscapeSequences.SET_BG_COLOR_BLACK);
-        this.defaultColors.put("whitePieceColor", EscapeSequences.SET_TEXT_COLOR_WHITE);
-        this.defaultColors.put("blackPieceColor", EscapeSequences.SET_TEXT_COLOR_BLACK);
-    }
+    private String whiteEmptyTextColor;
+    private String blackEmptyTextColor;
 
     private ServerFacade serverFacade;
 
     public ChessUI (ServerFacade serverFacade, Map<String, String> colors){
         this.serverFacade = serverFacade;
 
-        try {
-            colors.get("menuBGColor");
-        } catch (Exception exception) {
-            colors = this.defaultColors;
-        }
-
-        this.menuBGColor = colors.get("menuBGColor");
-        this.menuTextColor = colors.get("menuTextColor");
-        this.emptyColor = colors.get("emptyColor");
-        this.bgColor = colors.get("bgColor");
-        this.boardLetterColor = colors.get("boardLetterColor");
-        this.whiteTileColor = colors.get("whiteTileColor");
-        this.blackTileColor = colors.get("blackTileColor");
-        this.whitePieceColor = colors.get("whitePieceColor");
-        this.blackPieceColor = colors.get("blackPieceColor");
+        this.menuBGColor = EscapeSequences.SET_BG_COLOR_BLACK;
+        this.menuTextColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
+        this.emptyColor = EscapeSequences.SET_BG_COLOR_BLACK;
+        this.bgColor = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
+        this.boardLetterColor = EscapeSequences.SET_TEXT_COLOR_BLACK;
+        this.whiteTileColor = EscapeSequences.SET_BG_COLOR_WHITE;
+        this.blackTileColor = EscapeSequences.SET_BG_COLOR_BLACK;
+        this.whitePieceColor = EscapeSequences.SET_TEXT_COLOR_RED;
+        this.blackPieceColor = EscapeSequences.SET_TEXT_COLOR_BLUE;
+        this.whiteEmptyTextColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
+        this.blackEmptyTextColor = EscapeSequences.SET_TEXT_COLOR_BLACK;
     }
     public void run(){
         /*
@@ -117,6 +103,7 @@ public class ChessUI {
         int startRow = 0;
         int numRows = 10;
         String[] boardLabels = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
         String emptySpace = "   "; // An empty tile, either three spaces or an m space
         String space = " "; // A space, either a space or an m space
@@ -124,7 +111,7 @@ public class ChessUI {
         // if perspective is black
         //this.drawBlackBoardGraphic(board);
         // this is for black
-        for (int i = (numRows + startRow); i > 0 ; i--){
+        for (int i = (numRows + startRow); i > -1 ; i--){
             switch (i){
                 // Both 0 and 9 have the same string
                 case 0:
@@ -158,23 +145,26 @@ public class ChessUI {
                         ChessPosition curPos = new ChessPosition(i, j);
                         ChessPiece curPiece = board.getPiece(curPos);
                         String pieceToDraw = "";
+                        String curTileColor = this.getTileColor(curPos);
+
+                        if (curTileColor.equals("WHITE")){
+                            sb.append(whiteTileColor);
+                        } else {
+                            sb.append(blackTileColor);
+                        }
 
                         if (curPiece == null){
-                            if(this.getEmptyTileColor(curPos).equals("WHTIE")){
-                                sb.append(whiteTileColor);
-                                sb.append(whitePieceColor);
-                                pieceToDraw = emptySpace;
+                            if(curTileColor.equals("WHTIE")){
+                                sb.append(this.whiteEmptyTextColor);
+                                pieceToDraw = space;
                             } else {
-                                sb.append(blackTileColor);
-                                sb.append(blackPieceColor);
-                                pieceToDraw = emptySpace;
+                                sb.append(this.blackEmptyTextColor);
+                                pieceToDraw = space;
                             }
                         } else if(curPiece.getTeamColor() == ChessGame.TeamColor.WHITE){
-                            sb.append(whiteTileColor);
                             sb.append(whitePieceColor);
                             pieceToDraw = curPiece.draw();
                         } else {
-                            sb.append(blackTileColor);
                             sb.append(blackPieceColor);
                             pieceToDraw = curPiece.draw();
                         }
@@ -201,7 +191,6 @@ public class ChessUI {
         StringBuilder sb = new StringBuilder();
         int startRow = 0;
         int numRows = 10;
-        String[] boardLabelsForward = {"a", "b", "c", "d", "e", "f", "g", "h"};
         String[] boardLabels = {"h", "g", "f", "e", "d", "c", "b", "a"};
 
         String emptySpace = "   "; // An empty tile, either three spaces or an m space
@@ -244,23 +233,26 @@ public class ChessUI {
                         ChessPosition curPos = new ChessPosition(i, j);
                         ChessPiece curPiece = board.getPiece(curPos);
                         String pieceToDraw = "";
+                        String curTileColor = this.getTileColor(curPos);
+
+                        if (curTileColor.equals("WHITE")){
+                            sb.append(whiteTileColor);
+                        } else {
+                            sb.append(blackTileColor);
+                        }
 
                         if (curPiece == null){
-                            if(this.getEmptyTileColor(curPos).equals("WHTIE")){
-                                sb.append(whiteTileColor);
-                                sb.append(whitePieceColor);
-                                pieceToDraw = emptySpace;
+                            if(curTileColor.equals("WHTIE")){
+                                sb.append(this.whiteEmptyTextColor);
+                                pieceToDraw = space;
                             } else {
-                                sb.append(blackTileColor);
-                                sb.append(blackPieceColor);
-                                pieceToDraw = emptySpace;
+                                sb.append(this.blackEmptyTextColor);
+                                pieceToDraw = space;
                             }
                         } else if(curPiece.getTeamColor() == ChessGame.TeamColor.WHITE){
-                            sb.append(whiteTileColor);
                             sb.append(whitePieceColor);
                             pieceToDraw = curPiece.draw();
                         } else {
-                            sb.append(blackTileColor);
                             sb.append(blackPieceColor);
                             pieceToDraw = curPiece.draw();
                         }
@@ -288,7 +280,7 @@ public class ChessUI {
         return space + str + space;
     }
 
-    private String getEmptyTileColor(ChessPosition position){
+    private String getTileColor(ChessPosition position){
         int row = position.getRow();
         int col = position.getColumn();
 
