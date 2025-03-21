@@ -108,9 +108,6 @@ public class ChessUI {
         String emptySpace = "   "; // An empty tile, either three spaces or an m space
         String space = " "; // A space, either a space or an m space
 
-        // if perspective is black
-        //this.drawBlackBoardGraphic(board);
-        // this is for black
         for (int i = (numRows + startRow); i > -1 ; i--){
             switch (i){
                 // Both 0 and 9 have the same string
@@ -141,7 +138,7 @@ public class ChessUI {
                     sb.append(
                             this.sandwichString(Integer.toString(i), space)
                     );
-                    for (int j = 8; j > 0; j--){
+                    for (int j = 1; j < 9; j++){
                         ChessPosition curPos = new ChessPosition(i, j);
                         ChessPiece curPiece = board.getPiece(curPos);
                         String pieceToDraw = "";
