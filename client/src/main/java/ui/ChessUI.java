@@ -26,7 +26,7 @@ public class ChessUI {
 
     private ServerFacade serverFacade;
 
-    public ChessUI(ServerFacade serverFacade, Map<String, String> colors) {
+    public ChessUI(ServerFacade serverFacade) {
         this.serverFacade = serverFacade;
 
         this.menuBGColor = EscapeSequences.SET_BG_COLOR_BLACK;
@@ -51,9 +51,12 @@ public class ChessUI {
         throw new RuntimeException("Not implemented.");
     }
 
-    public void mainMenu() {
-        System.out.printf("");
-        throw new RuntimeException("Not implemented.");
+    public void preLoginMenu() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("====== Welcome to Chess ======\n");
+        sb.append("Type \"help\" to get started!");
+
+        this.print(sb.toString());
     }
 
     public void help() {

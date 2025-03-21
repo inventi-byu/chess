@@ -17,7 +17,7 @@ public class ChessUITests {
         board.resetBoard();
         ServerFacade serverFacade = new ServerFacade();
         HashMap<String, String> colors = new HashMap<>();
-        ChessUI chessUI = new ChessUI(serverFacade, colors);
+        ChessUI chessUI = new ChessUI(serverFacade);
 
         chessUI.displayChessBoard(board, ChessGame.TeamColor.WHITE);
     }
@@ -27,9 +27,13 @@ public class ChessUITests {
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         ServerFacade serverFacade = new ServerFacade();
-        HashMap<String, String> colors = new HashMap<>();
-        ChessUI chessUI = new ChessUI(serverFacade, colors);
+        ChessUI chessUI = new ChessUI(serverFacade);
 
         chessUI.displayChessBoard(board, ChessGame.TeamColor.BLACK);
+    }
+
+    @Test
+    public void displayPreloginMenu(){
+
     }
 }
