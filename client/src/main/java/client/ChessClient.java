@@ -1,5 +1,7 @@
 package client;
 
+import chess.ChessBoard;
+import chess.ChessGame;
 import ui.ServerFacade;
 
 public class ChessClient {
@@ -14,10 +16,16 @@ public class ChessClient {
     public static final String STATE_POSTLOGIN = "POSTLOGIN";
     public static final String STATE_GAME = "GAME";
 
+    private ChessBoard board;
+    private ChessGame.TeamColor teamColor;
+
     public ChessClient(ServerFacade serverFacade){
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
         this.serverFacade = serverFacade;
         this.menuState = STATE_PRELOGIN;
+
+        this.board = null;
+        this.teamColor = null;
     }
 
     public String getLoginStatus(){
@@ -38,6 +46,14 @@ public class ChessClient {
 
     public void setMenuState(String menuState){
         this.menuState = menuState;
+    }
+
+    public ChessBoard getBoard(){
+        return this.board;
+    }
+
+    public ChessGame.TeamColor getTeamColor(){
+        return this.teamColor;
     }
 
     public String evalLine(String line){
