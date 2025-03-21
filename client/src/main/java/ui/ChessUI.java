@@ -7,8 +7,13 @@ import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+
+import client.ChessClient;
 
 public class ChessUI {
+
+    private ChessClient client;
 
     private String menuBGColor;
     private String menuTextColor;
@@ -47,19 +52,46 @@ public class ChessUI {
             display main menu
             switch between help, quit, login, register
          */
+
+
+        Scanner scanner = new Scanner(System.in);
+        String result = "";
+        while (!result.equals("quit")){
+            this.displayPrompt();
+            String line = scanner.nextLine();
+
+            try{
+                result = this.eval(line);
+
+            }
+        }
         throw new RuntimeException("Not implemented.");
     }
 
     public void displayPreLoginMenu() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("====== Welcome to Chess ======\n");
-        sb.append("Type \"help\" to get started!");
-
-        this.print(sb.toString());
+        this.print(
+            """
+            ====== Welcome to Chess ======
+            Type "help" to get started!
+            """
+        );
     }
 
-    public void help() {
-        throw new RuntimeException("Not implemented.");
+    public void displayPrompt(){
+        this.print(
+                this.client.getLoginStatus() + this.menuBGColor + this.menuTextColor + ">>> "
+        );
+    }
+
+    public void displayHelp() {
+        this.print(
+        """
+        register <USERNAME> <PASSWORD> <EMAIL> - Create an account
+        login <USERNAME> <PASSWORD> - Login to play chess
+        quit - Quit playing chess
+        help - Get help with possible commands
+        """
+        );
     }
 
     public void quit() {

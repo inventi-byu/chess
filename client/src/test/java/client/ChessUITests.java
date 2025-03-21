@@ -3,6 +3,7 @@ package client;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ui.ChessUI;
 import ui.ServerFacade;
@@ -10,6 +11,15 @@ import ui.ServerFacade;
 import java.util.HashMap;
 
 public class ChessUITests {
+
+    ServerFacade serverFacade;
+    ChessUI chessUI;
+
+    @BeforeEach
+    void setup(){
+        serverFacade = new ServerFacade();
+        chessUI = new ChessUI(serverFacade);
+    }
 
     @Test
     public void printChessBoardWhiteTest(){
@@ -34,8 +44,11 @@ public class ChessUITests {
 
     @Test
     public void displayDisplayPreLoginMenu(){
-        ServerFacade serverFacade = new ServerFacade();
-        ChessUI chessUI = new ChessUI(serverFacade);
         chessUI.displayPreLoginMenu();
+    }
+
+    @Test
+    public void displayPromptTest(){
+        chessUI.displayPrompt();
     }
 }
