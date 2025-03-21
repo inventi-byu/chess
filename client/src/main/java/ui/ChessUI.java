@@ -17,6 +17,7 @@ public class ChessUI {
 
     private String menuBGColor;
     private String menuTextColor;
+    private String menuLoggedInTextColor;
 
     private String emptyColor;
     private String bgColor;
@@ -36,6 +37,7 @@ public class ChessUI {
 
         this.menuBGColor = EscapeSequences.SET_BG_COLOR_BLACK;
         this.menuTextColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
+        this.menuLoggedInTextColor = EscapeSequences.SET_TEXT_COLOR_GREEN;
         this.emptyColor = EscapeSequences.SET_BG_COLOR_BLACK;
         this.bgColor = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
         this.boardLetterColor = EscapeSequences.SET_TEXT_COLOR_BLACK;
@@ -56,20 +58,52 @@ public class ChessUI {
 
         Scanner scanner = new Scanner(System.in);
         String result = "";
+        this.displayPreLoginMenu();
         while (!result.equals("quit")){
             this.displayPrompt();
             String line = scanner.nextLine();
 
             try{
                 result = this.client.evalLine(line);
+
+                switch (result) {
+                    case "helpPreLogin":
+                        this.displayHelpPreLogin();
+                        break;
+                    case "helpPostLogin":
+                        this.displayHelpPostLogin();
+                        break;
+                    case "quit":
+                        break;
+                    case "register":
+                        this.println("Successfully registered. You are now logged in.");
+                        this.displayPostLoginMenu();
+                        break;
+                    case "login":
+                        this.println("Successfully logged in.");
+                        this.displayPostLoginMenu();
+                        break;
+                    default:
+                        this.println(result);
+                }
+
             } catch (Exception ex){
                 this.print(ex.toString());
             }
         }
     }
 
+    public void displayPostLoginMenu(){
+        this.print(
+                """
+                PostLogin Menu not implemented :(
+                """
+        );
+    }
+
     public void displayPreLoginMenu() {
         this.print(
+            this.menuBGColor + this.menuTextColor +
             """
             ====== Welcome to Chess ======
             Type "help" to get started!
@@ -78,12 +112,18 @@ public class ChessUI {
     }
 
     public void displayPrompt(){
-        this.print(
-                this.menuBGColor + this.menuTextColor + "[ " +  this.client.getLoginStatus() + " ]" + " >>> "
-        );
+        if (this.client.getLoginStatus().equals(ChessClient.STATUS_LOGGED_IN)){
+            this.print(
+                    this.menuBGColor + this.menuTextColor + "[ " + this.menuLoggedInTextColor + this.client.getLoginStatus() + this.menuTextColor + " ]" + " >>> "
+            );
+        } else {
+            this.print(
+                    this.menuBGColor + this.menuTextColor + "[ " + this.client.getLoginStatus() + " ]" + " >>> "
+            );
+        }
     }
 
-    public void displayHelp() {
+    public void displayHelpPreLogin() {
         this.print(
         """
         register <USERNAME> <PASSWORD> <EMAIL> - Create an account
@@ -91,6 +131,20 @@ public class ChessUI {
         quit - Quit playing chess
         help - Get help with possible commands
         """
+        );
+    }
+
+    public void displayHelpPostLogin() {
+        this.print(
+                """
+                create <NAME> - Create a game
+                list - List all games.
+                join <ID> [WHITE|BLACK] - join a game
+                observe <ID> - Observe a game
+                logout - Logout of chess
+                quit - Quit playing chess
+                help - Get help with possible commands
+                """
         );
     }
 
@@ -122,9 +176,13 @@ public class ChessUI {
      * @param buf the String to print to the console (the buffer to print).
      */
     private void print(String buf) {
-        PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        out.print(buf);
-        //System.out.print(buf);
+//        PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+//        out.print(buf);
+        System.out.print(buf);
+    }
+
+    private void println(String buf) {
+        System.out.println(buf);
     }
 
     /**
