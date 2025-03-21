@@ -22,4 +22,12 @@ public class ChessClient {
     public boolean isLoggedIn(){
         return this.loginStatus.equals(STATUS_LOGGED_IN);
     }
+
+    public String evalLine(String line){
+        String result = "";
+        switch (line){
+            case "quit" -> result = "quit";
+        }
+        return result;
+    }
 }

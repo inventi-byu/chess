@@ -54,22 +54,18 @@ public class ChessUI {
             switch between help, quit, login, register
          */
 
-
         Scanner scanner = new Scanner(System.in);
         String result = "";
-        int x = 9;
-        while (x !=0 /*!result.equals("quit")*/){
+        while (!result.equals("quit")){
             this.displayPrompt();
             String line = scanner.nextLine();
 
             try{
-                //result = this.eval(line);
-                x = 0;
+                result = this.client.evalLine(line);
             } catch (Exception ex){
                 this.print(ex.toString());
             }
         }
-        throw new RuntimeException("Not implemented.");
     }
 
     public void displayPreLoginMenu() {
@@ -126,7 +122,9 @@ public class ChessUI {
      * @param buf the String to print to the console (the buffer to print).
      */
     private void print(String buf) {
-        System.out.print(buf);
+        PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        out.print(buf);
+        //System.out.print(buf);
     }
 
     /**

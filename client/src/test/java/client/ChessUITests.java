@@ -46,4 +46,9 @@ public class ChessUITests {
     public void displayPromptTest(){
         chessUI.displayPrompt();
     }
+
+    @Test
+    public void runTest(){
+        chessUI.run();
+    }
 }
