@@ -7,7 +7,6 @@ import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ChessUI {
@@ -27,7 +26,7 @@ public class ChessUI {
 
     private ServerFacade serverFacade;
 
-    public ChessUI (ServerFacade serverFacade, Map<String, String> colors){
+    public ChessUI(ServerFacade serverFacade, Map<String, String> colors) {
         this.serverFacade = serverFacade;
 
         this.menuBGColor = EscapeSequences.SET_BG_COLOR_BLACK;
@@ -42,7 +41,8 @@ public class ChessUI {
         this.whiteEmptyTextColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
         this.blackEmptyTextColor = EscapeSequences.SET_TEXT_COLOR_BLACK;
     }
-    public void run(){
+
+    public void run() {
         /*
         while command is not quit
             display main menu
@@ -51,34 +51,40 @@ public class ChessUI {
         throw new RuntimeException("Not implemented.");
     }
 
-    public void mainMenu(){
+    public void mainMenu() {
         System.out.printf("");
         throw new RuntimeException("Not implemented.");
     }
-    public void help(){
+
+    public void help() {
         throw new RuntimeException("Not implemented.");
     }
-    public void quit(){
+
+    public void quit() {
         throw new RuntimeException("Not implemented.");
     }
-    public void login(){
+
+    public void login() {
         throw new RuntimeException("Not implemented.");
     }
-    public void register(){
+
+    public void register() {
         throw new RuntimeException("Not implemented.");
     }
 
     /**
      * Returns the
+     *
      * @param board
      * @return
      */
-    public void displayChessBoard(ChessBoard board, ChessGame.TeamColor perspective){
+    public void displayChessBoard(ChessBoard board, ChessGame.TeamColor perspective) {
         this.print(getBoardGraphic(board, perspective));
     }
 
     /**
      * Prints a given string to the console.
+     *
      * @param buf the String to print to the console (the buffer to print).
      */
     private void print(String buf) {
@@ -87,18 +93,19 @@ public class ChessUI {
 
     /**
      * Creates a String that will be used to display the board (with colors, pieces, etc).
+     *
      * @param board the ChessBoard to print.
      * @return the String that represents the board image to display as console output.
      */
-    private String getBoardGraphic(ChessBoard board, ChessGame.TeamColor perspective){
-        if (perspective == ChessGame.TeamColor.WHITE){
+    private String getBoardGraphic(ChessBoard board, ChessGame.TeamColor perspective) {
+        if (perspective == ChessGame.TeamColor.WHITE) {
             return this.drawWhiteBoardGraphic(board);
         } else {
             return this.drawBlackBoardGraphic(board);
         }
     }
 
-    private String drawWhiteBoardGraphic(ChessBoard board){
+    private String drawWhiteBoardGraphic(ChessBoard board) {
         StringBuilder sb = new StringBuilder();
         int startRow = 0;
         int numRows = 10;
@@ -108,15 +115,15 @@ public class ChessUI {
         String emptySpace = "   "; // An empty tile, either three spaces or an m space
         String space = " "; // A space, either a space or an m space
 
-        for (int i = (numRows + startRow); i > -1 ; i--){
-            switch (i){
+        for (int i = (numRows + startRow); i > -1; i--) {
+            switch (i) {
                 // Both 0 and 9 have the same string
                 case 0:
                 case 9:
                     sb.append(this.bgColor);
                     sb.append(this.boardLetterColor);
                     sb.append(emptySpace);
-                    for (String label : boardLabels){
+                    for (String label : boardLabels) {
                         sb.append(
                                 this.sandwichString(label, space)
                         );
@@ -138,37 +145,8 @@ public class ChessUI {
                     sb.append(
                             this.sandwichString(Integer.toString(i), space)
                     );
-                    for (int j = 1; j < 9; j++){
-                        ChessPosition curPos = new ChessPosition(i, j);
-                        ChessPiece curPiece = board.getPiece(curPos);
-                        String pieceToDraw = "";
-                        String curTileColor = this.getTileColor(curPos);
-
-                        if (curTileColor.equals("WHITE")){
-                            sb.append(whiteTileColor);
-                        } else {
-                            sb.append(blackTileColor);
-                        }
-
-                        if (curPiece == null){
-                            if(curTileColor.equals("WHTIE")){
-                                sb.append(this.whiteEmptyTextColor);
-                                pieceToDraw = space;
-                            } else {
-                                sb.append(this.blackEmptyTextColor);
-                                pieceToDraw = space;
-                            }
-                        } else if(curPiece.getTeamColor() == ChessGame.TeamColor.WHITE){
-                            sb.append(whitePieceColor);
-                            pieceToDraw = curPiece.draw();
-                        } else {
-                            sb.append(blackPieceColor);
-                            pieceToDraw = curPiece.draw();
-                        }
-
-                        sb.append(
-                                this.sandwichString(pieceToDraw, space)
-                        );
+                    for (int j = 1; j < 9; j++) {
+                        sb = this.drawTile(sb, board, space, i, j);
                     }
 
                     sb.append(this.bgColor);
@@ -184,7 +162,7 @@ public class ChessUI {
         return sb.toString();
     }
 
-    private String drawBlackBoardGraphic(ChessBoard board){
+    private String drawBlackBoardGraphic(ChessBoard board) {
         StringBuilder sb = new StringBuilder();
         int startRow = 0;
         int numRows = 10;
@@ -196,15 +174,15 @@ public class ChessUI {
         // if perspective is black
         //this.drawBlackBoardGraphic(board);
         // this is for black
-        for (int i = 0; i < (numRows + startRow); i++){
-            switch (i){
+        for (int i = 0; i < (numRows + startRow); i++) {
+            switch (i) {
                 // Both 0 and 9 have the same string
                 case 0:
                 case 9:
                     sb.append(this.bgColor);
                     sb.append(this.boardLetterColor);
                     sb.append(emptySpace);
-                    for (String label : boardLabels){
+                    for (String label : boardLabels) {
                         sb.append(
                                 this.sandwichString(label, space)
                         );
@@ -226,37 +204,8 @@ public class ChessUI {
                     sb.append(
                             this.sandwichString(Integer.toString(i), space)
                     );
-                    for (int j = 8; j > 0; j--){
-                        ChessPosition curPos = new ChessPosition(i, j);
-                        ChessPiece curPiece = board.getPiece(curPos);
-                        String pieceToDraw = "";
-                        String curTileColor = this.getTileColor(curPos);
-
-                        if (curTileColor.equals("WHITE")){
-                            sb.append(whiteTileColor);
-                        } else {
-                            sb.append(blackTileColor);
-                        }
-
-                        if (curPiece == null){
-                            if(curTileColor.equals("WHTIE")){
-                                sb.append(this.whiteEmptyTextColor);
-                                pieceToDraw = space;
-                            } else {
-                                sb.append(this.blackEmptyTextColor);
-                                pieceToDraw = space;
-                            }
-                        } else if(curPiece.getTeamColor() == ChessGame.TeamColor.WHITE){
-                            sb.append(whitePieceColor);
-                            pieceToDraw = curPiece.draw();
-                        } else {
-                            sb.append(blackPieceColor);
-                            pieceToDraw = curPiece.draw();
-                        }
-
-                        sb.append(
-                                this.sandwichString(pieceToDraw, space)
-                        );
+                    for (int j = 8; j > 0; j--) {
+                        sb = this.drawTile(sb, board, space, i, j);
                     }
 
                     sb.append(this.bgColor);
@@ -271,6 +220,42 @@ public class ChessUI {
         }
 
         return sb.toString();
+    }
+
+
+    private StringBuilder drawTile(StringBuilder sb, ChessBoard board, String space, int row, int col) {
+        ChessPosition curPos = new ChessPosition(row, col);
+        ChessPiece curPiece = board.getPiece(curPos);
+        String pieceToDraw = "";
+        String curTileColor = this.getTileColor(curPos);
+
+        if (curTileColor.equals("WHITE")) {
+            sb.append(whiteTileColor);
+        } else {
+            sb.append(blackTileColor);
+        }
+
+        if (curPiece == null) {
+            if (curTileColor.equals("WHTIE")) {
+                sb.append(this.whiteEmptyTextColor);
+                pieceToDraw = space;
+            } else {
+                sb.append(this.blackEmptyTextColor);
+                pieceToDraw = space;
+            }
+        } else if (curPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            sb.append(whitePieceColor);
+            pieceToDraw = curPiece.draw();
+        } else {
+            sb.append(blackPieceColor);
+            pieceToDraw = curPiece.draw();
+        }
+
+        sb.append(
+                this.sandwichString(pieceToDraw, space)
+        );
+
+        return sb;
     }
 
     private String sandwichString(String str, String space){
