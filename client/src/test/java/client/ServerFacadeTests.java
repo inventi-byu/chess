@@ -1,7 +1,13 @@
 package client;
 
+import chess.ChessBoard;
+import chess.ChessGame;
 import org.junit.jupiter.api.*;
 import server.Server;
+import ui.ChessUI;
+import ui.ServerFacade;
+
+import java.util.HashMap;
 
 
 public class ServerFacadeTests {
@@ -24,6 +30,18 @@ public class ServerFacadeTests {
     @Test
     public void sampleTest() {
         Assertions.assertTrue(true);
+    }
+
+
+    @Test
+    public void printChessBoardTest(){
+        ChessBoard board = new ChessBoard();
+        board.resetBoard();
+        ServerFacade serverFacade = new ServerFacade();
+        HashMap<String, String> colors = new HashMap<>();
+        ChessUI chessUI = new ChessUI(serverFacade, colors);
+
+        chessUI.displayChessBoard(board, ChessGame.TeamColor.BLACK);
     }
 
 }

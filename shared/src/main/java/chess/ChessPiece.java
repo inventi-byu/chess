@@ -3,6 +3,8 @@ package chess;
 import java.util.Collection;
 import java.util.*;
 
+import static chess.ChessGame.TeamColor.WHITE;
+
 /**
  * Represents a single chess piece
  * <p>
@@ -77,6 +79,36 @@ public class ChessPiece {
         PieceMovesCalculator calc = new PieceMovesCalculator(board, this, myPosition);
         return calc.moves();
     }
+
+    /**
+     * Draws the piece as a string to display on a ChessBoard graphic.
+     * @return a String representing the piece to display on a ChessBoard.
+     */
+    public String draw(){
+        String piece = "";
+        if(this.getTeamColor() == WHITE){
+            switch (this.getPieceType()) {
+                case KING -> piece = "K";
+                case QUEEN -> piece = "Q";
+                case BISHOP -> piece = "B";
+                case KNIGHT -> piece = "N";
+                case ROOK -> piece = "R";
+                case PAWN -> piece = "P";
+
+            }
+        } else {
+            switch (this.getPieceType()) {
+                case KING -> piece = "k";
+                case QUEEN -> piece = "q";
+                case BISHOP -> piece = "b";
+                case KNIGHT -> piece = "n";
+                case ROOK -> piece = "r";
+                case PAWN -> piece = "p";
+            }
+        }
+
+        return piece;
+    };
 
     @Override
     public boolean equals(Object o){

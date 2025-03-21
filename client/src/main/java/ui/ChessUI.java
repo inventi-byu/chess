@@ -1,6 +1,9 @@
 package ui;
 
 import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +40,12 @@ public class ChessUI {
     public ChessUI (ServerFacade serverFacade, Map<String, String> colors){
         this.serverFacade = serverFacade;
 
+        try {
+            colors.get("menuBGColor");
+        } catch (Exception exception) {
+            colors = this.defaultColors;
+        }
+        
         this.menuBGColor = colors.get("menuBGColor");
         this.menuTextColor = colors.get("menuTextColor");
         this.emptyColor = colors.get("emptyColor");
@@ -78,8 +87,8 @@ public class ChessUI {
      * @param board
      * @return
      */
-    public void displayChessBoard(ChessBoard board){
-        this.print(getBoardGraphic(board));
+    public void displayChessBoard(ChessBoard board, ChessGame.TeamColor perspective){
+        this.print(getBoardGraphic(board, perspective));
     }
 
     /**
@@ -95,7 +104,7 @@ public class ChessUI {
      * @param board the ChessBoard to print.
      * @return the String that represents the board image to display as console output.
      */
-    private String getBoardGraphic(ChessBoard board){
+    private String getBoardGraphic(ChessBoard board, ChessGame.TeamColor perspective){
         StringBuilder sb = new StringBuilder();
         int startRow = 0;
         int numRows = 10;
@@ -104,6 +113,10 @@ public class ChessUI {
 
         String emptySpace = "   "; // An empty tile, either three spaces or an m space
         String space = " "; // A space, either a space or an m space
+
+        // if perspective is black
+        this.drawBlackBoardGraphic(board);
+        // this is for black
         for (int i = 0; i < (numRows + startRow); i++){
             switch (i){
                 // Both 0 and 9 have the same string
@@ -113,29 +126,62 @@ public class ChessUI {
                     sb.append(this.boardLetterColor);
                     sb.append(emptySpace);
                     for (String label : boardLabels){
-                        sb.append(space);
-                        sb.append(label);
-                        sb.append(space);
+                        sb.append(
+                                this.sandwichString(label, space)
+                        );
                     }
                     sb.append(emptySpace);
                     sb.append(this.emptyColor);
                     sb.append("\n");
                     break;
                 case 1:
-                    break;
                 case 2:
-                    break;
                 case 3:
-                    break;
                 case 4:
-                    break;
                 case 5:
-                    break;
                 case 6:
-                    break;
                 case 7:
-                    break;
                 case 8:
+                    sb.append(this.bgColor);
+                    sb.append(this.boardLetterColor);
+                    sb.append(
+                            this.sandwichString(Integer.toString(i), space)
+                    );
+                    for (int j = 8; j > 0; j--){
+                        ChessPosition curPos = new ChessPosition(i, j);
+                        ChessPiece curPiece = board.getPiece(curPos);
+                        String pieceToDraw = "";
+
+                        if (curPiece == null){
+                            if(this.getEmptyTileColor(curPos).equals("WHTIE")){
+                                sb.append(whiteTileColor);
+                                sb.append(whitePieceColor);
+                                pieceToDraw = emptySpace;
+                            } else {
+                                sb.append(blackTileColor);
+                                sb.append(blackPieceColor);
+                                pieceToDraw = emptySpace;
+                            }
+                        } else if(curPiece.getTeamColor() == ChessGame.TeamColor.WHITE){
+                            sb.append(whiteTileColor);
+                            sb.append(whitePieceColor);
+                            pieceToDraw = curPiece.draw();
+                        } else {
+                            sb.append(blackTileColor);
+                            sb.append(blackPieceColor);
+                            pieceToDraw = curPiece.draw();
+                        }
+
+                        sb.append(
+                                this.sandwichString(pieceToDraw, space)
+                        );
+                    }
+
+                    sb.append(this.bgColor);
+                    sb.append(this.boardLetterColor);
+                    sb.append(
+                            this.sandwichString(Integer.toString(i), space)
+                    );
                     break;
             }
         }
@@ -143,6 +189,19 @@ public class ChessUI {
         throw new RuntimeException("Not implemented.");
         //return sb.toString();
 
+    }
+
+    private String sandwichString(String str, String space){
+        return space + str + space;
+    }
+
+    private String getEmptyTileColor(ChessPosition position){
+        int row = position.getRow();
+        int col = position.getColumn();
+
+        boolean white = (row % 2 != col % 2);
+
+        return white ? "WHITE" : "BLACK";
     }
 
 }
