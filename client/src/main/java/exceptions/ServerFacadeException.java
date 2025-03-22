@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 
 import java.util.Map;
 
-public class LoginException extends Exception {
+public class ServerFacadeException extends Exception {
     private final int statusCode;
 
-    public LoginException(int statusCode, String message) {
+    public ServerFacadeException(int statusCode, String message) {
         super(message);
         this.statusCode = statusCode;
     }
@@ -22,8 +22,8 @@ public class LoginException extends Exception {
 
     @Override
     public boolean equals(Object o){
-        if (o instanceof LoginException){
-            LoginException obj = (LoginException) o;
+        if (o instanceof ServerFacadeException){
+            ServerFacadeException obj = (ServerFacadeException) o;
             if(this.getStatusCode() == obj.getStatusCode() && this.getMessage().equals(obj.getMessage())){
                 return true;
             }

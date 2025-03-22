@@ -2,6 +2,7 @@ package client;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import exceptions.ServerFacadeException;
 import ui.ServerFacade;
 
 public class ChessClient {
@@ -65,13 +66,7 @@ public class ChessClient {
                 break;
 
             case "help":
-                if (this.getMenuState().equals(STATE_PRELOGIN)){
-                    result = "helpPreLogin";
-                } else if (this.getMenuState().equals(STATE_POSTLOGIN)){
-                    result = "helpPostLogin";
-                } else if (this.getMenuState().equals(STATE_GAME)){
-                    result = "helpGame";
-                }
+                result = this.evalHelp();
                 break;
 
             case "register":
@@ -110,28 +105,56 @@ public class ChessClient {
         return result;
     }
 
+    private String evalHelp() {
+        String result = "";
+        if (this.getMenuState().equals(STATE_PRELOGIN)){
+            result = "helpPreLogin";
+        } else if (this.getMenuState().equals(STATE_POSTLOGIN)){
+            result = "helpPostLogin";
+        } else if (this.getMenuState().equals(STATE_GAME)){
+            result = "helpGame";
+        }
+        return result;
+    }
+
+
     private String evalRegister(String[] command){
-        if (this.serverFacade.register(command[1], command[2], command[3])) {
+        if () {
+
+            return
+        } else {
+            return
+        }
+
+        String result = "";
+        try{
+            this.serverFacade.register(command[1], command[2], command[3]);
             this.loginStatus = STATUS_LOGGED_IN;
             this.setMenuState(STATE_POSTLOGIN);
-            return "register";
-        } else {
-            return "Failed to register.";
+            result = "register";
+        } catch (ServerFacadeException exception){
+            switch (exception.getStatusCode()){
+                case 400 -> result = "Failed to register. Did you forget to enter a username AND password?";
+                case 403 -> result = "Sorry, username \"" + command[1] + "\" is already taken!";
+                case 500 -> result = "Failed to register.";
+            }
         }
+        return result;
     }
 
     private String evalLogin(String[] command){
         String result = "";
         try{
             this.serverFacade.login(command[1], command[2]);
-        } catch (LoginException exception){
-            switch (exception.getStatus()){
-                case 401 -> result = "Invalid credentials.";
-                case
+            this.loginStatus = STATUS_LOGGED_IN;
+            this.setMenuState(STATE_POSTLOGIN);
+            result = "login";
+        } catch (ServerFacadeException exception){
+            switch (exception.getStatusCode()){
+                case 401 -> result = "Could not log you in, wrong credentials.";
+                case 500 -> result = "Failed to login.";
             }
         }
-        this.loginStatus = STATUS_LOGGED_IN;
-        this.setMenuState(STATE_POSTLOGIN);
-        return "login";
+        return result;
     }
 }
