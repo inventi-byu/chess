@@ -10,6 +10,7 @@ import model.UserData;
 import server.service.exception.ResponseException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -128,4 +129,8 @@ public class ServerFacade {
             }
         }
     }
+
+    private <T> T readBody(HttpURLConnection http, Class<T> responseClass) {
+    }
 }
+
