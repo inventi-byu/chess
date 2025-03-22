@@ -16,7 +16,9 @@ public class ServerFacade {
      * @return boolean if the clear was successful, false if it was not.
      */
     public boolean clear() throws ServerFacadeException {
-        throw new ServerFacadeException(500, "Not implemented.");
+        String path = "/db";
+        this.makeHttpRequest("DELETE", path, null, null);
+        return true;
     }
 
     /**
@@ -66,6 +68,10 @@ public class ServerFacade {
     }
 
     public ChessBoard observe(String gameID) throws ServerFacadeException {
+        throw new ServerFacadeException(500, "Not implemented.");
+    }
+
+    public <T> T makeHttpRequest(String method, String path, Object request, Class<T> responseClass) throws ServerFacadeException {
         throw new ServerFacadeException(500, "Not implemented.");
     }
 }
