@@ -5,6 +5,7 @@ import exceptions.ServerFacadeException;
 import model.AuthData;
 import model.GameData;
 import model.GameMetaData;
+import model.UserData;
 
 public class ServerFacade {
     public ServerFacade(){
@@ -26,20 +27,30 @@ public class ServerFacade {
      * @return the user's AuthData
      */
     public AuthData register(String username, String password, String email) throws ServerFacadeException {
-        throw new ServerFacadeException(500, "Not implemented.");
+        String path = "/user";
+        UserData userData = new UserData(username, password, email);
+        AuthData authData = this.makeHttpRequest("POST", path, userData, AuthData.class);
+        return authData;
     }
     /**
      * Accesses the clear endpoint.
      * @return boolean if the clear was successful, false if it was not.
      */
     public AuthData login(String username, String password) throws ServerFacadeException {
-        throw new ServerFacadeException(500, "Not implemented.");
+        String path = "/session";
+
+        record UserCredentials(String username, String password){}
+        UserCredentials credentials = new UserCredentials(username, password)
+
+        AuthData authData = this.makeHttpRequest("POST", path, credentials, AuthData.class);
+        return authData;
     }
     /**
      * Accesses the clear endpoint.
      * @return boolean if the clear was successful, false if it was not.
      */
     public boolean logout(String authToken) throws ServerFacadeException {
+
         throw new ServerFacadeException(500, "Not implemented.");
     }
 
