@@ -21,7 +21,7 @@ public class ResponseException extends RuntimeException {
 
     public static ResponseException fromJson(InputStream stream){
         var map = new Gson().fromJson(new InputStreamReader(stream), HashMap.class);
-        int status = ((Double)map.get("status")).intValue();
+        int status = ((Double)map.get("statusCode")).intValue();
         String message = map.get("messsage").toString();
         return new ResponseException(status, message);
     }

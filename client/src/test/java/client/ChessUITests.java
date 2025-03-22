@@ -22,7 +22,7 @@ public class ChessUITests {
     void setup(){
         ChessBoard board = new ChessBoard();
         board.resetBoard();
-        serverFacade = new ServerFacade();
+        serverFacade = new ServerFacade("http://localhost:8080");
         client = new ChessClient(serverFacade);
         chessUI = new ChessUI(serverFacade, client);
     }

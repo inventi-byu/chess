@@ -13,19 +13,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ServerFacade {
 
     private String serverURL;
 
-    public ServerFacade(){
-        this.serverURL = "http//localhost:8080";
+    public ServerFacade(String serverURL){
+        this.serverURL = serverURL;
     }
 
     /**
@@ -86,28 +87,53 @@ public class ServerFacade {
         HashMap<String, String> headers = new HashMap<>(1);
         headers.put("authorization", authToken);
 
-        GameMetaData[] games = this.makeHttpRequest("GET", path, null, headers, GameMetaData[].class);
-        return games;
+        record GamesMap(GameMetaData[] games){}
+
+
+        GamesMap gamesMap = this.makeHttpRequest("GET", path, null, headers, GamesMap.class);
+        return gamesMap.games();
     }
 
     /**
      * Accesses the clear endpoint.
      * @return boolean if the clear was successful, false if it was not.
      */
-    public int createGame(int gameID) throws ServerFacadeException {
-        throw new ServerFacadeException(500, "Not implemented.");
+    public int createGame(String gameName, String authToken) throws ServerFacadeException {
+        String path = "/game";
+
+        HashMap<String, String> headers = new HashMap<>(1);
+        headers.put("authorization", authToken);
+
+        record GameNameContainer(String gameName){}
+        record GameIDContainer(String gameID){}
+
+        GameNameContainer gameToCreate = new GameNameContainer(gameName);
+
+        GameIDContainer gameID = this.makeHttpRequest("POST", path, gameToCreate, headers, GameIDContainer.class);
+        return Integer.parseInt(gameID.gameID());
     }
 
     /**
      * Accesses the clear endpoint.
      * @return boolean if the clear was successful, false if it was not.
      */
-    public GameData joinGame(String playerColor, int gameID) throws ServerFacadeException {
-        throw new ServerFacadeException(500, "Not implemented.");
+    public void joinGame(String playerColor, int gameID, String authToken) throws ServerFacadeException {
+        String path = "/game";
+
+        HashMap<String, String> headers = new HashMap<>(1);
+        headers.put("authorization", authToken);
+
+        record JoinGameInfo(String playerColor, int gameID){}
+        record GameIDContainer(String gameID){}
+
+        JoinGameInfo joinGameInfo = new JoinGameInfo(playerColor, gameID);
+
+        this.makeHttpRequest("PUT", path, joinGameInfo, headers, null);
     }
 
-    public ChessBoard observe(String gameID) throws ServerFacadeException {
-        throw new ServerFacadeException(500, "Not implemented.");
+    public void observe(String gameID, String authToken) throws ServerFacadeException {
+        return;
+        // Not implemented until phase 6
     }
 
     public <T> T makeHttpRequest(String method, String path, Object request, HashMap<String, String> headers, Class<T> responseClass) throws ServerFacadeException {
@@ -129,13 +155,14 @@ public class ServerFacade {
     }
 
     private void writeBody(Object request, HashMap<String, String> headers, HttpURLConnection http) throws IOException {
+        if (headers != null){
+            // Add all the headers specified
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                http.addRequestProperty(entry.getKey(), entry.getValue());
+            }
+        }
         if (request != null){
             http.addRequestProperty("Content-Type", "application/json");
-            if (!headers.isEmpty())
-                // Add all the headers specified
-                for (Map.Entry<String, String> entry : headers.entrySet()){
-                    http.addRequestProperty(entry.getKey(), entry.getValue());
-                }
             String requestJSON = new Gson().toJson(request);
             try (OutputStream requestBody = http.getOutputStream()){
                 requestBody.write(requestJSON.getBytes());
@@ -145,7 +172,7 @@ public class ServerFacade {
 
     private <T> T readBody(HttpURLConnection http, Class<T> responseClass) throws IOException {
         T response = null;
-        if (http.getContentLength() < -1){
+        if (http.getContentLength() < 0){
             try (InputStream responseBody = http.getInputStream()){
                 InputStreamReader reader = new InputStreamReader(responseBody);
                 if(responseClass != null){

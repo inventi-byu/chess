@@ -42,7 +42,7 @@ public class ChessUI {
         this.menuTextColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
         this.menuTextColorLoggedIn = EscapeSequences.SET_TEXT_COLOR_GREEN;
         this.menuTextColorPostLogin = EscapeSequences.SET_TEXT_COLOR_MAGENTA;
-        this.menuTextColorGame = EscapeSequences.SET_BG_COLOR_DARK_GREEN;
+        this.menuTextColorGame = EscapeSequences.SET_TEXT_COLOR_BLUE;
 
         this.emptyColor = EscapeSequences.SET_BG_COLOR_BLACK;
         this.bgColor = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
@@ -94,6 +94,12 @@ public class ChessUI {
                         this.println("Successfully logged in.");
                         this.displayPostLoginMenu();
                         this.displayHelpPostLogin();
+                        break;
+
+                    case "logout":
+                        this.println("You successfully logged out.");
+                        this.print("\n");
+                        this.displayPreLoginMenu();
                         break;
 
                     case "create":
@@ -211,6 +217,7 @@ public class ChessUI {
             sb.append("\n");
         }
         sb.append("======== END LIST OF ALL GAMES ========");
+        sb.append("\n");
         this.print(sb.toString());
     }
 

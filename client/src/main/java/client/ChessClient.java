@@ -216,6 +216,9 @@ public class ChessClient {
     }
 
     private String evalRegister(String[] command){
+        if(command.length != 4){
+            return "Failed to register. Did you forget to enter a username, password, and email?";
+        }
         String result = "";
         try{
             this.setAuthData(
@@ -226,15 +229,20 @@ public class ChessClient {
             result = "register";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
-                case 400 -> result = "Failed to register. Did you forget to enter a username AND password?";
+                case 400 -> result = "Failed to register. Did you forget to enter a username, password, and email?";
                 case 403 -> result = "Sorry, username \"" + command[1] + "\" is already taken!";
                 case 500 -> result = "Failed to register.";
             }
+        } catch (Exception exception){
+            return "Failed to register.";
         }
         return result;
     }
 
     private String evalLogin(String[] command){
+        if(command.length != 3){
+            return "Failed to login. Did you forget to username and password?";
+        }
         String result = "";
         try{
             this.setAuthData(
@@ -248,11 +256,16 @@ public class ChessClient {
                 case 401 -> result = "Could not log you in, wrong credentials.";
                 case 500 -> result = "Failed to login.";
             }
+        } catch (Exception exception){
+            return "Failed to login.";
         }
         return result;
     }
 
     private String evalLogout(){
+        if (this.getLoginStatus().equals(STATUS_LOGGED_OUT)){
+            return "Cannot logout, you aren\'t logged in!";
+        }
         String result = "";
         try{
             this.serverFacade.logout(this.authData.authToken());
@@ -261,27 +274,35 @@ public class ChessClient {
             result = "logout";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
-                case 401 -> result = "You are already s out.";
+                case 401 -> result = "You are already logged out.";
                 case 500 -> result = "Failed to logout.";
             }
+        } catch (Exception exception) {
+            return "Failed to logout";
         }
         return result;
     }
 
     private String evalCreate(String[] command){
+        if (command.length != 2){
+            return "Could not create chess game. Did you forget to name your game?";
+        }
         String result = "";
         try{
             this.setLastCreatedGameID(
                     this.serverFacade.createGame(
-                            Integer.parseInt(command[1])
+                            command[1],
+                            this.getAuthData().authToken()
                     )
             );
             result = "create";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
-                case 400 -> result = "Could not create chess game \"" + command[1] + "\". Did you forget to name your game?";
+                case 400 -> result = "Could not create chess game. Did you forget to name your game?";
                 case 500 -> result = "Failed to create game \"" + command[1] + "\".";
             }
+        } catch (Exception exception) {
+            return "Failed to create game.";
         }
         return result;
     }
@@ -297,18 +318,33 @@ public class ChessClient {
                 case 401 -> result = "Silly chess player, you can\'t list games when you\'re logged out!";
                 case 500 -> result = "Failed to get list of games.";
             }
+        } catch (Exception exception) {
+            return "Failed to get list of games";
         }
         return result;
     }
+
     private String evalJoin(String[] command){
+        if(command.length != 3){
+            return "Could not join game. Did you forget to the game id or player color?";
+        }
         String result = "";
         int gameID = Integer.parseInt(command[1]);
         String stringTeamColor = command[2];
+        if (this.currentGames == null){
+            return "You need to list the games before you can join one.";
+        }
         try{
-            GameData joinedGameData = this.serverFacade.joinGame(stringTeamColor, gameID);
+            this.serverFacade.joinGame(stringTeamColor, gameID, this.authData.authToken());
 
-            this.setGame(joinedGameData.game());
-            this.setBoard(joinedGameData.game().getBoard());
+            ChessGame tempGameUntilPhaseSix = new ChessGame();
+
+            GameData tempGameDataUntilPhaseSix = new GameData(0, "NULL", "NULL", "NOT_IMPLEMENTED", tempGameUntilPhaseSix);
+
+            // This is for phase 6 to implement gameplay
+
+            this.setGame(tempGameDataUntilPhaseSix.game());
+            this.setBoard(tempGameDataUntilPhaseSix.game().getBoard());
 
             if (stringTeamColor.equals("WHITE")){
                 this.setTeamColor(ChessGame.TeamColor.WHITE);
@@ -317,7 +353,7 @@ public class ChessClient {
             }
 
             this.setGameID(gameID);
-            this.setGameData(joinedGameData);
+            this.setGameData(tempGameDataUntilPhaseSix);
 
             this.setMenuState(STATE_GAME);
             result = "join";
@@ -328,15 +364,23 @@ public class ChessClient {
                 case 403 -> result = "Sorry someone is already playing as " + stringTeamColor + " on game " + gameID + "!";
                 case 500 -> result = "Failed to join game " + gameID + ".";
             }
+        } catch (Exception exception) {
+            return "Failed to join game.";
         }
         return result;
     }
     private String evalObserve(String[] command){
+        if(command.length != 2){
+            return "Could not observe chess game. Did you forget to enter the game id?";
+        }
         String result = "";
         try{
-            this.setCurrentObservingBoard(
-                    this.serverFacade.observe(command[1])
-            );
+            this.serverFacade.observe(command[1], this.authData.authToken());
+
+            ChessBoard tempBoardUntilPhaseSix = new ChessBoard();
+            tempBoardUntilPhaseSix.resetBoard();
+            this.setCurrentObservingBoard(tempBoardUntilPhaseSix);
+
             this.setMenuState(STATE_GAME);
             result = "observe";
         } catch (ServerFacadeException exception){
@@ -344,6 +388,8 @@ public class ChessClient {
                 case 401 -> result = "You can\'t observe a game when you\'re logged out!";
                 case 500 -> result = "Failed to observe game " + command[1] + ".";
             }
+        } catch (Exception exception) {
+            return "Failed to observe game.";
         }
         return result;
     }
