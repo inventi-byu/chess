@@ -33,7 +33,7 @@ public class ServerFacade {
      * Accesses the clear endpoint.
      * @return boolean if the clear was successful, false if it was not.
      */
-    public boolean logout(String username) throws ServerFacadeException {
+    public boolean logout(String authToken) throws ServerFacadeException {
         throw new RuntimeException("Not implemented.");
     }
 

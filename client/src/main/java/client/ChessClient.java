@@ -19,6 +19,8 @@ public class ChessClient {
 
     private ChessBoard board;
     private ChessGame.TeamColor teamColor;
+    private String username;
+    private String authToken;
 
     public ChessClient(ServerFacade serverFacade){
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
@@ -27,6 +29,8 @@ public class ChessClient {
 
         this.board = null;
         this.teamColor = null;
+        this.username = null;
+        this.authToken = null;
     }
 
     public String getLoginStatus(){
@@ -62,7 +66,7 @@ public class ChessClient {
         String[] command = line.split(" ");
         switch (command[0]){
             case "quit":
-                result = "quit";
+                result = this.evalQuit();
                 break;
 
             case "help":
@@ -105,6 +109,16 @@ public class ChessClient {
         return result;
     }
 
+    private String evalQuit(){
+        String result = "";
+        if(this.evalLogout().equals("logout")){
+            result = "quit";
+        } else {
+            result = "You can never quit chess! Mwah ha ha ha ha!";
+        }
+        return result;
+    }
+
     private String evalHelp() {
         String result = "";
         if (this.getMenuState().equals(STATE_PRELOGIN)){
@@ -117,15 +131,7 @@ public class ChessClient {
         return result;
     }
 
-
     private String evalRegister(String[] command){
-        if () {
-
-            return
-        } else {
-            return
-        }
-
         String result = "";
         try{
             this.serverFacade.register(command[1], command[2], command[3]);
@@ -153,6 +159,22 @@ public class ChessClient {
             switch (exception.getStatusCode()){
                 case 401 -> result = "Could not log you in, wrong credentials.";
                 case 500 -> result = "Failed to login.";
+            }
+        }
+        return result;
+    }
+
+    private String evalLogout(){
+        String result = "";
+        try{
+            this.serverFacade.logout(this.authToken);
+            this.loginStatus = STATUS_LOGGED_OUT;
+            this.setMenuState(STATE_PRELOGIN);
+            result = "logout";
+        } catch (ServerFacadeException exception){
+            switch (exception.getStatusCode()){
+                case 401 -> result = "You are already logged out.";
+                case 500 -> result = "Failed to logout.";
             }
         }
         return result;
