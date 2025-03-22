@@ -204,17 +204,20 @@ public class ChessUI {
 
         StringBuilder sb = new StringBuilder();
         sb.append("======= BEGIN LIST OF ALL GAMES =======");
+        sb.append("\n");
+        int i = 1;
         for (GameMetaData game: currentGames){
             sb.append(String.format("""
+                    (%d)
                     GAME: "%s"
-                    ID: %d
                     WHITE PLAYER: %s
                     BLACK PLAYER: %s
                     """,
-                    game.gameName(), game.gameID(), game.whiteUsername(), game.blackUsername()
+                    i, game.gameName(), game.whiteUsername(), game.blackUsername()
                     )
             );
             sb.append("\n");
+            i++;
         }
         sb.append("======== END LIST OF ALL GAMES ========");
         sb.append("\n");

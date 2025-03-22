@@ -329,7 +329,8 @@ public class ChessClient {
             return "Could not join game. Did you forget to the game id or player color?";
         }
         String result = "";
-        int gameID = Integer.parseInt(command[1]);
+        int chosenGameIndex = Integer.parseInt(command[1]) - 1;
+        int gameID = this.currentGames[chosenGameIndex].gameID();
         String stringTeamColor = command[2];
         if (this.currentGames == null){
             return "You need to list the games before you can join one.";
