@@ -188,10 +188,17 @@ public class ChessClient {
 
     private String evalQuit(){
         String result = "";
-        if(this.evalLogout().equals("logout")){
-            result = "quit";
-        } else {
-            result = "You can never quit chess! Mwah ha ha ha ha!";
+        switch (this.loginStatus){
+            case STATUS_LOGGED_OUT:
+                result = "quit";
+                break;
+            case STATUS_LOGGED_IN:
+                if(this.evalLogout().equals("logout")){
+                    result = "quit";
+                } else {
+                    result = "You can never quit chess! Mwah ha ha ha ha!";
+                }
+                break;
         }
         return result;
     }

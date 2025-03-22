@@ -195,7 +195,23 @@ public class ChessUI {
 
     public void displayListOfGames(){
         GameMetaData[] currentGames = this.client.getCurrentGames();
-        throw new RuntimeException("Not implemented.");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("======= BEGIN LIST OF ALL GAMES =======");
+        for (GameMetaData game: currentGames){
+            sb.append(String.format("""
+                    GAME: "%s"
+                    ID: %d
+                    WHITE PLAYER: %s
+                    BLACK PLAYER: %s
+                    """,
+                    game.gameName(), game.gameID(), game.whiteUsername(), game.blackUsername()
+                    )
+            );
+            sb.append("\n");
+        }
+        sb.append("======== END LIST OF ALL GAMES ========");
+        this.print(sb.toString());
     }
 
     /**
