@@ -65,8 +65,14 @@ public class ServerFacade {
      * @return boolean if the clear was successful, false if it was not.
      */
     public boolean logout(String authToken) throws ServerFacadeException {
+        String path = "/session";
 
-        throw new ServerFacadeException(500, "Not implemented.");
+        record UserCredentials(String username, String password){}
+        HashMap<String, String> headers = new HashMap<>(1);
+        headers.put("authorization", authToken);
+
+        this.makeHttpRequest("DELETE", path, null, headers, AuthData.class);
+        return true;
     }
 
     /**
