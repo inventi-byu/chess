@@ -75,15 +75,11 @@ public class ChessClient {
                 break;
 
             case "register":
-                this.loginStatus = STATUS_LOGGED_IN;
-                this.setMenuState(STATE_POSTLOGIN);
-                result = "register";
+                result = this.evalRegister(command);
                 break;
 
             case "login":
-                this.loginStatus = STATUS_LOGGED_IN;
-                this.setMenuState(STATE_POSTLOGIN);
-                result = "login";
+                result = this.evalLogin(command);
                 break;
 
             case "create":
@@ -112,5 +108,30 @@ public class ChessClient {
                 result = "Unknown command.";
         }
         return result;
+    }
+
+    private String evalRegister(String[] command){
+        if (this.serverFacade.register(command[1], command[2], command[3])) {
+            this.loginStatus = STATUS_LOGGED_IN;
+            this.setMenuState(STATE_POSTLOGIN);
+            return "register";
+        } else {
+            return "Failed to register.";
+        }
+    }
+
+    private String evalLogin(String[] command){
+        String result = "";
+        try{
+            this.serverFacade.login(command[1], command[2]);
+        } catch (LoginException exception){
+            switch (exception.getStatus()){
+                case 401 -> result = "Invalid credentials.";
+                case
+            }
+        }
+        this.loginStatus = STATUS_LOGGED_IN;
+        this.setMenuState(STATE_POSTLOGIN);
+        return "login";
     }
 }
