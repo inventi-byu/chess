@@ -113,6 +113,7 @@ public class ChessUI {
                         break;
 
                     default:
+                        // If there was an error, print the user friendly message.
                         if(client.getMenuState().equals(ChessClient.STATE_POSTLOGIN)){
                             this.println( (this.menuTextColorPostLogin + result) );
                         } else if ((client.getMenuState().equals(ChessClient.STATE_GAME))){

@@ -1,6 +1,7 @@
 package ui;
 
 import exceptions.ServerFacadeException;
+import model.AuthData;
 import model.GameMetaData;
 
 public class ServerFacade {
@@ -18,9 +19,9 @@ public class ServerFacade {
 
     /**
      * Accesses the register endpoint.
-     * @return boolean if the clear was successful, false if it was not.
+     * @return the user's AuthData
      */
-    public boolean register(String username, String password, String email) throws ServerFacadeException {
+    public AuthData register(String username, String password, String email) throws ServerFacadeException {
         throw new RuntimeException("Not implemented.");
     }
     /**

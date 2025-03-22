@@ -3,6 +3,7 @@ package client;
 import chess.ChessBoard;
 import chess.ChessGame;
 import exceptions.ServerFacadeException;
+import model.AuthData;
 import model.GameData;
 import model.GameMetaData;
 import ui.ServerFacade;
@@ -22,7 +23,7 @@ public class ChessClient {
     private ChessBoard board;
     private ChessGame.TeamColor teamColor;
     private String username;
-    private String authToken;
+    private AuthData authData;
     private GameMetaData[] currentGames;
 
     public ChessClient(ServerFacade serverFacade){
@@ -33,7 +34,7 @@ public class ChessClient {
         this.board = null;
         this.teamColor = null;
         this.username = null;
-        this.authToken = null;
+        this.authData = null;
         this.currentGames = null;
     }
 
@@ -140,7 +141,7 @@ public class ChessClient {
     private String evalRegister(String[] command){
         String result = "";
         try{
-            this.serverFacade.register(command[1], command[2], command[3]);
+            this.authData = this.serverFacade.register(command[1], command[2], command[3]);
             this.loginStatus = STATUS_LOGGED_IN;
             this.setMenuState(STATE_POSTLOGIN);
             result = "register";
@@ -173,7 +174,7 @@ public class ChessClient {
     private String evalLogout(){
         String result = "";
         try{
-            this.serverFacade.logout(this.authToken);
+            this.serverFacade.logout(this.authData.authToken());
             this.loginStatus = STATUS_LOGGED_OUT;
             this.setMenuState(STATE_PRELOGIN);
             result = "logout";
