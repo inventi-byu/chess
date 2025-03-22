@@ -51,7 +51,7 @@ public class ServerFacade {
      * Accesses the clear endpoint.
      * @return boolean if the clear was successful, false if it was not.
      */
-    public boolean createGame() throws ServerFacadeException {
+    public int createGame() throws ServerFacadeException {
         throw new RuntimeException("Not implemented.");
     }
 

@@ -97,7 +97,7 @@ public class ChessUI {
                         break;
 
                     case "create":
-                        this.println("Create not implemented");
+                        this.println("Successfully created game with id " + this.client.getLastCreatedGameID());
                         break;
 
                     case "list":

@@ -25,6 +25,7 @@ public class ChessClient {
     private String username;
     private AuthData authData;
     private GameMetaData[] currentGames;
+    private int lastCreatedGameID;
 
     public ChessClient(ServerFacade serverFacade){
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
@@ -36,6 +37,7 @@ public class ChessClient {
         this.username = null;
         this.authData = null;
         this.currentGames = null;
+        this.lastCreatedGameID = 0; // No game created, because the IDs from the database start at 1.
     }
 
     public String getLoginStatus(){
@@ -56,6 +58,10 @@ public class ChessClient {
 
     public void setMenuState(String menuState){
         this.menuState = menuState;
+    }
+
+    public int getLastCreatedGameID(){
+        return this.lastCreatedGameID;
     }
 
     public ChessBoard getBoard(){
@@ -188,7 +194,17 @@ public class ChessClient {
     }
 
     private String evalCreate(String[] command){
-        throw new RuntimeException("Not implemented.");
+        String result = "";
+        try{
+            this.lastCreatedGameID = this.serverFacade.createGame();
+            result = "create";
+        } catch (ServerFacadeException exception){
+            switch (exception.getStatusCode()){
+                case 400 -> result = "Could not create chess game \"" + command[1] + "\". Did you forget to name your game?";
+                case 500 -> result = "Failed to create game \"" + command[1] + "\".";
+            }
+        }
+        return result;
     }
     private String evalList(){
         String result = "";
