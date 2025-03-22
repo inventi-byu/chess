@@ -1,15 +1,28 @@
 package ui;
 
 import chess.ChessBoard;
+import com.google.gson.Gson;
 import exceptions.ServerFacadeException;
 import model.AuthData;
 import model.GameData;
 import model.GameMetaData;
 import model.UserData;
+import server.service.exception.ResponseException;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerFacade {
+
+    private String serverURL;
+
     public ServerFacade(){
-        //throw new RuntimeException("Not implemented.");
+        this.serverURL = "http//localhost:8080";
     }
 
     /**
@@ -18,7 +31,7 @@ public class ServerFacade {
      */
     public boolean clear() throws ServerFacadeException {
         String path = "/db";
-        this.makeHttpRequest("DELETE", path, null, null);
+        this.makeHttpRequest("DELETE", path, null, null, null);
         return true;
     }
 
@@ -29,7 +42,7 @@ public class ServerFacade {
     public AuthData register(String username, String password, String email) throws ServerFacadeException {
         String path = "/user";
         UserData userData = new UserData(username, password, email);
-        AuthData authData = this.makeHttpRequest("POST", path, userData, AuthData.class);
+        AuthData authData = this.makeHttpRequest("POST", path, userData, null, AuthData.class);
         return authData;
     }
     /**
@@ -42,7 +55,7 @@ public class ServerFacade {
         record UserCredentials(String username, String password){}
         UserCredentials credentials = new UserCredentials(username, password)
 
-        AuthData authData = this.makeHttpRequest("POST", path, credentials, AuthData.class);
+        AuthData authData = this.makeHttpRequest("POST", path, credentials, null, AuthData.class);
         return authData;
     }
     /**
@@ -82,10 +95,37 @@ public class ServerFacade {
         throw new ServerFacadeException(500, "Not implemented.");
     }
 
-    public <T> T makeHttpRequest(String method, String path, Object request, Class<T> responseClass) throws ServerFacadeException {
+    public <T> T makeHttpRequest(String method, String path, Object request, HashMap<String, Object> headers, Class<T> responseClass) throws ServerFacadeException {
         try {
+            URL url = (new URI(serverURL + path)).toURL();
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestMethod(method);
+            http.setDoOutput(true);
+            this.writeBody(request, headers, http);
+            http.connect();
+            this.throwIfNotSuccessful(http);
 
-        } catch (ResponseException exception)
+            return this.readBody(http, responseClass);
+        } catch (ResponseException exception){
+            throw new ServerFacadeException(exception.getStatusCode(), exception.getMessage());
+        } catch (Exception exception){
+            throw new ServerFacadeException(500, exception.getMessage());
+        }
         throw new ServerFacadeException(500, "Not implemented.");
+    }
+
+    private void writeBody(Object request, HashMap<String, String> headers, HttpURLConnection http) throws IOException {
+        if (request != null){
+            http.addRequestProperty("Content-Type", "application/json");
+            if (!headers.isEmpty())
+                // Add all the headers specified
+                for (Map.Entry<String, String> entry : headers.entrySet()){
+                    http.addRequestProperty(entry.getKey(), entry.getValue());
+                }
+            String requestJSON = new Gson().toJson(request);
+            try (OutputStream requestBody = http.getOutputStream()){
+                requestBody.write(requestJSON.getBytes());
+            }
+        }
     }
 }
