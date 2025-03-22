@@ -1,7 +1,5 @@
 package dataaccess;
 
-import service.exception.ResponseException;
-
 public interface AdminDAO {
 
     /**

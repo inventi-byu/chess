@@ -13,7 +13,7 @@ import service.UserService;
 import service.LoginService;
 import service.LogoutService;
 import service.GameService;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 
 import spark.*;
 

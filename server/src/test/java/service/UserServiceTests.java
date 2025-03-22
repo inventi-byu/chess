@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 import service.request.RegisterRequest;
 import service.result.RegisterResult;
 

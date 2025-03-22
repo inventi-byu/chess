@@ -1,7 +1,7 @@
 package handler;
 
 import service.*;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 import service.request.LoginRequest;
 import service.request.LogoutRequest;
 import service.result.LoginResult;

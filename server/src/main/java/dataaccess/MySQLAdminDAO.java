@@ -1,6 +1,6 @@
 package dataaccess;
 
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 
 public class MySQLAdminDAO implements AdminDAO {
     public boolean clear(){

@@ -4,7 +4,7 @@ import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 import service.request.LoginRequest;
 import service.result.LoginResult;
 

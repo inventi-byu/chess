@@ -3,7 +3,7 @@ import dataaccess.*;
 import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 
 import java.util.UUID;
 

@@ -1,9 +1,8 @@
 package dataaccess;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import static dataaccess.DatabaseManager.*;

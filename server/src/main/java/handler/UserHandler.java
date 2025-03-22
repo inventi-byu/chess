@@ -4,7 +4,7 @@ import model.UserData;
 import service.UserService;
 import service.request.RegisterRequest;
 import service.result.RegisterResult;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 
 import spark.Request;
 import spark.Response;

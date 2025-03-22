@@ -7,7 +7,7 @@ import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 
 import java.util.List;
 

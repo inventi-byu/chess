@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 import java.util.ArrayList;
 
 import static dataaccess.DatabaseManager.*;

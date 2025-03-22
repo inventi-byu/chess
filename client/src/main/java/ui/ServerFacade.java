@@ -83,6 +83,9 @@ public class ServerFacade {
     }
 
     public <T> T makeHttpRequest(String method, String path, Object request, Class<T> responseClass) throws ServerFacadeException {
+        try {
+
+        } catch (ResponseException exception)
         throw new ServerFacadeException(500, "Not implemented.");
     }
 }

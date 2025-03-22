@@ -1,6 +1,6 @@
 package dataaccess;
 
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 
 import java.sql.*;
 import java.util.ArrayList;

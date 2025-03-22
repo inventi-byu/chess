@@ -6,7 +6,7 @@ import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
 import model.GameMetaData;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 import service.request.CreateGameRequest;
 import service.request.JoinGameRequest;
 import service.request.ListGamesRequest;

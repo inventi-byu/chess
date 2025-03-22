@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.Service;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 
 import java.util.ArrayList;
 

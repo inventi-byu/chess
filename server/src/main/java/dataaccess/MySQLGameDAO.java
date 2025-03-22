@@ -4,7 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
 import model.GameMetaData;
-import service.exception.ResponseException;
+import server.service.exception.ResponseException;
 
 import java.util.ArrayList;
 import java.util.List;

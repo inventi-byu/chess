@@ -1,4 +1,4 @@
-package service.exception;
+package server.service.exception;
 import com.google.gson.*;
 import service.result.LoginResult;
 
