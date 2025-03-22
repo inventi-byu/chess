@@ -143,5 +143,21 @@ public class ServerFacade {
         }
         return response;
     }
+
+    private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, ServerFacadeException {
+        int status = http.getResponseCode();
+        if (!this.isSuccessful(status)){
+            try (InputStream responseError = http.getErrorStream()){
+                if (responseError != null){
+                    ResponseException exception = ResponseException.fromJson(responseError);
+                    throw new ServerFacadeException(exception.getStatusCode(), exception.getMessage());
+                }
+            }
+        }
+    }
+
+    private boolean isSuccessful(int status){
+        return status / 100 == 2; // Any code in 200 to 299 range is successful
+    }
 }
 

@@ -1,7 +1,9 @@
 package server.service.exception;
 import com.google.gson.*;
-import service.result.LoginResult;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseException extends RuntimeException {
@@ -15,6 +17,13 @@ public class ResponseException extends RuntimeException {
 
     public String toJson(){
         return new Gson().toJson(Map.of("message", this.getMessage()));
+    }
+
+    public ResponseException fromJson(InputStream stream){
+        var map = new Gson().fromJson(new InputStreamReader(stream), HashMap.class);
+        int status = ((Double)map.get("status")).intValue();
+        String message = map.get("messsage").toString();
+        return new ResponseException(status, message);
     }
 
     public int getStatusCode(){
