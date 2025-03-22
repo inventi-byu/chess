@@ -55,7 +55,7 @@ public class ServerFacade {
         String path = "/session";
 
         record UserCredentials(String username, String password){}
-        UserCredentials credentials = new UserCredentials(username, password)
+        UserCredentials credentials = new UserCredentials(username, password);
 
         AuthData authData = this.makeHttpRequest("POST", path, credentials, null, AuthData.class);
         return authData;
@@ -97,7 +97,7 @@ public class ServerFacade {
         throw new ServerFacadeException(500, "Not implemented.");
     }
 
-    public <T> T makeHttpRequest(String method, String path, Object request, HashMap<String, Object> headers, Class<T> responseClass) throws ServerFacadeException {
+    public <T> T makeHttpRequest(String method, String path, Object request, HashMap<String, String> headers, Class<T> responseClass) throws ServerFacadeException {
         try {
             URL url = (new URI(serverURL + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -113,7 +113,6 @@ public class ServerFacade {
         } catch (Exception exception){
             throw new ServerFacadeException(500, exception.getMessage());
         }
-        throw new ServerFacadeException(500, "Not implemented.");
     }
 
     private void writeBody(Object request, HashMap<String, String> headers, HttpURLConnection http) throws IOException {
@@ -137,7 +136,7 @@ public class ServerFacade {
             try (InputStream responseBody = http.getInputStream()){
                 InputStreamReader reader = new InputStreamReader(responseBody);
                 if(responseClass != null){
-                    response = new Gson().fromJson(reader, responseClass)
+                    response = new Gson().fromJson(reader, responseClass);
                 }
             }
         }
