@@ -25,7 +25,7 @@ public interface GameDAO {
      * Fetches a list of all the games' metadata (without the ChessGame object).
      * @return Returns a list of GameMetaData for all the games in the database.
      */
-    public List<GameMetaData> getAllGames();
+    public GameMetaData[] getAllGames();
 
     /**
      * Adds a user to a game in the game database with the specified playerColor.

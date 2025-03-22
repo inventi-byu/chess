@@ -289,7 +289,7 @@ public class ChessClient {
         String result = "";
         try{
             this.setCurrentGames(
-                    this.serverFacade.listGames()
+                    this.serverFacade.listGames(this.getAuthData().authToken())
             );
             result = "list";
         } catch (ServerFacadeException exception){

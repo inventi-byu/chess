@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ServerFacade {
@@ -79,8 +80,14 @@ public class ServerFacade {
      * Accesses the clear endpoint.
      * @return boolean if the clear was successful, false if it was not.
      */
-    public GameMetaData[] listGames() throws ServerFacadeException {
-        throw new ServerFacadeException(500, "Not implemented.");
+    public GameMetaData[] listGames(String authToken) throws ServerFacadeException {
+        String path = "/game";
+
+        HashMap<String, String> headers = new HashMap<>(1);
+        headers.put("authorization", authToken);
+
+        GameMetaData[] games = this.makeHttpRequest("GET", path, null, headers, GameMetaData[].class);
+        return games;
     }
 
     /**

@@ -47,11 +47,12 @@ public class GameServiceTests {
         this.gameService.createGame(new CreateGameRequest(this.authToken, "mygame"));
         ListGamesResult result = this.gameService.listGames(new ListGamesRequest(this.authToken));
         GameMetaData gameMetaData = new GameMetaData(1, null, null, "mygame");
-        ArrayList<GameMetaData> games = new ArrayList<GameMetaData>();
-        games.add(gameMetaData);
+        ArrayList<GameMetaData> gamesList = new ArrayList<GameMetaData>();
+        gamesList.add(gameMetaData);
+        GameMetaData[] games = gamesList.toArray(new GameMetaData[0]);
 
         Assertions.assertEquals(200, result.getStatus());
-        Assertions.assertEquals(games, result.getGames());
+        Assertions.assertEquals(games[0], result.getGames()[0]);
     }
 
     @Test

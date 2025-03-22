@@ -103,7 +103,7 @@ public class GameDAOTests {
             gameNameArray[i] = gameName;
         }
 
-        List<GameMetaData> games = this.gameDAO.getAllGames();
+        GameMetaData[] games = this.gameDAO.getAllGames();
 
         int i = 0;
         for (GameMetaData gameMetaData : games){
@@ -113,13 +113,13 @@ public class GameDAOTests {
         }
         // Make sure that all the games were actually listed, and not just some
         // Just i and not i++ because i++ is at the end, so it will be the actual length
-        Assertions.assertEquals(gameNameArray.length, games.size());
+        Assertions.assertEquals(gameNameArray.length, games.length);
     }
 
     @Test
     public void getAllGamesTestBadInput(){
-        List<GameMetaData> games = this.gameDAO.getAllGames();
-        Assertions.assertTrue(games.isEmpty());
+        GameMetaData[] games = this.gameDAO.getAllGames();
+        Assertions.assertEquals(0, games.length);
     }
 
     @Test
@@ -135,8 +135,8 @@ public class GameDAOTests {
         }
 
         // Make sure all the games were properly added
-        List<GameMetaData> games = this.gameDAO.getAllGames();
-        Assertions.assertEquals(gameNameArray.length, games.size());
+        GameMetaData[] games = this.gameDAO.getAllGames();
+        Assertions.assertEquals(gameNameArray.length, games.length);
 
         // Test
         int chosenGameIDIndex = 0;
@@ -164,8 +164,8 @@ public class GameDAOTests {
         }
 
         // Make sure all the games were properly added
-        List<GameMetaData> games = this.gameDAO.getAllGames();
-        Assertions.assertEquals(gameNameArray.length, games.size());
+        GameMetaData[] games = this.gameDAO.getAllGames();
+        Assertions.assertEquals(gameNameArray.length, games.length);
 
         // Add the users to the game
         int chosenGameIDIndex = 0;

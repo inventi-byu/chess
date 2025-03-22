@@ -50,7 +50,7 @@ public class GameService extends Service {
         String authToken = request.getAuthorization();
         this.authenticateWithToken(authToken);
 
-        List<GameMetaData> games = this.gameDAO.getAllGames();
+        GameMetaData[] games = this.gameDAO.getAllGames();
         return new ListGamesResult(200, games);
     }
 

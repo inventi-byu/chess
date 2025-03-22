@@ -7,9 +7,9 @@ import java.util.List;
 public class ListGamesResult {
 
     private int status;
-    private List<GameMetaData> games;
+    private GameMetaData[] games;
 
-    public ListGamesResult(int status, List<GameMetaData> games){
+    public ListGamesResult(int status, GameMetaData[] games){
         this.status = status;
         this.games = games;
     }
@@ -18,13 +18,13 @@ public class ListGamesResult {
         return this.status;
     }
 
-    public List<GameMetaData> getGames(){
+    public GameMetaData[] getGames(){
         return this.games;
     }
 
     @Override
     public boolean equals(Object o){
-        if (o instanceof ClearResult){
+        if (o instanceof ListGamesResult){
             ListGamesResult obj = (ListGamesResult)o;
             if(this.getStatus() == obj.getStatus() && this.getGames().equals(obj.getGames())){
                 return true;

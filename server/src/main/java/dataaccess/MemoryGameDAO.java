@@ -66,12 +66,12 @@ public class MemoryGameDAO implements GameDAO {
 
     }
 
-    public List<GameMetaData> getAllGames(){
+    public GameMetaData[] getAllGames(){
         ArrayList<GameMetaData> games = new ArrayList<GameMetaData>();
         for (GameData game : gameDB){
             games.add(new GameMetaData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName()));
         }
-        return games;
+        return games.toArray(new GameMetaData[0]);
     }
 
     /**

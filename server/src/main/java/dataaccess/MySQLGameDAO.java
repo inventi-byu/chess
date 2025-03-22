@@ -71,7 +71,7 @@ public class MySQLGameDAO implements GameDAO {
         }
     }
 
-    public List<GameMetaData> getAllGames(){
+    public GameMetaData[] getAllGames(){
         String statement = "SELECT " +
                 GAME_TABLE_GAME_ID + ", " +
                 GAME_TABLE_WHITE_USERNAME + ", " +
@@ -87,7 +87,7 @@ public class MySQLGameDAO implements GameDAO {
 
             if(data.isEmpty()){
                 // If there is no data, we still need to return an empty list for the response to be correct
-                return games;
+                return games.toArray(new GameMetaData[0]);
             }
 
             // Make sure that we have the right amount of stuff
@@ -103,7 +103,7 @@ public class MySQLGameDAO implements GameDAO {
                        )
                );
             }
-            return games;
+            return games.toArray(new GameMetaData[0]);
 
         } catch (DataAccessException exception){
             throw new ResponseException(500, String.format("Error: Something went wrong getting all games. Message: %s", exception));
