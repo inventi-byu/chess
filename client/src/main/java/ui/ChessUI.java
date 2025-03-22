@@ -109,7 +109,7 @@ public class ChessUI {
                         break;
 
                     case "observe":
-                        this.println("Observe not implemented");
+                        this.displayGameMenu(client.getObservingBoard(), ChessGame.TeamColor.WHITE);
                         break;
 
                     default:

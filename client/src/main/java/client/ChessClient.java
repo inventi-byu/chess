@@ -8,6 +8,8 @@ import model.GameData;
 import model.GameMetaData;
 import ui.ServerFacade;
 
+import java.lang.annotation.IncompleteAnnotationException;
+
 public class ChessClient {
     private String loginStatus;
     private String menuState; // Which menu you are currently in
@@ -26,6 +28,7 @@ public class ChessClient {
     private AuthData authData;
     private GameMetaData[] currentGames;
     private int lastCreatedGameID;
+    private ChessBoard currentObservingBoard;
 
     public ChessClient(ServerFacade serverFacade){
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
@@ -38,6 +41,7 @@ public class ChessClient {
         this.authData = null;
         this.currentGames = null;
         this.lastCreatedGameID = 0; // No game created, because the IDs from the database start at 1.
+        this.currentObservingBoard = null;
     }
 
     public String getLoginStatus(){
@@ -64,16 +68,47 @@ public class ChessClient {
         return this.lastCreatedGameID;
     }
 
+    public void setLastCreatedGameID(int gameID){
+        this.lastCreatedGameID = gameID;
+    }
+
     public ChessBoard getBoard(){
         return this.board;
+    }
+
+    public void setBoard(ChessBoard board){
+        this.board = board;
     }
 
     public ChessGame.TeamColor getTeamColor(){
         return this.teamColor;
     }
 
+    public void setTeamColor(ChessGame.TeamColor teamColor){
+        this.teamColor = teamColor;
+    }
+
     public GameMetaData[] getCurrentGames(){
         return this.currentGames;
+    }
+    public void setCurrentGames(GameMetaData[] currentGames){
+        this.currentGames = currentGames;
+    }
+
+    public ChessBoard getObservingBoard(){
+        return this.currentObservingBoard;
+    }
+
+    public void setCurrentObservingBoard(ChessBoard observingBoard){
+        this.currentObservingBoard = observingBoard;
+    }
+
+    public AuthData getAuthData(){
+        return this.authData;
+    }
+
+    public void setAuthData(AuthData authData) {
+        this.authData = authData;
     }
 
     public String evalLine(String line){
@@ -147,8 +182,10 @@ public class ChessClient {
     private String evalRegister(String[] command){
         String result = "";
         try{
-            this.authData = this.serverFacade.register(command[1], command[2], command[3]);
-            this.loginStatus = STATUS_LOGGED_IN;
+            this.setAuthData(
+                    this.serverFacade.register(command[1], command[2], command[3])
+            );
+            this.setLoginStatus(STATUS_LOGGED_IN);
             this.setMenuState(STATE_POSTLOGIN);
             result = "register";
         } catch (ServerFacadeException exception){
@@ -164,8 +201,10 @@ public class ChessClient {
     private String evalLogin(String[] command){
         String result = "";
         try{
-            this.serverFacade.login(command[1], command[2]);
-            this.loginStatus = STATUS_LOGGED_IN;
+            this.setAuthData(
+                    this.serverFacade.login(command[1], command[2])
+            );
+            this.setLoginStatus(STATUS_LOGGED_IN);
             this.setMenuState(STATE_POSTLOGIN);
             result = "login";
         } catch (ServerFacadeException exception){
@@ -181,12 +220,12 @@ public class ChessClient {
         String result = "";
         try{
             this.serverFacade.logout(this.authData.authToken());
-            this.loginStatus = STATUS_LOGGED_OUT;
+            this.setLoginStatus(STATUS_LOGGED_OUT);
             this.setMenuState(STATE_PRELOGIN);
             result = "logout";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
-                case 401 -> result = "You are already logged out.";
+                case 401 -> result = "You are already s out.";
                 case 500 -> result = "Failed to logout.";
             }
         }
@@ -196,7 +235,11 @@ public class ChessClient {
     private String evalCreate(String[] command){
         String result = "";
         try{
-            this.lastCreatedGameID = this.serverFacade.createGame();
+            this.setLastCreatedGameID(
+                    this.serverFacade.createGame(
+                            Integer.parseInt(command[1])
+                    )
+            );
             result = "create";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
@@ -223,6 +266,17 @@ public class ChessClient {
         throw new RuntimeException("Not implemented.");
     }
     private String evalObserve(String[] command){
-        throw new RuntimeException("Not implemented.");
+        String result = "";
+        try{
+            this.currentObservingBoard = this.serverFacade.observe(command[1]);
+            this.setMenuState(STATE_GAME);
+            result = "observe";
+        } catch (ServerFacadeException exception){
+            switch (exception.getStatusCode()){
+                case 401 -> result = "You can\'t observe a game when you\'re logged out!";
+                case 500 -> result = "Failed to get list of games.";
+            }
+        }
+        return result;
     }
 }
