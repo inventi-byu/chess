@@ -3,6 +3,7 @@ package ui;
 import chess.ChessBoard;
 import exceptions.ServerFacadeException;
 import model.AuthData;
+import model.GameData;
 import model.GameMetaData;
 
 public class ServerFacade {
@@ -60,7 +61,7 @@ public class ServerFacade {
      * Accesses the clear endpoint.
      * @return boolean if the clear was successful, false if it was not.
      */
-    public boolean joinGame(String playerColor, String gameID) throws ServerFacadeException {
+    public GameData joinGame(String playerColor, int gameID) throws ServerFacadeException {
         throw new ServerFacadeException(500, "Not implemented.");
     }
 

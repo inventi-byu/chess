@@ -8,7 +8,6 @@ import model.GameData;
 import model.GameMetaData;
 import ui.ServerFacade;
 
-import java.lang.annotation.IncompleteAnnotationException;
 
 public class ChessClient {
     private String loginStatus;
@@ -22,13 +21,16 @@ public class ChessClient {
     public static final String STATE_POSTLOGIN = "POSTLOGIN";
     public static final String STATE_GAME = "GAME";
 
+    private GameData gameData;
     private ChessBoard board;
+    private ChessGame game;
     private ChessGame.TeamColor teamColor;
     private String username;
     private AuthData authData;
     private GameMetaData[] currentGames;
     private int lastCreatedGameID;
     private ChessBoard currentObservingBoard;
+    private int gameID;
 
     public ChessClient(ServerFacade serverFacade){
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
@@ -42,6 +44,9 @@ public class ChessClient {
         this.currentGames = null;
         this.lastCreatedGameID = 0; // No game created, because the IDs from the database start at 1.
         this.currentObservingBoard = null;
+        this.gameData = null;
+        this.game = null;
+        this.gameID = 0; // No game at the beginning
     }
 
     public String getLoginStatus(){
@@ -109,6 +114,30 @@ public class ChessClient {
 
     public void setAuthData(AuthData authData) {
         this.authData = authData;
+    }
+
+    public GameData getGameData(){
+        return this.gameData;
+    }
+
+    public void setGameData(GameData gameData){
+        this.gameData = gameData;
+    }
+
+    public ChessGame getGame(){
+        return this.game;
+    }
+
+    public void setGame(ChessGame game){
+        this.game = game;
+    }
+
+    public int getGameID(){
+        return this.gameID;
+    }
+
+    public void setGameID(int gameID){
+        this.gameID = gameID;
     }
 
     public String evalLine(String line){
@@ -265,7 +294,35 @@ public class ChessClient {
         return result;
     }
     private String evalJoin(String[] command){
-        throw new RuntimeException("Not implemented.");
+        String result = "";
+        int gameID = Integer.parseInt(command[1]);
+        String stringTeamColor = command[2];
+        try{
+            GameData joinedGameData = this.serverFacade.joinGame(stringTeamColor, gameID);
+
+            this.setGame(joinedGameData.game());
+            this.setBoard(joinedGameData.game().getBoard());
+
+            if (stringTeamColor.equals("WHITE")){
+                this.setTeamColor(ChessGame.TeamColor.WHITE);
+            } else {
+                this.setTeamColor(ChessGame.TeamColor.BLACK);
+            }
+
+            this.setGameID(gameID);
+            this.setGameData(joinedGameData);
+
+            this.setMenuState(STATE_GAME);
+            result = "join";
+        } catch (ServerFacadeException exception){
+            switch (exception.getStatusCode()){
+                case 400 -> result = "Could not join game. Did you forget the ID or player color?";
+                case 401 -> result = "You can\'t join a game when you\'re logged out!";
+                case 403 -> result = "Sorry someone is already playing as " + stringTeamColor + " on game " + gameID + "!";
+                case 500 -> result = "Failed to join game " + gameID + ".";
+            }
+        }
+        return result;
     }
     private String evalObserve(String[] command){
         String result = "";
@@ -278,7 +335,7 @@ public class ChessClient {
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
                 case 401 -> result = "You can\'t observe a game when you\'re logged out!";
-                case 500 -> result = "Failed to get list of games.";
+                case 500 -> result = "Failed to observe game " + command[1] + ".";
             }
         }
         return result;
