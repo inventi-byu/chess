@@ -252,7 +252,9 @@ public class ChessClient {
     private String evalList(){
         String result = "";
         try{
-            this.currentGames = this.serverFacade.listGames();
+            this.setCurrentGames(
+                    this.serverFacade.listGames()
+            );
             result = "list";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
@@ -268,7 +270,9 @@ public class ChessClient {
     private String evalObserve(String[] command){
         String result = "";
         try{
-            this.currentObservingBoard = this.serverFacade.observe(command[1]);
+            this.setCurrentObservingBoard(
+                    this.serverFacade.observe(command[1])
+            );
             this.setMenuState(STATE_GAME);
             result = "observe";
         } catch (ServerFacadeException exception){
