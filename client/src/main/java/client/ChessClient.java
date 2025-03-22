@@ -3,6 +3,8 @@ package client;
 import chess.ChessBoard;
 import chess.ChessGame;
 import exceptions.ServerFacadeException;
+import model.GameData;
+import model.GameMetaData;
 import ui.ServerFacade;
 
 public class ChessClient {
@@ -21,6 +23,7 @@ public class ChessClient {
     private ChessGame.TeamColor teamColor;
     private String username;
     private String authToken;
+    private GameMetaData[] currentGames;
 
     public ChessClient(ServerFacade serverFacade){
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
@@ -31,6 +34,7 @@ public class ChessClient {
         this.teamColor = null;
         this.username = null;
         this.authToken = null;
+        this.currentGames = null;
     }
 
     public String getLoginStatus(){
@@ -61,6 +65,10 @@ public class ChessClient {
         return this.teamColor;
     }
 
+    public GameMetaData[] getCurrentGames(){
+        return this.currentGames;
+    }
+
     public String evalLine(String line){
         String result = "";
         String[] command = line.split(" ");
@@ -82,25 +90,23 @@ public class ChessClient {
                 break;
 
             case "create":
-                result = "Create not implemented. :(";
+                result = this.evalCreate(command);
                 break;
 
             case "list":
-                result = "List not implemented. :(";
+                result = this.evalList();
                 break;
 
             case "join":
-                result = "Join not implemented. :(";
+                result = this.evalJoin(command);
                 break;
 
             case "observe":
-                result = "Observe not implemented. :(";
+                result = this.evalObserve(command);
                 break;
 
             case "logout":
-                this.setLoginStatus(STATUS_LOGGED_OUT);
-                this.setMenuState(STATE_PRELOGIN);
-                result = "Logout not implemented. :(";
+                result = this.evalLogout();
                 break;
 
             default:
@@ -178,5 +184,28 @@ public class ChessClient {
             }
         }
         return result;
+    }
+
+    private String evalCreate(String[] command){
+        throw new RuntimeException("Not implemented.");
+    }
+    private String evalList(){
+        String result = "";
+        try{
+            this.currentGames = this.serverFacade.listGames();
+            result = "list";
+        } catch (ServerFacadeException exception){
+            switch (exception.getStatusCode()){
+                case 401 -> result = "Silly chess player, you can\'t list games when you\'re logged out!";
+                case 500 -> result = "Failed to get list of games.";
+            }
+        }
+        return result;
+    }
+    private String evalJoin(String[] command){
+        throw new RuntimeException("Not implemented.");
+    }
+    private String evalObserve(String[] command){
+        throw new RuntimeException("Not implemented.");
     }
 }

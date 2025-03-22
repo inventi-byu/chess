@@ -1,6 +1,7 @@
 package ui;
 
 import exceptions.ServerFacadeException;
+import model.GameMetaData;
 
 public class ServerFacade {
     public ServerFacade(){
@@ -41,7 +42,7 @@ public class ServerFacade {
      * Accesses the clear endpoint.
      * @return boolean if the clear was successful, false if it was not.
      */
-    public boolean listGames() throws ServerFacadeException {
+    public GameMetaData[] listGames() throws ServerFacadeException {
         throw new RuntimeException("Not implemented.");
     }
 
