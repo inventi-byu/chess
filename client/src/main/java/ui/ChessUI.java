@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import client.ChessClient;
+import model.GameMetaData;
 
 public class ChessUI {
 
@@ -75,16 +76,20 @@ public class ChessUI {
                     case "helpPreLogin":
                         this.displayHelpPreLogin();
                         break;
+
                     case "helpPostLogin":
                         this.displayHelpPostLogin();
                         break;
+
                     case "quit":
                         break;
+
                     case "register":
                         this.println("Successfully registered. You are now logged in.");
                         this.displayPostLoginMenu();
                         this.displayHelpPostLogin();
                         break;
+
                     case "login":
                         this.println("Successfully logged in.");
                         this.displayPostLoginMenu();
@@ -94,12 +99,15 @@ public class ChessUI {
                     case "create":
                         this.println("Create not implemented");
                         break;
+
                     case "list":
-                        this.println("List not implemented");
+                        this.displayListOfGames();
                         break;
+
                     case "join":
                         this.displayGameMenu(client.getBoard(), client.getTeamColor());
                         break;
+
                     case "observe":
                         this.println("Observe not implemented");
                         break;
@@ -182,6 +190,11 @@ public class ChessUI {
                 help - Get help with possible commands
                 """
         );
+    }
+
+    public void displayListOfGames(){
+        GameMetaData[] currentGames = this.client.getCurrentGames();
+        throw new RuntimeException("Not implemented.");
     }
 
     /**
