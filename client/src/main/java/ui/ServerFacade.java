@@ -11,6 +11,7 @@ import server.service.exception.ResponseException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -130,7 +131,16 @@ public class ServerFacade {
         }
     }
 
-    private <T> T readBody(HttpURLConnection http, Class<T> responseClass) {
+    private <T> T readBody(HttpURLConnection http, Class<T> responseClass) throws IOException {
+        T response = null;
+        if (http.getContentLength() < -1){
+            try (InputStream responseBody = http.getInputStream()){
+                InputStreamReader reader = new InputStreamReader(responseBody);
+                if(responseClass != null){
+                    response = new Gson().fromJson(reader, responseClass)
+                }
+            }
+        }
     }
 }
 
