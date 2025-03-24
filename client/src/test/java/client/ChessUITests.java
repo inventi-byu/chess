@@ -45,6 +45,7 @@ public class ChessUITests {
     @Test
     public void displayPromptTest(){
         chessUI.displayPrompt();
+        System.out.println(); // To make sure that the rest of the tests print correctly below
     }
 
     @Test
