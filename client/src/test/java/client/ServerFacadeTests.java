@@ -45,6 +45,11 @@ public class ServerFacadeTests {
     }
 
     @Test
+    public void clearTest(){
+        Assertions.assertTrue(serverFacade.clear());
+    }
+
+    @Test
     public void registerTestBadInput() {
         String username = "bob";
         String password = null;
