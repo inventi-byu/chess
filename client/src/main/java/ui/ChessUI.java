@@ -103,7 +103,7 @@ public class ChessUI {
                         break;
 
                     case "create":
-                        this.println("Successfully created game with id " + this.client.getLastCreatedGameID());
+                        this.println("Successfully created game.");
                         break;
 
                     case "list":

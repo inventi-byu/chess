@@ -330,7 +330,11 @@ public class ChessClient {
         }
         String result = "";
         int chosenGameIndex = Integer.parseInt(command[1]) - 1;
-        int gameID = this.currentGames[chosenGameIndex].gameID();
+        try {
+            int gameID = this.currentGames[chosenGameIndex].gameID();
+        } catch (IndexOutOfBoundsException indexException) {
+            return "Sorry that game doesn\'t exist!";
+        }
         String stringTeamColor = command[2];
         if (this.currentGames == null){
             return "You need to list the games before you can join one.";
