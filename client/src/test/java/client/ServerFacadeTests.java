@@ -1,17 +1,11 @@
 package client;
 
-import chess.ChessBoard;
-import chess.ChessGame;
 import exceptions.ServerFacadeException;
 import model.AuthData;
 import model.GameMetaData;
 import org.junit.jupiter.api.*;
 import server.Server;
-import ui.ChessUI;
 import ui.ServerFacade;
-
-import java.util.HashMap;
-
 
 public class ServerFacadeTests {
 
@@ -55,7 +49,8 @@ public class ServerFacadeTests {
         String username = "bob";
         String password = null;
         String email = "email@bob.com";
-        ServerFacadeException exception = Assertions.assertThrows(ServerFacadeException.class, () -> serverFacade.register(username, password, email));
+        ServerFacadeException exception = Assertions.assertThrows(ServerFacadeException.class,
+                () -> serverFacade.register(username, password, email));
     }
 
     @Test
@@ -84,7 +79,10 @@ public class ServerFacadeTests {
             AuthData authData = serverFacade.register(username, password, email);
             Assertions.assertEquals(username, authData.username());
 
-            ServerFacadeException exception = Assertions.assertThrows(ServerFacadeException.class, () -> serverFacade.login(username, "FaKePaSsWoRd"));
+            ServerFacadeException exception = Assertions.assertThrows(
+                    ServerFacadeException.class, () ->
+                            serverFacade.login(username, "FaKePaSsWoRd")
+            );
             Assertions.assertEquals(401, exception.getStatusCode());
         } catch (ServerFacadeException exception) {
             Assertions.fail("Incorrect exception thrown for bad input. Message:" + exception);
@@ -147,7 +145,10 @@ public class ServerFacadeTests {
             AuthData authData = serverFacade.register(username, password, email);
             Assertions.assertEquals(username, authData.username());
 
-            ServerFacadeException exception = Assertions.assertThrows(ServerFacadeException.class, () -> serverFacade.createGame(gameName, authData.authToken()));
+            ServerFacadeException exception = Assertions.assertThrows(
+                    ServerFacadeException.class,
+                    () -> serverFacade.createGame(gameName, authData.authToken())
+            );
             Assertions.assertEquals(400, exception.getStatusCode());
         } catch (ServerFacadeException exception) {
             Assertions.fail("Exception thrown for bad input. Message:" + exception);
@@ -184,7 +185,10 @@ public class ServerFacadeTests {
             AuthData authData = serverFacade.register(username, password, email);
             Assertions.assertEquals(username, authData.username());
 
-            ServerFacadeException exception = Assertions.assertThrows(ServerFacadeException.class, () -> serverFacade.createGame(gameName, "FaKeToKeN"));
+            ServerFacadeException exception = Assertions.assertThrows(
+                    ServerFacadeException.class,
+                    () -> serverFacade.createGame(gameName, "FaKeToKeN")
+            );
 
             Assertions.assertEquals(401, exception.getStatusCode());
         } catch (ServerFacadeException exception) {
@@ -224,7 +228,8 @@ public class ServerFacadeTests {
 
             // There is nothing to call because this is not implemented until phase 6
             serverFacade.observe("0", authData.authToken());
-            Assertions.assertTrue(true);
+            boolean observeWorked = true;
+            Assertions.assertTrue(observeWorked);
         } catch (ServerFacadeException exception) {
             Assertions.fail("Exception thrown for bad input. Message:" + exception);
         }

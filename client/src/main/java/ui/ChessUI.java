@@ -164,7 +164,13 @@ public class ChessUI {
     public void displayPrompt(){
         if (this.client.getLoginStatus().equals(ChessClient.STATUS_LOGGED_IN)){
             this.print(
-                    this.menuBGColor + this.menuTextColor + "[ " + this.menuTextColorLoggedIn + this.client.getLoginStatus() + this.menuTextColor + " ]" + " >>> "
+                    this.menuBGColor + this.menuTextColor +
+                            "[ "
+                            + this.menuTextColorLoggedIn +
+                            this.client.getLoginStatus() +
+                            this.menuTextColor +
+                            " ]"
+                            + " >>> "
             );
         } else {
             this.print(
@@ -273,48 +279,7 @@ public class ChessUI {
         String space = " "; // A space, either a space or an m space
 
         for (int i = (numRows + startRow); i > -1; i--) {
-            switch (i) {
-                // Both 0 and 9 have the same string
-                case 0:
-                case 9:
-                    sb.append(this.bgColor);
-                    sb.append(this.boardLetterColor);
-                    sb.append(emptySpace);
-                    for (String label : boardLabels) {
-                        sb.append(
-                                this.sandwichString(label, space)
-                        );
-                    }
-                    sb.append(emptySpace);
-                    sb.append(this.emptyColor);
-                    sb.append("\n");
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                    sb.append(this.bgColor);
-                    sb.append(this.boardLetterColor);
-                    sb.append(
-                            this.sandwichString(Integer.toString(i), space)
-                    );
-                    for (int j = 1; j < 9; j++) {
-                        sb = this.drawTile(sb, board, space, i, j);
-                    }
-
-                    sb.append(this.bgColor);
-                    sb.append(this.boardLetterColor);
-                    sb.append(
-                            this.sandwichString(Integer.toString(i), space)
-                    );
-                    sb.append(this.emptyColor);
-                    sb.append("\n");
-                    break;
-            }
+            sb = drawChessBoard(sb, board, i, space, emptySpace, boardLabels);
         }
         return sb.toString();
     }
@@ -329,52 +294,58 @@ public class ChessUI {
         String space = " "; // A space, either a space or an m space
 
         for (int i = 0; i < (numRows + startRow); i++) {
-            switch (i) {
-                // Both 0 and 9 have the same string
-                case 0:
-                case 9:
-                    sb.append(this.bgColor);
-                    sb.append(this.boardLetterColor);
-                    sb.append(emptySpace);
-                    for (String label : boardLabels) {
-                        sb.append(
-                                this.sandwichString(label, space)
-                        );
-                    }
-                    sb.append(emptySpace);
-                    sb.append(this.emptyColor);
-                    sb.append("\n");
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                    sb.append(this.bgColor);
-                    sb.append(this.boardLetterColor);
-                    sb.append(
-                            this.sandwichString(Integer.toString(i), space)
-                    );
-                    for (int j = 8; j > 0; j--) {
-                        sb = this.drawTile(sb, board, space, i, j);
-                    }
-
-                    sb.append(this.bgColor);
-                    sb.append(this.boardLetterColor);
-                    sb.append(
-                            this.sandwichString(Integer.toString(i), space)
-                    );
-                    sb.append(this.emptyColor);
-                    sb.append("\n");
-                    break;
-            }
+            sb = drawChessBoard(sb, board, i, space, emptySpace, boardLabels);
         }
 
         return sb.toString();
     }
+
+    private StringBuilder drawChessBoard(StringBuilder sb, ChessBoard board, int i,  String space, String emptySpace, String[] boardLabels) {
+        switch (i) {
+            // Both 0 and 9 have the same string
+            case 0:
+            case 9:
+                sb.append(this.bgColor);
+                sb.append(this.boardLetterColor);
+                sb.append(emptySpace);
+                for (String label : boardLabels) {
+                    sb.append(
+                            this.sandwichString(label, space)
+                    );
+                }
+                sb.append(emptySpace);
+                sb.append(this.emptyColor);
+                sb.append("\n");
+                break;
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                sb.append(this.bgColor);
+                sb.append(this.boardLetterColor);
+                sb.append(
+                        this.sandwichString(Integer.toString(i), space)
+                );
+                for (int j = 8; j > 0; j--) {
+                    sb = this.drawTile(sb, board, space, i, j);
+                }
+
+                sb.append(this.bgColor);
+                sb.append(this.boardLetterColor);
+                sb.append(
+                        this.sandwichString(Integer.toString(i), space)
+                );
+                sb.append(this.emptyColor);
+                sb.append("\n");
+                break;
+        }
+        return sb;
+    }
+
 
     private StringBuilder drawTile(StringBuilder sb, ChessBoard board, String space, int row, int col) {
         ChessPosition curPos = new ChessPosition(row, col);

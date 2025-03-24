@@ -139,7 +139,12 @@ public class ServerFacade {
         // Not implemented until phase 6
     }
 
-    private <T> T makeHttpRequest(String method, String path, Object request, HashMap<String, String> headers, Class<T> responseClass) throws ServerFacadeException {
+    private <T> T makeHttpRequest(String method,
+                                  String path,
+                                  Object request,
+                                  HashMap<String, String> headers,
+                                  Class<T> responseClass)
+            throws ServerFacadeException {
         try {
             URL url = (new URI(serverURL + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
