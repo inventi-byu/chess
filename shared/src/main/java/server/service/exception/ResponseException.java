@@ -21,8 +21,13 @@ public class ResponseException extends RuntimeException {
 
     public static ResponseException fromJson(InputStream stream){
         var map = new Gson().fromJson(new InputStreamReader(stream), HashMap.class);
-        int status = ((Double)map.get("statusCode")).intValue();
-        String message = map.get("messsage").toString();
+        String message = map.get("message").toString();
+        int status = 500;
+        switch (message){
+            case "Error: bad request" -> status = 400;
+            case "Error: already taken" -> status = 403;
+            case "Error: unauthorized" -> status = 401;
+        }
         return new ResponseException(status, message);
     }
 

@@ -51,6 +51,14 @@ public class ServerFacadeTests {
     }
 
     @Test
+    public void registerTestBadInput() {
+        String username = "bob";
+        String password = null;
+        String email = "email@bob.com";
+        ServerFacadeException exception = Assertions.assertThrows(ServerFacadeException.class, () -> serverFacade.register(username, password, email));
+    }
+
+    @Test
     public void loginTestGoodInput() {
         String username = "loginUserTest";
         String password = "password2";
@@ -62,6 +70,22 @@ public class ServerFacadeTests {
             AuthData authDataAfterLogin = serverFacade.login(username, password);
             Assertions.assertEquals(username, authDataAfterLogin.username());
             Assertions.assertNotEquals(authData.authToken(), authDataAfterLogin.authToken());
+        } catch (ServerFacadeException exception) {
+            Assertions.fail("Exception thrown for good input. Message:" + exception);
+        }
+    }
+
+    @Test
+    public void loginTestBadInput() {
+        String username = "loginUserTest";
+        String password = "password2";
+        String email = "loginUser@bob.com";
+        try {
+            AuthData authData = serverFacade.register(username, password, email);
+            Assertions.assertEquals(username, authData.username());
+
+            ServerFacadeException exception = Assertions.assertThrows(ServerFacadeException.class, () -> serverFacade.login(username, "FaKePaSsWoRd"));
+            Assertions.assertEquals(401, exception.getStatusCode());
         } catch (ServerFacadeException exception) {
             Assertions.fail("Exception thrown for good input. Message:" + exception);
         }

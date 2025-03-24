@@ -14,9 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -154,7 +152,7 @@ public class ServerFacade {
             return this.readBody(http, responseClass);
         } catch (ResponseException exception){
             throw new ServerFacadeException(exception.getStatusCode(), exception.getMessage());
-        } catch (Exception exception){
+        } catch (URISyntaxException | IOException exception){
             throw new ServerFacadeException(500, exception.getMessage());
         }
     }
@@ -194,7 +192,7 @@ public class ServerFacade {
             try (InputStream responseError = http.getErrorStream()){
                 if (responseError != null){
                     ResponseException exception = ResponseException.fromJson(responseError);
-                    throw new ServerFacadeException(exception.getStatusCode(), exception.getMessage());
+                    throw new ServerFacadeException(status, exception.getMessage());
                 }
             }
         }
