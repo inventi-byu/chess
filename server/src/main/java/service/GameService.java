@@ -32,7 +32,7 @@ public class GameService extends Service {
         this.authenticateWithToken(authToken);
 
         String gameName = request.getGameName();
-        if(gameName.isEmpty()){
+        if(gameName == null || gameName.isEmpty()){
             throw new ResponseException(400, "Error: bad request");
         }
 

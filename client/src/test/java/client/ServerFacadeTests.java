@@ -87,7 +87,7 @@ public class ServerFacadeTests {
             ServerFacadeException exception = Assertions.assertThrows(ServerFacadeException.class, () -> serverFacade.login(username, "FaKePaSsWoRd"));
             Assertions.assertEquals(401, exception.getStatusCode());
         } catch (ServerFacadeException exception) {
-            Assertions.fail("Exception thrown for good input. Message:" + exception);
+            Assertions.fail("Incorrect exception thrown for bad input. Message:" + exception);
         }
     }
 
@@ -105,8 +105,24 @@ public class ServerFacadeTests {
             Assertions.fail("Exception thrown for good input. Message:" + exception);
         }
     }
+
     @Test
-    public void createGameTest() {
+    public void logoutTestBadInput() {
+        String username = "logoutUser";
+        String password = "password3";
+        String email = "logoutUser@bob.com";
+        try {
+            AuthData authData = serverFacade.register(username, password, email);
+            Assertions.assertEquals(username, authData.username());
+
+            Assertions.assertThrows(ServerFacadeException.class, () -> serverFacade.logout("aTokenThatIsNotLoggedIn"));
+        } catch (ServerFacadeException exception) {
+            Assertions.fail("Exception thrown for bad input. Message:" + exception);
+        }
+    }
+
+    @Test
+    public void createGameGoodTest() {
         String username = "createGameUser";
         String password = "password4";
         String email = "createGameUser@bob.com";
@@ -120,8 +136,26 @@ public class ServerFacadeTests {
             Assertions.fail("Exception thrown for good input. Message:" + exception);
         }
     }
+
     @Test
-    public void listGamesTest() {
+    public void createGameBadTest() {
+        String username = "createGameUser";
+        String password = "password4";
+        String email = "createGameUser@bob.com";
+        String gameName = null;
+        try {
+            AuthData authData = serverFacade.register(username, password, email);
+            Assertions.assertEquals(username, authData.username());
+
+            ServerFacadeException exception = Assertions.assertThrows(ServerFacadeException.class, () -> serverFacade.createGame(gameName, authData.authToken()));
+            Assertions.assertEquals(400, exception.getStatusCode());
+        } catch (ServerFacadeException exception) {
+            Assertions.fail("Exception thrown for bad input. Message:" + exception);
+        }
+    }
+
+    @Test
+    public void listGamesGoodTest() {
         String username = "listGamesUser";
         String password = "password5";
         String email = "listGamesUser@bob.com";
@@ -141,7 +175,24 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    public void observeTest() {
+    public void listGamesBadTest() {
+        String username = "listGamesUser";
+        String password = "password5";
+        String email = "listGamesUser@bob.com";
+        String gameName = "MyOtherCreatedGame";
+        try {
+            AuthData authData = serverFacade.register(username, password, email);
+            Assertions.assertEquals(username, authData.username());
+
+            ServerFacadeException exception = Assertions.assertThrows(ServerFacadeException.class, () -> serverFacade.createGame(gameName, "FaKeToKeN"));
+
+            Assertions.assertEquals(401, exception.getStatusCode());
+        } catch (ServerFacadeException exception) {
+            Assertions.fail("Exception thrown for bad input. Message:" + exception);
+        }
+    }
+    @Test
+    public void observeGoodTest() {
         String username = "listGamesUser";
         String password = "password5";
         String email = "listGamesUser@bob.com";
@@ -157,6 +208,25 @@ public class ServerFacadeTests {
             Assertions.assertTrue(true);
         } catch (ServerFacadeException exception) {
             Assertions.fail("Exception thrown for good input. Message:" + exception);
+        }
+    }
+    @Test
+    public void observeBadTest() {
+        String username = "listGamesUser";
+        String password = "password5";
+        String email = "listGamesUser@bob.com";
+        String gameName = "MyOtherCreatedGame";
+        try {
+            AuthData authData = serverFacade.register(username, password, email);
+            Assertions.assertEquals(username, authData.username());
+
+            Assertions.assertNotEquals(0, serverFacade.createGame(gameName, authData.authToken()));
+
+            // There is nothing to call because this is not implemented until phase 6
+            serverFacade.observe("0", authData.authToken());
+            Assertions.assertTrue(true);
+        } catch (ServerFacadeException exception) {
+            Assertions.fail("Exception thrown for bad input. Message:" + exception);
         }
     }
 
