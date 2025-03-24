@@ -33,10 +33,15 @@ public class ServerFacade {
      * Accesses the clear endpoint.
      * @return boolean if the clear was successful, false if it was not.
      */
-    public boolean clear() throws ServerFacadeException {
-        String path = "/db";
-        this.makeHttpRequest("DELETE", path, null, null, null);
-        return true;
+
+    public boolean clear(){
+        try {
+            String path = "/db";
+            this.makeHttpRequest("DELETE", path, null, null, null);
+            return true;
+        } catch (Exception exception){
+            return false;
+        }
     }
 
     /**
@@ -136,7 +141,7 @@ public class ServerFacade {
         // Not implemented until phase 6
     }
 
-    public <T> T makeHttpRequest(String method, String path, Object request, HashMap<String, String> headers, Class<T> responseClass) throws ServerFacadeException {
+    private <T> T makeHttpRequest(String method, String path, Object request, HashMap<String, String> headers, Class<T> responseClass) throws ServerFacadeException {
         try {
             URL url = (new URI(serverURL + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
