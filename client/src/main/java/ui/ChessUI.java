@@ -279,7 +279,7 @@ public class ChessUI {
         String space = " "; // A space, either a space or an m space
 
         for (int i = (numRows + startRow); i > -1; i--) {
-            sb = drawChessBoard(sb, board, i, space, emptySpace, boardLabels);
+            sb = drawChessBoard(sb, board, i, space, emptySpace, boardLabels, ChessGame.TeamColor.WHITE);
         }
         return sb.toString();
     }
@@ -294,13 +294,13 @@ public class ChessUI {
         String space = " "; // A space, either a space or an m space
 
         for (int i = 0; i < (numRows + startRow); i++) {
-            sb = drawChessBoard(sb, board, i, space, emptySpace, boardLabels);
+            sb = drawChessBoard(sb, board, i, space, emptySpace, boardLabels, ChessGame.TeamColor.BLACK);
         }
 
         return sb.toString();
     }
 
-    private StringBuilder drawChessBoard(StringBuilder sb, ChessBoard board, int i,  String space, String emptySpace, String[] boardLabels) {
+    private StringBuilder drawChessBoard(StringBuilder sb, ChessBoard board, int i,  String space, String emptySpace, String[] boardLabels, ChessGame.TeamColor perspective) {
         switch (i) {
             // Both 0 and 9 have the same string
             case 0:
@@ -330,8 +330,15 @@ public class ChessUI {
                 sb.append(
                         this.sandwichString(Integer.toString(i), space)
                 );
-                for (int j = 8; j > 0; j--) {
-                    sb = this.drawTile(sb, board, space, i, j);
+
+                if (perspective == ChessGame.TeamColor.WHITE) {
+                    for (int j = 1; j < 9; j++) {
+                        sb = this.drawTile(sb, board, space, i, j);
+                    }
+                } else {
+                    for (int j = 8; j > 0; j--) {
+                        sb = this.drawTile(sb, board, space, i, j);
+                    }
                 }
 
                 sb.append(this.bgColor);

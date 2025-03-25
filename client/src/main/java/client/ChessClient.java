@@ -8,6 +8,8 @@ import model.GameData;
 import model.GameMetaData;
 import ui.ServerFacade;
 
+import java.util.HashMap;
+
 
 public class ChessClient {
     private String loginStatus;
@@ -31,6 +33,7 @@ public class ChessClient {
     private int lastCreatedGameID;
     private ChessBoard currentObservingBoard;
     private int gameID;
+    private HashMap<Integer, GameMetaData> gamesMap;
 
     public ChessClient(ServerFacade serverFacade){
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
@@ -47,6 +50,7 @@ public class ChessClient {
         this.gameData = null;
         this.game = null;
         this.gameID = 0; // No game at the beginning
+        this.gamesMap = new HashMap<>();
     }
 
     public String getLoginStatus(){
@@ -138,6 +142,10 @@ public class ChessClient {
 
     public void setGameID(int gameID){
         this.gameID = gameID;
+    }
+
+    public void setGamesMap(HashMap<Integer, GameMetaData> map){
+        this.gamesMap = map;
     }
 
     public String evalLine(String line){
@@ -312,6 +320,14 @@ public class ChessClient {
             this.setCurrentGames(
                     this.serverFacade.listGames(this.getAuthData().authToken())
             );
+
+            // Create a map
+            HashMap<Integer, GameMetaData> tempGamesMap = new HashMap<>();
+            for (int i = 1; i < this.currentGames.length+1; i++){
+                tempGamesMap.put(i, this.currentGames[i-1]);
+            }
+            this.setGamesMap(tempGamesMap);
+
             result = "list";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
@@ -329,18 +345,22 @@ public class ChessClient {
             return "Could not join game. Did you forget to the game id or player color?";
         }
         String result = "";
-        int chosenGameIndex = Integer.parseInt(command[1]) - 1;
-        try {
-            int gameID = this.currentGames[chosenGameIndex].gameID();
-        } catch (IndexOutOfBoundsException indexException) {
-            return "Sorry that game doesn\'t exist!";
+        int chosenGameNumber = Integer.parseInt(command[1]);
+        GameMetaData chosenGameMetaData = this.gamesMap.get(chosenGameNumber);
+        if (chosenGameMetaData == null){
+            if (this.gamesMap.isEmpty()){
+                return "You need to list the games before you can join one!";
+            }
+            return "Sorry that game does not exist!";
         }
+        int curGameID = chosenGameMetaData.gameID();
+
         String stringTeamColor = command[2];
         if (this.currentGames == null){
             return "You need to list the games before you can join one.";
         }
         try{
-            this.serverFacade.joinGame(stringTeamColor, gameID, this.authData.authToken());
+            this.serverFacade.joinGame(stringTeamColor, curGameID, this.authData.authToken());
 
             ChessGame tempGameUntilPhaseSix = new ChessGame();
 
@@ -357,7 +377,7 @@ public class ChessClient {
                 this.setTeamColor(ChessGame.TeamColor.BLACK);
             }
 
-            this.setGameID(gameID);
+            this.setGameID(curGameID);
             this.setGameData(tempGameDataUntilPhaseSix);
 
             this.setMenuState(STATE_GAME);
