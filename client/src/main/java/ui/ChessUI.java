@@ -313,7 +313,12 @@ public class ChessUI {
         return sb.toString();
     }
 
-    private StringBuilder drawChessBoard(StringBuilder sb, ChessBoard board, int i,  String space, String emptySpace, String[] boardLabels, ChessGame.TeamColor perspective) {
+    private StringBuilder drawChessBoard(StringBuilder sb,
+                                         ChessBoard board, int i,
+                                         String space,
+                                         String emptySpace,
+                                         String[] boardLabels,
+                                         ChessGame.TeamColor perspective) {
         switch (i) {
             // Both 0 and 9 have the same string
             case 0:
