@@ -67,8 +67,12 @@ public class ChessUI {
         this.displayPreLoginMenu();
         while (!result.equals("quit")){
             this.displayPrompt();
-            String line = scanner.nextLine();
-
+            String line = "";
+            try {
+                line = scanner.nextLine();
+            } catch (Exception exception) {
+                this.println("Sorry that\'s an invalid command!");
+            }
             try{
                 result = this.client.evalLine(line);
 
@@ -79,6 +83,10 @@ public class ChessUI {
 
                     case "helpPostLogin":
                         this.displayHelpPostLogin();
+                        break;
+
+                    case "helpGame":
+                        this.displayHelpGame();
                         break;
 
                     case "quit":
@@ -134,6 +142,11 @@ public class ChessUI {
                 this.print(ex.toString());
             }
         }
+    }
+
+    public void displayHelpGame(){
+        // This is not really implemented until Phase 6
+        return;
     }
 
     public void displayPostLoginMenu(){

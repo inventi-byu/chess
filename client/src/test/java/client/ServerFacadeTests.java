@@ -32,6 +32,11 @@ public class ServerFacadeTests {
     }
 
     @Test
+    public void clearTest(){
+        Assertions.assertTrue(serverFacade.clear());
+    }
+
+    @Test
     public void registerTestGoodInput() {
         String username = "bob";
         String password = "password";
@@ -42,11 +47,6 @@ public class ServerFacadeTests {
         } catch (ServerFacadeException exception) {
             Assertions.fail("Exception thrown for good input. Message:" + exception);
         }
-    }
-
-    @Test
-    public void clearTest(){
-        Assertions.assertTrue(serverFacade.clear());
     }
 
     @Test

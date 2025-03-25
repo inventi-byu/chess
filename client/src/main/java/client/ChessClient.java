@@ -345,8 +345,14 @@ public class ChessClient {
             return "Could not join game. Did you forget to the game id or player color?";
         }
         String result = "";
-        int chosenGameNumber = Integer.parseInt(command[1]);
-        GameMetaData chosenGameMetaData = this.gamesMap.get(chosenGameNumber);
+        int chosenGameNumber = 0;
+        GameMetaData chosenGameMetaData = null;
+        try {
+            chosenGameNumber = Integer.parseInt(command[1]);
+            chosenGameMetaData = this.gamesMap.get(chosenGameNumber);
+        } catch (Exception exception) {
+            return "Sorry that game doesn\'t exist!";
+        }
         if (chosenGameMetaData == null){
             if (this.gamesMap.isEmpty()){
                 return "You need to list the games before you can join one!";
@@ -357,7 +363,7 @@ public class ChessClient {
 
         String stringTeamColor = command[2];
         if (this.currentGames == null){
-            return "You need to list the games before you can join one.";
+            return "You need to list the games or create one before you can join one.";
         }
         try{
             this.serverFacade.joinGame(stringTeamColor, curGameID, this.authData.authToken());
