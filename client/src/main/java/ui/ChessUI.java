@@ -126,6 +126,22 @@ public class ChessUI {
                         this.displayGameMenu(client.getObservingBoard(), ChessGame.TeamColor.WHITE);
                         break;
 
+                    case "redraw":
+                        this.displayChessBoard(client.getBoard(), client.getTeamColor());
+                        break;
+
+                    case "leave":
+                        throw new RuntimeException("Not implemented.");
+
+                    case "move":
+                        throw new RuntimeException("Not implemented.");
+
+                    case "resign":
+                        throw new RuntimeException("Not implemented.");
+                        
+                    case "highlight":
+                        throw new RuntimeException("Not implemented.");
+
                     default:
                         // If there was an error, print the user-friendly message.
                         if(client.getMenuState().equals(ChessClient.STATE_POSTLOGIN)){
