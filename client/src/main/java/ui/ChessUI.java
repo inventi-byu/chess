@@ -5,8 +5,7 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
+import java.util.Random;
 import java.util.Scanner;
 
 import client.ChessClient;
@@ -32,6 +31,8 @@ public class ChessUI {
     private String whiteEmptyTextColor;
     private String blackEmptyTextColor;
 
+    private Random rand;
+
     private ServerFacade serverFacade;
 
     public ChessUI(ServerFacade serverFacade, ChessClient client) {
@@ -53,6 +54,8 @@ public class ChessUI {
         this.blackPieceColor = EscapeSequences.SET_TEXT_COLOR_BLUE;
         this.whiteEmptyTextColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
         this.blackEmptyTextColor = EscapeSequences.SET_TEXT_COLOR_BLACK;
+
+        this.rand = new Random(1221830);
     }
 
     public void run() {
@@ -120,6 +123,7 @@ public class ChessUI {
 
                     case "join":
                         this.displayGameMenu(client.getBoard(), client.getTeamColor());
+                        this.displayHelpGame();
                         break;
 
                     case "observe":
@@ -131,16 +135,35 @@ public class ChessUI {
                         break;
 
                     case "leave":
-                        throw new RuntimeException("Not implemented.");
+                        this.displayPostLoginMenu();
+                        this.displayHelpPostLogin();
+                        break;
 
                     case "move":
-                        throw new RuntimeException("Not implemented.");
+                        // Just reprint the chessboard with a fun message
+                        this.displayChessBoard(client.getBoard(), client.getTeamColor());
 
+                        switch (this.rand.nextInt(5)){
+                            case 0 -> this.println("You moved! One more move towards chess victory!");
+                            case 1 -> this.println("You moved! Wow! That was quite a move!");
+                            case 2 -> this.println("You moved! Only an expert would have known to make that move!");
+                            case 3 -> this.println("You moved! And so the tables turn...");
+                            case 4 -> this.println("You moved! And the battle continues...");
+                        }
+                        break;
                     case "resign":
-                        throw new RuntimeException("Not implemented.");
+                        switch (this.rand.nextInt(5)){
+                            case 0 -> this.println("You resigned! Wow...just...wow.");
+                            case 1 -> this.println("You resigned! But you were so close :(");
+                            case 2 -> this.println("You resigned! Don't give up next time!");
+                            case 3 -> this.println("You resigned! It\'s all in the mind...");
+                            case 4 -> this.println("You resigned! Well that was unexpected.");
+                        }
+                        break;
                         
                     case "highlight":
-                        throw new RuntimeException("Not implemented.");
+                        this.displayChessBoard(client.getBoard(), client.getTeamColor(), client.getLegalMoves());
+                        break;
 
                     default:
                         // If there was an error, print the user-friendly message.
