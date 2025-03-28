@@ -2,13 +2,17 @@ package client;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import exceptions.ServerFacadeException;
 import model.AuthData;
 import model.GameData;
 import model.GameMetaData;
 import ui.ServerFacade;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 
 public class ChessClient {
@@ -34,6 +38,7 @@ public class ChessClient {
     private ChessBoard currentObservingBoard;
     private int gameID;
     private HashMap<Integer, GameMetaData> gamesMap;
+    private ChessPosition highlightPosition;
 
     public ChessClient(ServerFacade serverFacade){
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
@@ -51,6 +56,8 @@ public class ChessClient {
         this.game = null;
         this.gameID = 0; // No game at the beginning
         this.gamesMap = new HashMap<>();
+
+        this.highlightPosition = null;
     }
 
     public String getLoginStatus(){
@@ -146,6 +153,14 @@ public class ChessClient {
 
     public void setGamesMap(HashMap<Integer, GameMetaData> map){
         this.gamesMap = map;
+    }
+
+    public void setHighlightPosition(ChessPosition position){
+        this.highlightPosition = position;
+    }
+
+    public ChessPosition getHighlightPosition(){
+        return this.highlightPosition;
     }
 
     public String evalLine(String line){
@@ -423,5 +438,14 @@ public class ChessClient {
             return "Failed to observe game.";
         }
         return result;
+    }
+
+    /**
+     * Get all the legal moves a given piece can make
+     * @return
+     */
+    public ChessMove[] getLegalMoves(ChessPosition position){
+        Collection<ChessMove> moves = this.game.validMoves(position);
+        return moves.toArray(new ChessMove[0]);
     }
 }

@@ -29,12 +29,12 @@ public class ChessUITests {
 
     @Test
     public void printChessBoardWhiteTest(){
-        chessUI.displayChessBoard(board, ChessGame.TeamColor.WHITE);
+        chessUI.displayChessBoard(board, ChessGame.TeamColor.WHITE, null);
     }
 
     @Test
     public void printChessBoardBlackTest(){
-        chessUI.displayChessBoard(board, ChessGame.TeamColor.BLACK);
+        chessUI.displayChessBoard(board, ChessGame.TeamColor.BLACK, null);
     }
 
     @Test
