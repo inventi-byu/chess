@@ -161,8 +161,19 @@ public class ChessUI {
     }
 
     public void displayHelpGame(){
-        // This is not really implemented until Phase 6
-        return;
+        this.print(
+                """
+                redraw - Redraws the chessboard
+                highlight <LOCATION> - Highlights legal moves for the piece at LOCATION.
+                                       Location should be in lowercase chess notation (i.e. a1)
+                move <START> <END> - (PLAYER ONLY) Move chess piece at START to the END position.
+                                     START and END should be in lowercase chess
+                                     notation (i.e. a1).
+                leave - leave the game (without forfeiting, if playing).
+                resign - (PLAYER ONLY) Forfeit and end the game without leaving.
+                help - Get help with possible commands
+                """
+        );
     }
 
     public void displayPostLoginMenu(){
