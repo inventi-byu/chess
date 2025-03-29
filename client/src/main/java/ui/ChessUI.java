@@ -2,6 +2,7 @@ package ui;
 
 import chess.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -343,7 +344,7 @@ public class ChessUI {
         String[] boardLabels = {"a", "b", "c", "d", "e", "f", "g", "h"};
 
         for (int i = (numRows + startRow); i > -1; i--) {
-            sb = drawChessBoard(sb, board, i, boardLabels, ChessGame.TeamColor.WHITE, tilesToHighlight);
+            sb = drawChessBoard(sb, board, i, boardLabels, ChessGame.TeamColor.WHITE, this.getRowTilesToHighlight(tilesToHighlight, i));
         }
         return sb.toString();
     }
@@ -354,8 +355,9 @@ public class ChessUI {
         int numRows = 10;
         String[] boardLabels = {"h", "g", "f", "e", "d", "c", "b", "a"};
 
+
         for (int i = 0; i < (numRows + startRow); i++) {
-            sb = drawChessBoard(sb, board, i, boardLabels, ChessGame.TeamColor.BLACK, tilesToHighlight);
+            sb = drawChessBoard(sb, board, i, boardLabels, ChessGame.TeamColor.BLACK, this.getRowTilesToHighlight(tilesToHighlight, i));
         }
 
         return sb.toString();
@@ -467,6 +469,20 @@ public class ChessUI {
 
     private ChessPosition[] getTilesToHighlight(ChessMove[] legalMoves){
         throw new RuntimeException("Not implemented.");
+    }
+
+    private ChessPosition[] getRowTilesToHighlight(ChessPosition[] tilesToHighlight, int row){
+        ArrayList<ChessPosition> rowTilesToHighlightAsList = new ArrayList<>();
+        // Only worry about the tiles to highlight for this row
+        if (tilesToHighlight != null){
+            for (ChessPosition position : tilesToHighlight){
+                if (position.getRow() == row){
+                    rowTilesToHighlightAsList.add(position);
+                }
+            }
+        }
+        // Return the list as a plain array
+        return rowTilesToHighlightAsList.toArray(new ChessPosition[0]);
     }
 
 }
