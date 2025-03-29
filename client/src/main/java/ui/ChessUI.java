@@ -515,6 +515,14 @@ public class ChessUI {
                 // Don't let the logic error
                 continue;
             }
+            ChessGame.TeamColor curTeamColor = curPiece.getTeamColor();
+
+            switch (curPiece.getPieceType()){
+                case PAWN:
+                    break;
+            }
+
+
         }
 
         throw new RuntimeException("Not implemented.");
