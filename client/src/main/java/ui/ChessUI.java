@@ -405,9 +405,11 @@ public class ChessUI {
                 if (perspective == ChessGame.TeamColor.WHITE) {
                     for (int j = 1; j < 9; j++) {
                         boolean doHighlight = false;
-                        for (ChessPosition tile : tilesToHighlight){
-                            if (tile.getRow() == i && tile.getColumn() == j){
-                                doHighlight = true;
+                        if(tilesToHighlight == null) {
+                            for (ChessPosition tile : tilesToHighlight) {
+                                if (tile.getRow() == i && tile.getColumn() == j) {
+                                    doHighlight = true;
+                                }
                             }
                         }
                         sb = this.drawTile(sb, board, i, j, doHighlight);
@@ -415,9 +417,11 @@ public class ChessUI {
                 } else {
                     for (int j = 8; j > 0; j--) {
                         boolean doHighlight = false;
-                        for (ChessPosition tile : tilesToHighlight){
-                            if (tile.getRow() == i && tile.getColumn() == j){
-                                doHighlight = true;
+                        if (tilesToHighlight == null) {
+                            for (ChessPosition tile : tilesToHighlight) {
+                                if (tile.getRow() == i && tile.getColumn() == j) {
+                                    doHighlight = true;
+                                }
                             }
                         }
                         sb = this.drawTile(sb, board, i, j, doHighlight);
@@ -498,10 +502,28 @@ public class ChessUI {
     }
 
     private ChessPosition[] getTilesToHighlight(ChessMove[] legalMoves){
+        /*
+        for ever move
+        check to see that p
+         */
+        ChessBoard curBoard = this.client.getBoard();
+        for (ChessMove move : legalMoves){
+            ChessPosition startPosition = move.getStartPosition();
+            ChessPosition endPosition = move.getEndPosition();
+            ChessPiece curPiece = curBoard.getPiece(startPosition);
+            if(curPiece == null){
+                // Don't let the logic error
+                continue;
+            }
+        }
+
         throw new RuntimeException("Not implemented.");
     }
 
     private ChessPosition[] getRowTilesToHighlight(ChessPosition[] tilesToHighlight, int row){
+        if(tilesToHighlight == null){
+            return null;
+        }
         ArrayList<ChessPosition> rowTilesToHighlightAsList = new ArrayList<>();
         // Only worry about the tiles to highlight for this row
         if (tilesToHighlight != null){
