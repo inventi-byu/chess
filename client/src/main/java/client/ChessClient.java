@@ -503,6 +503,9 @@ public class ChessClient {
                 case 'f' -> col = 6;
                 case 'g' -> col = 7;
                 case 'h' -> col = 8;
+                default -> {
+                    return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
+                }
             }
             switch (positionAsArray[1]){
                 case '1' -> row = 1;
@@ -513,9 +516,11 @@ public class ChessClient {
                 case '6' -> row = 6;
                 case '7' -> row = 7;
                 case '8' -> row = 8;
-                case '9' -> row = 9;
+                default -> {
+                    return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
+                }
             }
-        } catch (IndexOutOfBoundsException exception) {
+        } catch (ArrayIndexOutOfBoundsException exception) {
             return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
         }
 
