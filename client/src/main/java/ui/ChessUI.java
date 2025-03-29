@@ -32,6 +32,9 @@ public class ChessUI {
     private String whiteEmptyTextColor;
     private String blackEmptyTextColor;
 
+    private String whiteTileHighlightColor;
+    private String blackTileHighlightColor;
+
     private Random rand;
 
     private ServerFacade serverFacade;
@@ -55,6 +58,9 @@ public class ChessUI {
         this.blackPieceColor = EscapeSequences.SET_TEXT_COLOR_BLUE;
         this.whiteEmptyTextColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
         this.blackEmptyTextColor = EscapeSequences.SET_TEXT_COLOR_BLACK;
+
+        this.whiteTileHighlightColor = EscapeSequences.SET_BG_COLOR_GREEN;
+        this.blackTileHighlightColor = EscapeSequences.SET_BG_COLOR_DARK_GREEN;
 
         this.rand = new Random(1221830);
     }
@@ -398,11 +404,23 @@ public class ChessUI {
 
                 if (perspective == ChessGame.TeamColor.WHITE) {
                     for (int j = 1; j < 9; j++) {
-                        sb = this.drawTile(sb, board, i, j);
+                        boolean doHighlight = false;
+                        for (ChessPosition tile : tilesToHighlight){
+                            if (tile.getRow() == i && tile.getColumn() == j){
+                                doHighlight = true;
+                            }
+                        }
+                        sb = this.drawTile(sb, board, i, j, doHighlight);
                     }
                 } else {
                     for (int j = 8; j > 0; j--) {
-                        sb = this.drawTile(sb, board, i, j);
+                        boolean doHighlight = false;
+                        for (ChessPosition tile : tilesToHighlight){
+                            if (tile.getRow() == i && tile.getColumn() == j){
+                                doHighlight = true;
+                            }
+                        }
+                        sb = this.drawTile(sb, board, i, j, doHighlight);
                     }
                 }
 
@@ -419,18 +437,19 @@ public class ChessUI {
     }
 
 
-    private StringBuilder drawTile(StringBuilder sb, ChessBoard board, int row, int col) {
+    private StringBuilder drawTile(StringBuilder sb, ChessBoard board, int row, int col, boolean doHighlight) {
         ChessPosition curPos = new ChessPosition(row, col);
         ChessPiece curPiece = board.getPiece(curPos);
         String pieceToDraw = "";
-        String curTileColor = this.getTileColor(curPos);
+        String curTileColor = this.getTileColor(curPos, doHighlight);
 
-        if (curTileColor.equals("WHITE")) {
-            sb.append(whiteTileColor);
-        } else {
-            sb.append(blackTileColor);
+        switch (curTileColor) {
+            case "WHITE" -> sb.append(whiteTileColor);
+            case "BLACK" -> sb.append(blackTileColor);
+            case "WHITE_HIGHLIGHT" -> sb.append(whiteTileHighlightColor);
+            case "BLACK_HIGHLIGHT" -> sb.append(blackTileHighlightColor);
+
         }
-
         if (curPiece == null) {
             if (curTileColor.equals("WHTIE")) {
                 sb.append(this.whiteEmptyTextColor);
@@ -458,13 +477,24 @@ public class ChessUI {
         return ChessUI.SPACE + str + ChessUI.SPACE;
     }
 
-    private String getTileColor(ChessPosition position){
+    private String getTileColor(ChessPosition position, boolean doHighlight){
         int row = position.getRow();
         int col = position.getColumn();
 
         boolean white = (row % 2 != col % 2);
-
-        return white ? "WHITE" : "BLACK";
+        if (white) {
+            if (doHighlight) {
+                return "WHITE_HIGHLIGHT";
+            } else {
+                return "WHITE";
+            }
+        } else {
+            if (doHighlight) {
+                return "BLACK_HIGHLIGHT";
+            } else {
+                return "BLACK";
+            }
+        }
     }
 
     private ChessPosition[] getTilesToHighlight(ChessMove[] legalMoves){
