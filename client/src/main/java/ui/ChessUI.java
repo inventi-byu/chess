@@ -509,6 +509,10 @@ public class ChessUI {
          */
         ArrayList<ChessPosition> tilesToHighlight = new ArrayList<>();
         ChessBoard curBoard = this.client.getBoard();
+        
+        // Add the starting position only once (not in the for-each loop)
+        ChessPosition startPosition = legalMoves[0].getStartPosition();
+        tilesToHighlight.add(startPosition);
 
         for (ChessMove move : legalMoves){
             tilesToHighlight.add(move.getEndPosition());
