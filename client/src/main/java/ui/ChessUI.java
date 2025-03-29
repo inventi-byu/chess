@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import client.ChessClient;
+import model.GameData;
 import model.GameMetaData;
 
 public class ChessUI {
@@ -140,7 +141,7 @@ public class ChessUI {
                         break;
 
                     case "observe":
-                        this.displayObserveMenu(client.getObservingBoard(), ChessGame.TeamColor.WHITE);
+                        this.displayObserveMenu(client.getObservingBoard());
                         this.displayHelpObserve();
                         break;
 
@@ -299,9 +300,37 @@ public class ChessUI {
 
     public void displayObserveMenu(ChessBoard board){
         this.displayChessBoard(board, ChessGame.TeamColor.WHITE, null);
-        this.println(
-                this.menuBGColor + this.menuTextColorObserve + "You are no observing the " + this.client.getObservingGame()
-        )
+
+        // Reset text color
+        this.print(this.menuBGColor + this.menuTextColorObserve);
+
+        String gameName = null;
+        String whiteUser = null;
+        String blackUser = null;
+        GameData curGameData = this.client.getObservingGameData();
+        if (curGameData != null) {
+            gameName = curGameData.gameName();
+            whiteUser = curGameData.whiteUsername();
+            blackUser = curGameData.blackUsername();
+            if (whiteUser == null || whiteUser.isEmpty()) {
+                whiteUser = "No white user";
+            }
+            if (blackUser == null || blackUser.isEmpty()) {
+                blackUser = "no black user";
+            }
+
+            this.println(
+                    this.menuBGColor + this.menuTextColorObserve +
+                            "You are now observing the " +
+                            gameName +
+                            "game."
+            );
+            this.println(
+                    whiteUser + " and " + blackUser + " are playing right now."
+            );
+        } else {
+            this.println("Now observing.");
+        }
     }
 
     public void displayListOfGames(){
