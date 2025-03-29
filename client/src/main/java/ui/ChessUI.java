@@ -100,6 +100,10 @@ public class ChessUI {
                         this.displayHelpGame();
                         break;
 
+                    case "helpObserve":
+                        this.displayHelpObserve();
+                        break;
+
                     case "quit":
                         break;
 
@@ -136,6 +140,7 @@ public class ChessUI {
 
                     case "observe":
                         this.displayGameMenu(client.getObservingBoard(), ChessGame.TeamColor.WHITE);
+                        this.displayHelpObserve();
                         break;
 
                     case "redraw":

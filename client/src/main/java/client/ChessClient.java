@@ -12,8 +12,6 @@ import ui.ServerFacade;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
-
 
 public class ChessClient {
     private String loginStatus;
@@ -26,6 +24,7 @@ public class ChessClient {
     public static final String STATE_PRELOGIN= "PRELOGIN";
     public static final String STATE_POSTLOGIN = "POSTLOGIN";
     public static final String STATE_GAME = "GAME";
+    public static final String STATE_OBSERVE = "OBSERVE";
 
     private GameData gameData;
     private ChessBoard board;
@@ -203,6 +202,10 @@ public class ChessClient {
 
             case "logout":
                 result = this.evalLogout();
+                break;
+
+            case "highlight":
+                result = this.evalHighlight(command);
                 break;
 
             default:
@@ -448,7 +451,6 @@ public class ChessClient {
     }
 
     private String evalHighlight(String[] command){
-        throw new RuntimeException("Not implemented.");
         if(command.length != 2){
             return "Could not highlight moves. Did you forget to enter position of the piece you want to highlight?";
         }
