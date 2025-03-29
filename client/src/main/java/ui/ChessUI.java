@@ -300,7 +300,11 @@ public class ChessUI {
      * @param perspective the TeamColor from whose perspective to draw the board (that color will be on the bottom).
      */
     public void displayChessBoard(ChessBoard board, ChessGame.TeamColor perspective, ChessMove[] legalMoves) {
-        this.print(getBoardGraphic(board, perspective));
+        this.print(getBoardGraphic(
+                board,
+                perspective,
+                this.getTilesToHighlight(legalMoves)
+        ));
     }
 
     /**
@@ -324,34 +328,34 @@ public class ChessUI {
      * @param board the ChessBoard to print.
      * @return the String that represents the board image to display as console output.
      */
-    private String getBoardGraphic(ChessBoard board, ChessGame.TeamColor perspective) {
+    private String getBoardGraphic(ChessBoard board, ChessGame.TeamColor perspective, ChessPosition[] tilesToHighlight) {
         if (perspective == ChessGame.TeamColor.WHITE) {
-            return this.drawWhiteBoardGraphic(board);
+            return this.drawWhiteBoardGraphic(board, tilesToHighlight);
         } else {
-            return this.drawBlackBoardGraphic(board);
+            return this.drawBlackBoardGraphic(board, tilesToHighlight);
         }
     }
 
-    private String drawWhiteBoardGraphic(ChessBoard board) {
+    private String drawWhiteBoardGraphic(ChessBoard board, ChessPosition[] tilesToHighlight) {
         StringBuilder sb = new StringBuilder();
         int startRow = 0;
         int numRows = 10;
         String[] boardLabels = {"a", "b", "c", "d", "e", "f", "g", "h"};
 
         for (int i = (numRows + startRow); i > -1; i--) {
-            sb = drawChessBoard(sb, board, i, boardLabels, ChessGame.TeamColor.WHITE);
+            sb = drawChessBoard(sb, board, i, boardLabels, ChessGame.TeamColor.WHITE, tilesToHighlight);
         }
         return sb.toString();
     }
 
-    private String drawBlackBoardGraphic(ChessBoard board) {
+    private String drawBlackBoardGraphic(ChessBoard board, ChessPosition[] tilesToHighlight) {
         StringBuilder sb = new StringBuilder();
         int startRow = 0;
         int numRows = 10;
         String[] boardLabels = {"h", "g", "f", "e", "d", "c", "b", "a"};
 
         for (int i = 0; i < (numRows + startRow); i++) {
-            sb = drawChessBoard(sb, board, i, boardLabels, ChessGame.TeamColor.BLACK);
+            sb = drawChessBoard(sb, board, i, boardLabels, ChessGame.TeamColor.BLACK, tilesToHighlight);
         }
 
         return sb.toString();
@@ -360,7 +364,8 @@ public class ChessUI {
     private StringBuilder drawChessBoard(StringBuilder sb,
                                          ChessBoard board, int i,
                                          String[] boardLabels,
-                                         ChessGame.TeamColor perspective) {
+                                         ChessGame.TeamColor perspective,
+                                         ChessPosition[] tilesToHighlight) {
         switch (i) {
             // Both 0 and 9 have the same string
             case 0:
@@ -458,6 +463,10 @@ public class ChessUI {
         boolean white = (row % 2 != col % 2);
 
         return white ? "WHITE" : "BLACK";
+    }
+
+    private ChessPosition[] getTilesToHighlight(ChessMove[] legalMoves){
+        throw new RuntimeException("Not implemented.");
     }
 
 }
