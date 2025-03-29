@@ -517,6 +517,13 @@ public class ChessUI {
             }
             ChessGame.TeamColor curTeamColor = curPiece.getTeamColor();
             ChessMove.Direction curDirection = null;
+            int rowChange = endPosition.getRow() - startPosition.getRow();
+            int colChange = endPosition.getColumn() - startPosition.getColumn();
+
+            boolean isPositiveRowChange = (rowChange > 0);
+            boolean isPositiveColChange = (colChange > 0);
+            boolean isZeroRowChange = (rowChange == 0);
+            boolean isZeroColChange = (colChange == 0);
 
             // Set the current direction
             // Remember the direction tells the logic where on the board to go
@@ -532,6 +539,17 @@ public class ChessUI {
                     }
                     break;
                 case ROOK:
+                    if (isPositiveColChange && isZeroRowChange){
+                        curDirection = ChessMove.Direction.RIGHT;
+                    } else if (!isPositiveColChange && isZeroRowChange){
+                        curDirection = ChessMove.Direction.LEFT;
+                    } else if (isZeroColChange && isPositiveRowChange){
+                        curDirection = ChessMove.Direction.UP;
+                    } else if (isZeroColChange && !isPositiveRowChange){ // The IDE is saying by checking everything before this you know that rowChange must be > 0
+                        curDirection = ChessMove.Direction.DOWN;
+                    } else {
+                        curDirection = null;
+                    }
                     break;
                 case BISHOP:
                     break;
