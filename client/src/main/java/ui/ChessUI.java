@@ -2,6 +2,7 @@ package ui;
 
 import chess.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -506,79 +507,14 @@ public class ChessUI {
         for ever move
         check to see that p
          */
+        ArrayList<ChessPosition> tilesToHighlight = new ArrayList<>();
         ChessBoard curBoard = this.client.getBoard();
+
         for (ChessMove move : legalMoves){
-            ChessPosition startPosition = move.getStartPosition();
-            ChessPosition endPosition = move.getEndPosition();
-            ChessPiece curPiece = curBoard.getPiece(startPosition);
-            if(curPiece == null){
-                // Don't let the logic error
-                continue;
-            }
-            ChessGame.TeamColor curTeamColor = curPiece.getTeamColor();
-            ChessPiece.PieceType curPieceType = curPiece.getPieceType();
-            ChessMove.Direction curDirection = null;
-            int rowChange = endPosition.getRow() - startPosition.getRow();
-            int colChange = endPosition.getColumn() - startPosition.getColumn();
-
-            boolean isPositiveRowChange = (rowChange > 0);
-            boolean isPositiveColChange = (colChange > 0);
-            boolean isZeroRowChange = (rowChange == 0);
-            boolean isZeroColChange = (colChange == 0);
-
-            // Set the current direction
-            // Remember the direction tells the logic where on the board to go
-            // Not how to draw it, so it will not affect the way the board is
-            // Draw directionally speaking (i.e. from white or black perspective)
-            switch (curPieceType){
-                // Organized easiest to hardestt ad
-                case PAWN:
-                    if (curTeamColor == ChessGame.TeamColor.WHITE){
-                        curDirection = ChessMove.Direction.UP;
-                    } else {
-                        curDirection = ChessMove.Direction.DOWN;
-                    }
-                    break;
-                case QUEEN:
-                case ROOK:
-                case KING:
-                    if (isPositiveColChange && isZeroRowChange){
-                        curDirection = ChessMove.Direction.RIGHT;
-                    } else if (!isPositiveColChange && isZeroRowChange){
-                        curDirection = ChessMove.Direction.LEFT;
-                    } else if (isZeroColChange && isPositiveRowChange){
-                        curDirection = ChessMove.Direction.UP;
-                    } else if (isZeroColChange && !isPositiveRowChange){ // The IDE is saying by checking everything before this you know that rowChange must be > 0
-                        curDirection = ChessMove.Direction.DOWN;
-                    } else {
-                        curDirection = null;
-                    }
-                    // Only break if rook or king, not queen
-                    if(curPieceType == ChessPiece.PieceType.ROOK || curPieceType == ChessPiece.PieceType.KING) {
-                        break;
-                    }
-                case BISHOP:
-                    if (isPositiveColChange && isPositiveRowChange){
-                        curDirection = ChessMove.Direction.DIAGur;
-                    } else if (!isPositiveColChange && isPositiveRowChange){
-                        curDirection = ChessMove.Direction.DIAGul;
-                    } else if (!isPositiveColChange && !isPositiveRowChange){
-                        curDirection = ChessMove.Direction.DIAGdl;
-                    } else if (isPositiveColChange && !isPositiveRowChange){ // The IDE is saying by checking everything before this you know that rowChange must be > 0
-                        curDirection = ChessMove.Direction.DIAGdr;
-                    } else {
-                        curDirection = null;
-                    }
-                    break;
-                case KNIGHT:
-                    break;
-
-            }
-
+            tilesToHighlight.add(move.getEndPosition());
 
         }
-
-        throw new RuntimeException("Not implemented.");
+        return tilesToHighlight.toArray(new ChessPosition[0]);
     }
 
     private ChessPosition[] getRowTilesToHighlight(ChessPosition[] tilesToHighlight, int row){
