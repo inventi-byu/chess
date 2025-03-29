@@ -30,6 +30,7 @@ public class ChessClient {
     private GameData gameData;
     private ChessBoard board;
     private ChessGame game;
+    private ChessGame observingGame;
     private ChessGame.TeamColor teamColor;
     private String username;
     private AuthData authData;
@@ -56,6 +57,7 @@ public class ChessClient {
         this.game = null;
         this.gameID = 0; // No game at the beginning
         this.gamesMap = new HashMap<>();
+        this.observingGame = null;
 
         this.highlightPosition = null;
     }
@@ -234,6 +236,8 @@ public class ChessClient {
             result = "helpPostLogin";
         } else if (this.getMenuState().equals(STATE_GAME)){
             result = "helpGame";
+        } else if (this.getMenuState().equals(STATE_OBSERVE)){
+            result = "helpObserve";
         }
         return result;
     }
@@ -427,7 +431,10 @@ public class ChessClient {
             tempBoardUntilPhaseSix.resetBoard();
             this.setCurrentObservingBoard(tempBoardUntilPhaseSix);
 
-            this.setMenuState(STATE_GAME);
+            ChessGame tempGameUntilPhaseSix = new ChessGame();
+            tempGameUntilPhaseSix.setBoard(tempBoardUntilPhaseSix);
+
+            this.setMenuState(STATE_OBSERVE);
             result = "observe";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
@@ -440,12 +447,52 @@ public class ChessClient {
         return result;
     }
 
+    private String evalHighlight(String[] command){
+        throw new RuntimeException("Not implemented.");
+        if(command.length != 2){
+            return "Could not highlight moves. Did you forget to enter position of the piece you want to highlight?";
+        }
+        String chessStylePosition = command[1];
+        chessStylePosition = chessStylePosition.toLowerCase();
+        char[] positionAsArray = chessStylePosition.toCharArray();
+        int row = 0;
+        int col = 0;
+        try {
+            row = Integer.parseInt(
+                    String.valueOf(
+                            positionAsArray[1]
+                    )
+            );
+        } catch (Exception exception) {
+            return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
+        }
+
+        // Convert letter to number
+        switch (positionAsArray[0]){
+            case 'a' -> col = 1;
+            case 'b' -> col = 2;
+            case 'c' -> col = 3;
+            case 'd' -> col = 4;
+            case 'e' -> col = 5;
+            case 'f' -> col = 6;
+            case 'g' -> col = 7;
+            case 'h' -> col = 8;
+        }
+        this.setHighlightPosition(new ChessPosition(row, col));
+        return "highlight";
+    }
+
     /**
      * Get all the legal moves a given piece can make
-     * @return
+     * @return ChessMove[] of all legal moves from validMoves
      */
     public ChessMove[] getLegalMoves(ChessPosition position){
-        Collection<ChessMove> moves = this.game.validMoves(position);
+        Collection<ChessMove> moves = null;
+        if (this.currentObservingBoard == null && this.game != null){
+            moves = this.game.validMoves(position);
+        } else {
+            moves = this.observingGame.validMoves(position);
+        }
         return moves.toArray(new ChessMove[0]);
     }
 }

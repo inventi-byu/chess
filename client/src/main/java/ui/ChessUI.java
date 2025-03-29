@@ -177,7 +177,7 @@ public class ChessUI {
                         // If there was an error, print the user-friendly message.
                         if(client.getMenuState().equals(ChessClient.STATE_POSTLOGIN)){
                             this.println( (this.menuTextColorPostLogin + result) );
-                        } else if ((client.getMenuState().equals(ChessClient.STATE_GAME))){
+                        } else if ((client.getMenuState().equals(ChessClient.STATE_GAME)) || client.getMenuState().equals(STATE_OBSERVE)){
                             this.println( (this.menuTextColorGame + result) );
                         } else {
                             this.println( (this.menuTextColor + result) );
@@ -196,12 +196,24 @@ public class ChessUI {
                 """
                 redraw - Redraws the chessboard
                 highlight <LOCATION> - Highlights legal moves for the piece at LOCATION.
-                                       Location should be in lowercase chess notation (i.e. a1)
-                move <START> <END> - (PLAYER ONLY) Move chess piece at START to the END position.
+                                       Location should be in chess notation (i.e. a1 or A1).
+                move <START> <END> - Move chess piece at START to the END position.
                                      START and END should be in lowercase chess
                                      notation (i.e. a1).
-                leave - leave the game (without forfeiting, if playing).
-                resign - (PLAYER ONLY) Forfeit and end the game without leaving.
+                leave - Leave the game without forfeiting.
+                resign - Forfeit and end the game without leaving.
+                help - Get help with possible commands
+                """
+        );
+    }
+
+    public void displayHelpObserve(){
+        this.print(
+                """
+                redraw - Redraws the chessboard
+                highlight <LOCATION> - Highlights legal moves for the piece at LOCATION.
+                                       Location should be in chess notation (i.e. a1 or A1).
+                leave - Leave the game you are observing.
                 help - Get help with possible commands
                 """
         );
@@ -504,7 +516,7 @@ public class ChessUI {
 
     private ChessPosition[] getTilesToHighlight(ChessMove[] legalMoves){
         ArrayList<ChessPosition> tilesToHighlight = new ArrayList<>();
-        
+
         // Add the starting position only once (not in the for-each loop)
         ChessPosition startPosition = legalMoves[0].getStartPosition();
         tilesToHighlight.add(startPosition);
