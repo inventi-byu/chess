@@ -516,6 +516,7 @@ public class ChessUI {
                 continue;
             }
             ChessGame.TeamColor curTeamColor = curPiece.getTeamColor();
+            ChessPiece.PieceType curPieceType = curPiece.getPieceType();
             ChessMove.Direction curDirection = null;
             int rowChange = endPosition.getRow() - startPosition.getRow();
             int colChange = endPosition.getColumn() - startPosition.getColumn();
@@ -529,7 +530,7 @@ public class ChessUI {
             // Remember the direction tells the logic where on the board to go
             // Not how to draw it, so it will not affect the way the board is
             // Draw directionally speaking (i.e. from white or black perspective)
-            switch (curPiece.getPieceType()){
+            switch (curPieceType){
                 // Organized easiest to hardestt ad
                 case PAWN:
                     if (curTeamColor == ChessGame.TeamColor.WHITE){
@@ -538,6 +539,7 @@ public class ChessUI {
                         curDirection = ChessMove.Direction.DOWN;
                     }
                     break;
+                case QUEEN:
                 case ROOK:
                 case KING:
                     if (isPositiveColChange && isZeroRowChange){
@@ -551,7 +553,10 @@ public class ChessUI {
                     } else {
                         curDirection = null;
                     }
-                    break;
+                    // Only break if rook or king, not queen
+                    if(curPieceType == ChessPiece.PieceType.ROOK || curPieceType == ChessPiece.PieceType.KING) {
+                        break;
+                    }
                 case BISHOP:
                     if (isPositiveColChange && isPositiveRowChange){
                         curDirection = ChessMove.Direction.DIAGur;
@@ -564,8 +569,6 @@ public class ChessUI {
                     } else {
                         curDirection = null;
                     }
-                    break;
-                case QUEEN:
                     break;
                 case KNIGHT:
                     break;
