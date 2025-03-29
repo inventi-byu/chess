@@ -2,7 +2,6 @@ package ui;
 
 import chess.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -15,13 +14,14 @@ public class ChessUI {
     private ChessClient client;
 
     private static final String SPACE = " ";
-    private static final String EMPTY_SPACE = " ";
+    private static final String EMPTY_SPACE = "   ";
 
     private String menuBGColor;
-    private String menuTextColor;
+    private String menuTextColorPreLogin;
     private String menuTextColorLoggedIn;
     private String menuTextColorPostLogin;
     private String menuTextColorGame;
+    private String menuTextColorObserve;
 
     private String emptyColor;
     private String bgColor;
@@ -45,10 +45,11 @@ public class ChessUI {
         this.client = client;
 
         this.menuBGColor = EscapeSequences.SET_BG_COLOR_BLACK;
-        this.menuTextColor = EscapeSequences.SET_TEXT_COLOR_WHITE;
+        this.menuTextColorPreLogin = EscapeSequences.SET_TEXT_COLOR_WHITE;
         this.menuTextColorLoggedIn = EscapeSequences.SET_TEXT_COLOR_GREEN;
         this.menuTextColorPostLogin = EscapeSequences.SET_TEXT_COLOR_MAGENTA;
         this.menuTextColorGame = EscapeSequences.SET_TEXT_COLOR_BLUE;
+        this.menuTextColorObserve = EscapeSequences.SET_TEXT_COLOR_YELLOW;
 
         this.emptyColor = EscapeSequences.SET_BG_COLOR_BLACK;
         this.bgColor = EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
@@ -139,7 +140,7 @@ public class ChessUI {
                         break;
 
                     case "observe":
-                        this.displayGameMenu(client.getObservingBoard(), ChessGame.TeamColor.WHITE);
+                        this.displayObserveMenu(client.getObservingBoard(), ChessGame.TeamColor.WHITE);
                         this.displayHelpObserve();
                         break;
 
@@ -182,10 +183,10 @@ public class ChessUI {
                         // If there was an error, print the user-friendly message.
                         if(client.getMenuState().equals(ChessClient.STATE_POSTLOGIN)){
                             this.println( (this.menuTextColorPostLogin + result) );
-                        } else if ((client.getMenuState().equals(ChessClient.STATE_GAME)) || client.getMenuState().equals(STATE_OBSERVE)){
+                        } else if ((client.getMenuState().equals(ChessClient.STATE_GAME)) || client.getMenuState().equals(ChessClient.STATE_OBSERVE)){
                             this.println( (this.menuTextColorGame + result) );
                         } else {
-                            this.println( (this.menuTextColor + result) );
+                            this.println( (this.menuTextColorPreLogin + result) );
                         }
 
                 }
@@ -198,6 +199,7 @@ public class ChessUI {
 
     public void displayHelpGame(){
         this.print(
+                this.menuBGColor + this.menuTextColorGame +
                 """
                 redraw - Redraws the chessboard
                 highlight <LOCATION> - Highlights legal moves for the piece at LOCATION.
@@ -214,6 +216,7 @@ public class ChessUI {
 
     public void displayHelpObserve(){
         this.print(
+                this.menuBGColor + this.menuTextColorObserve +
                 """
                 redraw - Redraws the chessboard
                 highlight <LOCATION> - Highlights legal moves for the piece at LOCATION.
@@ -226,7 +229,7 @@ public class ChessUI {
 
     public void displayPostLoginMenu(){
         this.print(
-                this.menuTextColorPostLogin + this.menuTextColorPostLogin +
+                this.menuBGColor + this.menuTextColorPostLogin +
                 """
                 
                 Welcome to Chess! To start, choose an option below:
@@ -237,7 +240,7 @@ public class ChessUI {
 
     public void displayPreLoginMenu() {
         this.print(
-            this.menuBGColor + this.menuTextColor +
+            this.menuBGColor + this.menuTextColorPreLogin +
             """
             ====== Welcome to Chess ======
             Type "help" to get started!
@@ -252,23 +255,24 @@ public class ChessUI {
     public void displayPrompt(){
         if (this.client.getLoginStatus().equals(ChessClient.STATUS_LOGGED_IN)){
             this.print(
-                    this.menuBGColor + this.menuTextColor +
+                    this.menuBGColor + this.menuTextColorPreLogin +
                             "[ "
                             + this.menuTextColorLoggedIn +
                             this.client.getLoginStatus() +
-                            this.menuTextColor +
+                            this.menuTextColorPreLogin +
                             " ]"
                             + " >>> "
             );
         } else {
             this.print(
-                    this.menuBGColor + this.menuTextColor + "[ " + this.client.getLoginStatus() + " ]" + " >>> "
+                    this.menuBGColor + this.menuTextColorPreLogin + "[ " + this.client.getLoginStatus() + " ]" + " >>> "
             );
         }
     }
 
     public void displayHelpPreLogin() {
         this.print(
+                this.menuTextColorPreLogin +
         """
         register <USERNAME> <PASSWORD> <EMAIL> - Create an account
         login <USERNAME> <PASSWORD> - Login to play chess
@@ -291,6 +295,13 @@ public class ChessUI {
                 help - Get help with possible commands
                 """
         );
+    }
+
+    public void displayObserveMenu(ChessBoard board){
+        this.displayChessBoard(board, ChessGame.TeamColor.WHITE, null);
+        this.println(
+                this.menuBGColor + this.menuTextColorObserve + "You are no observing the " + this.client.getObservingGame()
+        )
     }
 
     public void displayListOfGames(){
@@ -367,7 +378,8 @@ public class ChessUI {
         int numRows = 10;
         String[] boardLabels = {"a", "b", "c", "d", "e", "f", "g", "h"};
 
-        for (int i = (numRows + startRow); i > -1; i--) {
+        // It needs to be 9 here
+        for (int i = (numRows + startRow)-1; i > -1; i--) {
             sb = drawChessBoard(sb, board, i, boardLabels, ChessGame.TeamColor.WHITE, this.getRowTilesToHighlight(tilesToHighlight, i));
         }
         return sb.toString();
@@ -423,7 +435,7 @@ public class ChessUI {
                 if (perspective == ChessGame.TeamColor.WHITE) {
                     for (int j = 1; j < 9; j++) {
                         boolean doHighlight = false;
-                        if(tilesToHighlight == null) {
+                        if(tilesToHighlight != null) {
                             for (ChessPosition tile : tilesToHighlight) {
                                 if (tile.getRow() == i && tile.getColumn() == j) {
                                     doHighlight = true;
@@ -435,7 +447,7 @@ public class ChessUI {
                 } else {
                     for (int j = 8; j > 0; j--) {
                         boolean doHighlight = false;
-                        if (tilesToHighlight == null) {
+                        if (tilesToHighlight != null) {
                             for (ChessPosition tile : tilesToHighlight) {
                                 if (tile.getRow() == i && tile.getColumn() == j) {
                                     doHighlight = true;
@@ -520,6 +532,9 @@ public class ChessUI {
     }
 
     private ChessPosition[] getTilesToHighlight(ChessMove[] legalMoves){
+        if (legalMoves == null){
+            return null;
+        }
         ArrayList<ChessPosition> tilesToHighlight = new ArrayList<>();
 
         // Add the starting position only once (not in the for-each loop)

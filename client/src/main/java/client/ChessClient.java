@@ -39,6 +39,7 @@ public class ChessClient {
     private int gameID;
     private HashMap<Integer, GameMetaData> gamesMap;
     private ChessPosition highlightPosition;
+    private GameData observingGameData;
 
     public ChessClient(ServerFacade serverFacade){
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
@@ -56,6 +57,7 @@ public class ChessClient {
         this.game = null;
         this.gameID = 0; // No game at the beginning
         this.gamesMap = new HashMap<>();
+        this.observingGameData = null;
         this.observingGame = null;
 
         this.highlightPosition = null;
@@ -154,6 +156,22 @@ public class ChessClient {
 
     public void setGamesMap(HashMap<Integer, GameMetaData> map){
         this.gamesMap = map;
+    }
+
+    public void setObservingGame(ChessGame game){
+        this.observingGame = game;
+    }
+
+    public void setObservingGameData(GameData gameData){
+        this.observingGameData = gameData;
+    }
+    
+    public GameData getObservingGameData(){
+        return this.observingGameData;
+    }
+
+    public ChessGame getObservingGame(){
+        return this.observingGame;
     }
 
     public void setHighlightPosition(ChessPosition position){
@@ -271,7 +289,7 @@ public class ChessClient {
 
     private String evalLogin(String[] command){
         if(command.length != 3){
-            return "Failed to login. Did you forget to username and password?";
+            return "Failed to login. Did you forget to enter a username AND password?";
         }
         String result = "";
         try{
