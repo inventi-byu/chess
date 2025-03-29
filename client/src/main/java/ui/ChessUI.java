@@ -518,9 +518,30 @@ public class ChessUI {
             ChessGame.TeamColor curTeamColor = curPiece.getTeamColor();
             ChessMove.Direction curDirection = null;
 
+            // Set the current direction
+            // Remember the direction tells the logic where on the board to go
+            // Not how to draw it, so it will not affect the way the board is
+            // Draw directionally speaking (i.e. from white or black perspective)
             switch (curPiece.getPieceType()){
+                // Organized easiest to hardestt ad
                 case PAWN:
+                    if (curTeamColor == ChessGame.TeamColor.WHITE){
+                        curDirection = ChessMove.Direction.UP;
+                    } else {
+                        curDirection = ChessMove.Direction.DOWN;
+                    }
                     break;
+                case ROOK:
+                    break;
+                case BISHOP:
+                    break;
+                case QUEEN:
+                    break;
+                case KING:
+                    break;
+                case KNIGHT:
+                    break;
+
             }
 
 
