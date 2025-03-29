@@ -516,6 +516,7 @@ public class ChessUI {
                 continue;
             }
             ChessGame.TeamColor curTeamColor = curPiece.getTeamColor();
+            ChessMove.Direction curDirection = null;
 
             switch (curPiece.getPieceType()){
                 case PAWN:
