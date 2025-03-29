@@ -487,6 +487,9 @@ public class ChessClient {
         String chessStylePosition = command[1];
         chessStylePosition = chessStylePosition.toLowerCase();
         char[] positionAsArray = chessStylePosition.toCharArray();
+        if (positionAsArray.length != 2){
+            return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
+        }
         int row = 0;
         int col = 0;
         try {
@@ -512,7 +515,7 @@ public class ChessClient {
                 case '8' -> row = 8;
                 case '9' -> row = 9;
             }
-        } catch (Exception exception) {
+        } catch (IndexOutOfBoundsException exception) {
             return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
         }
 
