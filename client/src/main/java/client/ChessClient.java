@@ -158,6 +158,7 @@ public class ChessClient {
         this.gamesMap = map;
     }
 
+
     public void setObservingGame(ChessGame game){
         this.observingGame = game;
     }
@@ -165,7 +166,7 @@ public class ChessClient {
     public void setObservingGameData(GameData gameData){
         this.observingGameData = gameData;
     }
-    
+
     public GameData getObservingGameData(){
         return this.observingGameData;
     }
@@ -452,8 +453,19 @@ public class ChessClient {
             tempBoardUntilPhaseSix.resetBoard();
             this.setCurrentObservingBoard(tempBoardUntilPhaseSix);
 
-            ChessGame tempGameUntilPhaseSix = new ChessGame();
-            tempGameUntilPhaseSix.setBoard(tempBoardUntilPhaseSix);
+            ChessGame tempObservingGameUntilPhaseSix = new ChessGame();
+            tempObservingGameUntilPhaseSix.setBoard(tempBoardUntilPhaseSix);
+            this.setObservingGame(tempObservingGameUntilPhaseSix);
+
+            GameData tempObservingGameDataUntilPhaseSix = new GameData(
+                    0,
+                    "white",
+                    "black",
+                    "tempGameUntilPhaseSix",
+                    tempObservingGameUntilPhaseSix
+            );
+
+            this.setObservingGameData(tempObservingGameDataUntilPhaseSix);
 
             this.setMenuState(STATE_OBSERVE);
             result = "observe";
@@ -508,10 +520,14 @@ public class ChessClient {
      */
     public ChessMove[] getLegalMoves(ChessPosition position){
         Collection<ChessMove> moves = null;
-        if (this.currentObservingBoard == null && this.game != null){
+
+
+        if (this.getObservingBoard() == null && this.getGame() != null){
             moves = this.game.validMoves(position);
-        } else {
+        } else if (this.getObservingBoard() != null){
             moves = this.observingGame.validMoves(position);
+        } else {
+            return null;
         }
         return moves.toArray(new ChessMove[0]);
     }
