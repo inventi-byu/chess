@@ -539,6 +539,7 @@ public class ChessUI {
                     }
                     break;
                 case ROOK:
+                case KING:
                     if (isPositiveColChange && isZeroRowChange){
                         curDirection = ChessMove.Direction.RIGHT;
                     } else if (!isPositiveColChange && isZeroRowChange){
@@ -552,10 +553,19 @@ public class ChessUI {
                     }
                     break;
                 case BISHOP:
+                    if (isPositiveColChange && isPositiveRowChange){
+                        curDirection = ChessMove.Direction.DIAGur;
+                    } else if (!isPositiveColChange && isPositiveRowChange){
+                        curDirection = ChessMove.Direction.DIAGul;
+                    } else if (!isPositiveColChange && !isPositiveRowChange){
+                        curDirection = ChessMove.Direction.DIAGdl;
+                    } else if (isPositiveColChange && !isPositiveRowChange){ // The IDE is saying by checking everything before this you know that rowChange must be > 0
+                        curDirection = ChessMove.Direction.DIAGdr;
+                    } else {
+                        curDirection = null;
+                    }
                     break;
                 case QUEEN:
-                    break;
-                case KING:
                     break;
                 case KNIGHT:
                     break;
