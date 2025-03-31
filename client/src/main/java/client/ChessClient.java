@@ -645,7 +645,14 @@ public class ChessClient {
     }
 
     private void updateGameInfo(GameData newGameData) {
-        this.
-        throw new RuntimeException("Not implemented.");
+        ChessGame updatedGame = newGameData.game();
+        ChessBoard updatedBoard = updatedGame.getBoard();
+        int updatedGameID = newGameData.gameID();
+                
+        this.setGameData(newGameData);
+        this.setGame(updatedGame);
+        this.setBoard(updatedBoard);
+        this.setGameID(updatedGameID);
+        return;
     }
 }
