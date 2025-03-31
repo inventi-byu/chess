@@ -10,6 +10,7 @@ import model.AuthData;
 import model.GameData;
 import model.GameMetaData;
 import ui.ServerFacade;
+import ui.WebSocketFacade;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class ChessClient {
     private String menuState; // Which menu you are currently in
 
     private ServerFacade serverFacade;
+    private WebSocketFacade webSocketFacade;
 
     public static final String STATUS_LOGGED_IN = "LOGGED IN";
     public static final String STATUS_LOGGED_OUT = "LOGGED OUT";
@@ -52,9 +54,10 @@ public class ChessClient {
     // UI info
     private ChessPosition highlightPosition;
 
-    public ChessClient(ServerFacade serverFacade){
+    public ChessClient(ServerFacade serverFacade, WebSocketFacade webSocketFacade){
         // Client info
         this.serverFacade = serverFacade;
+        this.webSocketFacade = webSocketFacade;
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
         this.menuState = STATE_PRELOGIN;
 

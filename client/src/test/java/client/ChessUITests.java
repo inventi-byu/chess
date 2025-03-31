@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ui.ChessUI;
 import ui.ServerFacade;
+import ui.WebSocketFacade;
 
 import java.util.HashMap;
 
@@ -15,6 +16,7 @@ public class ChessUITests {
 
     ChessBoard board;
     ServerFacade serverFacade;
+    WebSocketFacade webSocketFacade;
     ChessClient client;
     ChessUI chessUI;
 
@@ -22,29 +24,30 @@ public class ChessUITests {
     void setup(){
         this.board = new ChessBoard();
         this.board.resetBoard();
-        serverFacade = new ServerFacade("http://localhost:0");
-        client = new ChessClient(serverFacade);
-        chessUI = new ChessUI(serverFacade, client);
+        this.serverFacade = new ServerFacade("http://localhost:0");
+        this.webSocketFacade = new WebSocketFacade("http://localhost:0");
+        this.client = new ChessClient(this.serverFacade, this.webSocketFacade);
+        this.chessUI = new ChessUI(this.serverFacade, this.client);
     }
 
     @Test
     public void printChessBoardWhiteTest(){
-        chessUI.displayChessBoard(board, ChessGame.TeamColor.WHITE, null);
+        this.chessUI.displayChessBoard(this.board, ChessGame.TeamColor.WHITE, null);
     }
 
     @Test
     public void printChessBoardBlackTest(){
-        chessUI.displayChessBoard(board, ChessGame.TeamColor.BLACK, null);
+        this.chessUI.displayChessBoard(this., ChessGame.TeamColor.BLACK, null);
     }
 
     @Test
     public void displayDisplayPreLoginMenu(){
-        chessUI.displayPreLoginMenu();
+        this.chessUI.displayPreLoginMenu();
     }
 
     @Test
     public void displayPromptTest(){
-        chessUI.displayPrompt();
+        this.chessUI.displayPrompt();
         System.out.println(); // To make sure that the rest of the tests print correctly below
     }
 

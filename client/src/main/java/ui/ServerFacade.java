@@ -1,11 +1,8 @@
 package ui;
 
-import chess.ChessGame;
-import chess.ChessPosition;
 import com.google.gson.Gson;
 import exceptions.ServerFacadeException;
 import model.AuthData;
-import model.GameData;
 import model.GameMetaData;
 import model.UserData;
 import server.service.exception.ResponseException;
@@ -131,23 +128,6 @@ public class ServerFacade {
         JoinGameInfo joinGameInfo = new JoinGameInfo(playerColor, gameID);
 
         this.makeHttpRequest("PUT", path, joinGameInfo, headers, null);
-    }
-
-    public void observeGame(String gameID, String authToken) throws ServerFacadeException {
-        return;
-        // Not implemented until phase 6
-    }
-
-    public GameData makeMove(ChessGame.TeamColor teamColor, ChessPosition start, ChessPosition end) throws ServerFacadeException {
-        throw new ServerFacadeException(0, "Not implemented");
-    }
-
-    public void leaveGame(String authToken, String username) throws ServerFacadeException {
-        throw new ServerFacadeException(0, "Not implemented.");
-    }
-
-    public void resignGame(String authToken, String username) throws ServerFacadeException {
-        throw new ServerFacadeException(0, "Not implemented.");
     }
 
     private <T> T makeHttpRequest(String method,
