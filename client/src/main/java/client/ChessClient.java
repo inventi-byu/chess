@@ -586,7 +586,7 @@ public class ChessClient {
         }
         return moves.toArray(new ChessMove[0]);
     }
-    
+
     private ChessPosition locationToPosition(String location) throws ChessPositionException {
         // Convert to lowercase in case
         location = location.toLowerCase();

@@ -1,8 +1,11 @@
 package ui;
 
+import chess.ChessGame;
+import chess.ChessPosition;
 import com.google.gson.Gson;
 import exceptions.ServerFacadeException;
 import model.AuthData;
+import model.GameData;
 import model.GameMetaData;
 import model.UserData;
 import server.service.exception.ResponseException;
@@ -134,6 +137,11 @@ public class ServerFacade {
         return;
         // Not implemented until phase 6
     }
+
+    public GameData makeMove(ChessGame.TeamColor teamColor, ChessPosition start, ChessPosition end) throws ServerFacadeException {
+        throw new ServerFacadeException(0, "Not implemented");
+    }
+
 
     private <T> T makeHttpRequest(String method,
                                   String path,
