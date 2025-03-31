@@ -23,45 +23,64 @@ public class ChessClient {
 
     public static final String STATUS_LOGGED_IN = "LOGGED IN";
     public static final String STATUS_LOGGED_OUT = "LOGGED OUT";
+
     public static final String STATE_PRELOGIN= "PRELOGIN";
     public static final String STATE_POSTLOGIN = "POSTLOGIN";
     public static final String STATE_GAME = "GAME";
     public static final String STATE_OBSERVE = "OBSERVE";
 
-    private GameData gameData;
-    private ChessBoard board;
-    private ChessGame game;
-    private ChessGame observingGame;
-    private ChessGame.TeamColor teamColor;
+    // User info
     private String username;
     private AuthData authData;
+    private ChessGame.TeamColor teamColor;
+
+    // Info about games
+    private HashMap<Integer, GameMetaData> gamesMap;
     private GameMetaData[] currentGames;
     private int lastCreatedGameID;
-    private ChessBoard currentObservingBoard;
+
+    // Joined Game info
+    private ChessBoard board;
+    private ChessGame game;
+    private GameData gameData;
     private int gameID;
-    private HashMap<Integer, GameMetaData> gamesMap;
-    private ChessPosition highlightPosition;
+
+    // Observe info
+    private ChessBoard currentObservingBoard;
+    private ChessGame observingGame;
     private GameData observingGameData;
 
+    // UI info
+    private ChessPosition highlightPosition;
+
     public ChessClient(ServerFacade serverFacade){
-        this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
+        // Client info
         this.serverFacade = serverFacade;
+        this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
         this.menuState = STATE_PRELOGIN;
 
-        this.board = null;
+        // User info
         this.teamColor = null;
         this.username = null;
         this.authData = null;
+
+        // Info about games
+        this.gamesMap = new HashMap<>();
         this.currentGames = null;
         this.lastCreatedGameID = 0; // No game created, because the IDs from the database start at 1.
-        this.currentObservingBoard = null;
-        this.gameData = null;
-        this.game = null;
-        this.gameID = 0; // No game at the beginning
-        this.gamesMap = new HashMap<>();
-        this.observingGameData = null;
-        this.observingGame = null;
 
+        // Joined game info
+        this.board = null;
+        this.game = null;
+        this.gameData = null;
+        this.gameID = 0; // No game at the beginning
+
+        // Observe info
+        this.currentObservingBoard = null;
+        this.observingGame = null;
+        this.observingGameData = null;
+
+        // UI info
         this.highlightPosition = null;
     }
 
@@ -515,7 +534,7 @@ public class ChessClient {
         } catch (ChessPositionException exception){
             return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
         }
-        
+
         return "highlight";
     }
 
@@ -533,13 +552,17 @@ public class ChessClient {
         if (command.length != 3){
             return "Could not observe chess game. Did you forget to enter the game id?";
         }
-
         try {
+            ChessPosition start = this.locationToPosition(command[1]);
+            ChessPosition end = this.locationToPosition(command[2]);
             GameData newGameData = this.serverFacade.makeMove(this.getTeamColor(), start, end);
+            this.updateGameInfo(newGameData);
+        } catch (ChessPositionException exception) {
+            return "Sorry that move is not valid. Check your position notation: each position should start with a letter from a to h, and end with a number from 1 to 8.";
         } catch (ServerFacadeException exception) {
-
+            return "Sorry that move is not valid. Did you include a start and end position?";
         }
-            throw new RuntimeException("Not implemented.");
+        return "move";
     }
 
     private String evalLeave(String[] command){
@@ -619,5 +642,10 @@ public class ChessClient {
         }
 
         return new ChessPosition(row, col);
+    }
+
+    private void updateGameInfo(GameData newGameData) {
+        this.
+        throw new RuntimeException("Not implemented.");
     }
 }
