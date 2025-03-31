@@ -494,7 +494,7 @@ public class ChessClient {
         }
         String result = "";
         try{
-            this.serverFacade.observeGame(command[1], this.authData.authToken());
+            this.webSocketFacade.observeGame(command[1], this.authData.authToken());
 
             // Temporary until Phase 6
             ChessGame tempObservingGameUntilPhaseSix = new ChessGame();
@@ -557,7 +557,7 @@ public class ChessClient {
         try {
             ChessPosition start = this.locationToPosition(command[1]);
             ChessPosition end = this.locationToPosition(command[2]);
-            GameData newGameData = this.serverFacade.makeMove(this.getTeamColor(), start, end);
+            GameData newGameData = this.webSocketFacade.makeMove(this.getTeamColor(), start, end);
             this.updateGameInfo(newGameData);
         } catch (ChessPositionException exception) {
             return "Sorry that move is not valid. Check your position notation: each position should start with a letter from a to h, and end with a number from 1 to 8.";
@@ -572,7 +572,7 @@ public class ChessClient {
             return "Sorry you have to have joined or be observing a game to use that command.";
         }
         try {
-            this.serverFacade.leaveGame(this.getAuthData().authToken(), this.getUsername());
+            this.webSocketFacade.leaveGame(this.getAuthData().authToken(), this.getUsername());
             if (this.getMenuState().equals(STATE_GAME)) {
                 this.clearGameInfo();
             } else if (this.getMenuState().equals(STATE_OBSERVE)) {
@@ -591,7 +591,7 @@ public class ChessClient {
             return "Sorry you have to have joined a game to use that command.";
         }
         try {
-            this.serverFacade.resignGame(this.getAuthData().authToken(), this.getUsername());
+            this.webSocketFacade.resignGame(this.getAuthData().authToken(), this.getUsername());
             // You can only resign when you are playing a game, not observing.
             this.clearGameInfo();
             this.setMenuState(STATE_POSTLOGIN);
