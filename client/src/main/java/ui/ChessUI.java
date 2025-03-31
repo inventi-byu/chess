@@ -148,7 +148,11 @@ public class ChessUI {
                         break;
 
                     case "redraw":
-                        this.displayChessBoard(client.getBoard(), client.getTeamColor(), null);
+                        if(this.client.getMenuState().equals(ChessClient.STATE_GAME)){
+                            this.displayChessBoard(client.getBoard(), client.getTeamColor(), null);
+                        } else if(this.client.getMenuState().equals(ChessClient.STATE_OBSERVE)){
+                            this.displayChessBoard(client.getObservingBoard(), ChessGame.TeamColor.WHITE, null);
+                        }
                         break;
 
                     case "leave":

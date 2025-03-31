@@ -10,6 +10,7 @@ import model.GameData;
 import model.GameMetaData;
 import ui.ServerFacade;
 
+import javax.naming.ldap.StartTlsRequest;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -227,6 +228,22 @@ public class ChessClient {
                 result = this.evalHighlight(command);
                 break;
 
+            case "redraw":
+                result = evalRedraw();
+                break;
+
+            case "leave":
+                throw new RuntimeException("Not implemented.");
+                //break;
+
+            case "move":
+                throw new RuntimeException("Not implemented.");
+                //break;
+
+            case "resign":
+                throw new RuntimeException("Not implemented.");
+                //break;
+            
             default:
                 result = "Unknown command.";
         }
@@ -445,6 +462,9 @@ public class ChessClient {
         if(command.length != 2){
             return "Could not observe chess game. Did you forget to enter the game id?";
         }
+        if(!this.getMenuState().equals(STATE_POSTLOGIN)){
+            return "Sorry you can't use that command right now.";
+        }
         String result = "";
         try{
             this.serverFacade.observe(command[1], this.authData.authToken());
@@ -481,6 +501,9 @@ public class ChessClient {
     }
 
     private String evalHighlight(String[] command){
+        if(!(this.getMenuState().equals(STATE_GAME) || this.getMenuState().equals(STATE_OBSERVE))){
+            return "Sorry you have to have joined or be observing a game to use that command.";
+        }
         if(command.length != 2){
             return "Could not highlight moves. Did you forget to enter position of the piece you want to highlight?";
         }
@@ -526,6 +549,34 @@ public class ChessClient {
 
         this.setHighlightPosition(new ChessPosition(row, col));
         return "highlight";
+    }
+
+    private String evalRedraw(){
+        if(!(this.getMenuState().equals(STATE_GAME) || this.getMenuState().equals(STATE_OBSERVE))){
+            return "Sorry you have to have joined or be observing a game to use that command.";
+        }
+        return "redraw";
+    }
+
+    private String evalMove(String[] command){
+        if(!this.getMenuState().equals(STATE_GAME)){
+            return "Sorry you have to have joined a game to use that command.";
+        }
+        throw new RuntimeException("Not implemented.");
+    }
+
+    private String evalLeave(String[] command){
+        if(!(this.getMenuState().equals(STATE_GAME) || this.getMenuState().equals(STATE_OBSERVE))) {
+            return "Sorry you have to have joined or be observing a game to use that command.";
+        }
+        throw new RuntimeException("Not implemented.");
+    }
+
+    private String evalResign(String[] command){
+        if(!this.getMenuState().equals(STATE_GAME)){
+            return "Sorry you have to have joined a game to use that command.";
+        }
+        throw new RuntimeException("Not implemented.");
     }
 
     /**
