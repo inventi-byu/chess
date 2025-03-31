@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
+import exceptions.ChessPositionException;
 import exceptions.ServerFacadeException;
 import model.AuthData;
 import model.GameData;
@@ -508,46 +509,13 @@ public class ChessClient {
             return "Could not highlight moves. Did you forget to enter position of the piece you want to highlight?";
         }
         String chessStylePosition = command[1];
-        chessStylePosition = chessStylePosition.toLowerCase();
-        char[] positionAsArray = chessStylePosition.toCharArray();
-        if (positionAsArray.length != 2){
-            return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
-        }
-        int row = 0;
-        int col = 0;
         try {
-            // Convert letter to number
-            switch (positionAsArray[0]){
-                case 'a' -> col = 1;
-                case 'b' -> col = 2;
-                case 'c' -> col = 3;
-                case 'd' -> col = 4;
-                case 'e' -> col = 5;
-                case 'f' -> col = 6;
-                case 'g' -> col = 7;
-                case 'h' -> col = 8;
-                default -> {
-                    return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
-                }
-            }
-            switch (positionAsArray[1]){
-                case '1' -> row = 1;
-                case '2' -> row = 2;
-                case '3' -> row = 3;
-                case '4' -> row = 4;
-                case '5' -> row = 5;
-                case '6' -> row = 6;
-                case '7' -> row = 7;
-                case '8' -> row = 8;
-                default -> {
-                    return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
-                }
-            }
-        } catch (ArrayIndexOutOfBoundsException exception) {
+            ChessPosition position = this.locationToPosition(chessStylePosition);
+            this.setHighlightPosition(position);
+        } catch (ChessPositionException exception){
             return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
         }
-
-        this.setHighlightPosition(new ChessPosition(row, col));
+        
         return "highlight";
     }
 
@@ -609,18 +577,18 @@ public class ChessClient {
 
 
 
-    private locationToPosition(String location) throws PositionError {
+    private ChessPosition locationToPosition(String location) throws ChessPositionException {
         // Convert to lowercase in case
         location = location.toLowerCase();
         char[] locationAsArray = location.toCharArray();
-        if (location.length != 2){
-            return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
+        if (locationAsArray.length != 2){
+            throw new ChessPositionException("Invalid notation.");
         }
         int row = 0;
         int col = 0;
         try {
             // Convert letter to number
-            switch (positionAsArray[0]){
+            switch (locationAsArray[0]) {
                 case 'a' -> col = 1;
                 case 'b' -> col = 2;
                 case 'c' -> col = 3;
@@ -630,10 +598,10 @@ public class ChessClient {
                 case 'g' -> col = 7;
                 case 'h' -> col = 8;
                 default -> {
-                    return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
+                    throw new ChessPositionException("Invalid notation.");
                 }
             }
-            switch (positionAsArray[1]){
+            switch (locationAsArray[1]) {
                 case '1' -> row = 1;
                 case '2' -> row = 2;
                 case '3' -> row = 3;
@@ -643,7 +611,13 @@ public class ChessClient {
                 case '7' -> row = 7;
                 case '8' -> row = 8;
                 default -> {
-                    return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
+                    throw new ChessPositionException("Invalid notation");
                 }
+            }
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            throw new ChessPositionException("Invalid notation");
+        }
+
+        return new ChessPosition(row, col);
     }
 }
