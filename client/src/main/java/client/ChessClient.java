@@ -233,17 +233,17 @@ public class ChessClient {
                 break;
 
             case "leave":
-                throw new RuntimeException("Not implemented.");
-                //break;
+                result = this.evalLeave();
+                break;
 
             case "move":
-                throw new RuntimeException("Not implemented.");
-                //break;
+                result = this.evalMove(command);
+                break;
 
             case "resign":
-                throw new RuntimeException("Not implemented.");
-                //break;
-            
+                result = this.evalResign();
+                break;
+
             default:
                 result = "Unknown command.";
         }
@@ -561,6 +561,9 @@ public class ChessClient {
     private String evalMove(String[] command){
         if(!this.getMenuState().equals(STATE_GAME)){
             return "Sorry you have to have joined a game to use that command.";
+        }
+        if (command.length != 3){
+            return "Could not observe chess game. Did you forget to enter the game id?";
         }
         throw new RuntimeException("Not implemented.");
     }
