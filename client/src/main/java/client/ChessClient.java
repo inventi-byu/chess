@@ -576,7 +576,6 @@ public class ChessClient {
     public ChessMove[] getLegalMoves(ChessPosition position){
         Collection<ChessMove> moves = null;
 
-
         if (this.getObservingBoard() == null && this.getGame() != null){
             moves = this.game.validMoves(position);
         } else if (this.getObservingBoard() != null){
@@ -584,7 +583,12 @@ public class ChessClient {
         } else {
             return null;
         }
-        return moves.toArray(new ChessMove[0]);
+        try {
+            return moves.toArray(new ChessMove[0]);
+        } catch (NullPointerException exception) {
+            // There are no moves
+            return null;
+        }
     }
 
     private ChessPosition locationToPosition(String location) throws ChessPositionException {
