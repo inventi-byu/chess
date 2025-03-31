@@ -213,7 +213,7 @@ public class ServerFacadeTests {
             Assertions.assertNotEquals(0, serverFacade.createGame(gameName, authData.authToken()));
 
             // There is nothing to call because this is not implemented until phase 6
-            serverFacade.observe("0", authData.authToken());
+            serverFacade.observeGame("0", authData.authToken());
             Assertions.assertTrue(true);
         } catch (ServerFacadeException exception) {
             Assertions.fail("Exception thrown for good input. Message:" + exception);
@@ -232,7 +232,7 @@ public class ServerFacadeTests {
             Assertions.assertNotEquals(0, serverFacade.createGame(gameName, authData.authToken()));
 
             // There is nothing to call because this is not implemented until phase 6
-            serverFacade.observe("0", authData.authToken());
+            serverFacade.observeGame("0", authData.authToken());
             boolean observeWorked = true;
             Assertions.assertTrue(observeWorked);
         } catch (ServerFacadeException exception) {

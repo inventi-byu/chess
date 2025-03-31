@@ -126,14 +126,14 @@ public class ServerFacade {
         headers.put("authorization", authToken);
 
         record JoinGameInfo(String playerColor, int gameID){}
-        record GameIDContainer(String gameID){}
+        //record GameIDContainer(String gameID){}
 
         JoinGameInfo joinGameInfo = new JoinGameInfo(playerColor, gameID);
 
         this.makeHttpRequest("PUT", path, joinGameInfo, headers, null);
     }
 
-    public void observe(String gameID, String authToken) throws ServerFacadeException {
+    public void observeGame(String gameID, String authToken) throws ServerFacadeException {
         return;
         // Not implemented until phase 6
     }
@@ -142,10 +142,13 @@ public class ServerFacade {
         throw new ServerFacadeException(0, "Not implemented");
     }
 
-    public void leaveGame(String authToken) throws ServerFacadeException {
+    public void leaveGame(String authToken, String username) throws ServerFacadeException {
         throw new ServerFacadeException(0, "Not implemented.");
     }
 
+    public void resignGame(String authToken, String username) throws ServerFacadeException {
+        throw new ServerFacadeException(0, "Not implemented.");
+    }
 
     private <T> T makeHttpRequest(String method,
                                   String path,

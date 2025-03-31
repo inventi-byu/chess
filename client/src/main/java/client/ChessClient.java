@@ -203,6 +203,14 @@ public class ChessClient {
         return this.highlightPosition;
     }
 
+    public String getUsername(){
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String evalLine(String line){
         String result = "";
         String[] command = line.split(" ");
@@ -333,6 +341,7 @@ public class ChessClient {
             this.setAuthData(
                     this.serverFacade.login(command[1], command[2])
             );
+            this.setUsername(this.getAuthData().username());
             this.setLoginStatus(STATUS_LOGGED_IN);
             this.setMenuState(STATE_POSTLOGIN);
             result = "login";
@@ -482,7 +491,7 @@ public class ChessClient {
         }
         String result = "";
         try{
-            this.serverFacade.observe(command[1], this.authData.authToken());
+            this.serverFacade.observeGame(command[1], this.authData.authToken());
 
             // Temporary until Phase 6
             ChessGame tempObservingGameUntilPhaseSix = new ChessGame();
@@ -560,7 +569,7 @@ public class ChessClient {
             return "Sorry you have to have joined or be observing a game to use that command.";
         }
         try {
-            this.serverFacade.leaveGame(this.getAuthData().authToken());
+            this.serverFacade.leaveGame(this.getAuthData().authToken(), this.getUsername());
             if (this.getMenuState().equals(STATE_GAME)) {
                 this.clearGameInfo();
             } else if (this.getMenuState().equals(STATE_OBSERVE)) {
@@ -578,7 +587,19 @@ public class ChessClient {
         if(!this.getMenuState().equals(STATE_GAME)){
             return "Sorry you have to have joined a game to use that command.";
         }
-        throw new RuntimeException("Not implemented.");
+        try {
+            this.serverFacade.resignGame(this.getAuthData().authToken(), this.getUsername());
+            if (this.getMenuState().equals(STATE_GAME)) {
+                this.clearGameInfo();
+            } else if (this.getMenuState().equals(STATE_OBSERVE)) {
+                this.clearObservingGameInfo();
+            }
+            this.setMenuState(STATE_POSTLOGIN);
+        } catch (ServerFacadeException exception) {
+            return "Cannot leave game. Are you logged in?";
+        }
+
+        return "leave";
     }
 
     /**
