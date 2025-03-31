@@ -446,14 +446,11 @@ public class ChessClient {
         try{
             this.serverFacade.joinGame(stringTeamColor, curGameID, this.authData.authToken());
 
+            // This is for phase 6 to implement gameplay
             ChessGame tempGameUntilPhaseSix = new ChessGame();
-
             GameData tempGameDataUntilPhaseSix = new GameData(0, "NULL", "NULL", "NOT_IMPLEMENTED", tempGameUntilPhaseSix);
 
-            // This is for phase 6 to implement gameplay
-
-            this.setGame(tempGameDataUntilPhaseSix.game());
-            this.setBoard(tempGameDataUntilPhaseSix.game().getBoard());
+            this.updateGameInfo(tempGameDataUntilPhaseSix);
 
             if (stringTeamColor.equals("WHITE")){
                 this.setTeamColor(ChessGame.TeamColor.WHITE);
@@ -461,10 +458,9 @@ public class ChessClient {
                 this.setTeamColor(ChessGame.TeamColor.BLACK);
             }
 
-            this.setGameID(curGameID);
-            this.setGameData(tempGameDataUntilPhaseSix);
-
+            // Update the menu state
             this.setMenuState(STATE_GAME);
+            
             result = "join";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
@@ -648,7 +644,7 @@ public class ChessClient {
         ChessGame updatedGame = newGameData.game();
         ChessBoard updatedBoard = updatedGame.getBoard();
         int updatedGameID = newGameData.gameID();
-                
+
         this.setGameData(newGameData);
         this.setGame(updatedGame);
         this.setBoard(updatedBoard);
