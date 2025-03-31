@@ -37,7 +37,7 @@ public class ChessUITests {
 
     @Test
     public void printChessBoardBlackTest(){
-        this.chessUI.displayChessBoard(this., ChessGame.TeamColor.BLACK, null);
+        this.chessUI.displayChessBoard(this.board, ChessGame.TeamColor.BLACK, null);
     }
 
     @Test
