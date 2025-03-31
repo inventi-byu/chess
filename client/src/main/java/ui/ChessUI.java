@@ -180,6 +180,8 @@ public class ChessUI {
                             case 3 -> this.println("You resigned! It\'s all in the mind...");
                             case 4 -> this.println("You resigned! Well that was unexpected.");
                         }
+                        this.displayPostLoginMenu();
+                        this.displayHelpPostLogin();
                         break;
                         
                     case "highlight":
