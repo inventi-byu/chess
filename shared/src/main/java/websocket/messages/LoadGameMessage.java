@@ -7,14 +7,14 @@ public class LoadGameMessage extends ServerMessage {
 
     public LoadGameMessage(GameData game){
         super(ServerMessageType.LOAD_GAME);
-        this.game = message;
+        this.game = game;
     }
 
-    public void setMessage(String message){
-        this.game = message;
+    public void setGame(GameData game){
+        this.game = game;
     }
 
-    public String getMessage(){
+    public GameData getGame(){
         return this.game;
     }
 
@@ -24,17 +24,22 @@ public class LoadGameMessage extends ServerMessage {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof NotificationMessage)) {
+            if (!(o instanceof LoadGameMessage)) {
                 return false;
             }
-            NotificationMessage that = (NotificationMessage) o;
-            return this.getServerMessageType() == that.getServerMessageType() && this.getMessage().equals(that.getMessage());
+            LoadGameMessage that = (LoadGameMessage) o;
+            return this.getServerMessageType() == that.getServerMessageType() && this.getGame().equals(that.getGame());
         }
         return false;
     }
 
     @Override
     public String toString(){
-        return "NotificationMessage(" + this.getMessage() + ")";
+        return "LoadGameMessage(" +
+                "gameID = " + this.game.gameID() + ", " +
+                "whiteUsername = " + this.game.whiteUsername() + ", " +
+                "blackUsername = " + this.game.blackUsername() +  ", " +
+                "gameName = " + this.game.gameName() + ", " +
+                "ChessGame not shown)";
     }
 }
