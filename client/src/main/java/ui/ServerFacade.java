@@ -1,10 +1,8 @@
 package ui;
 
-import chess.ChessBoard;
 import com.google.gson.Gson;
 import exceptions.ServerFacadeException;
 import model.AuthData;
-import model.GameData;
 import model.GameMetaData;
 import model.UserData;
 import server.service.exception.ResponseException;
@@ -13,9 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
