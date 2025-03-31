@@ -11,7 +11,6 @@ import model.GameData;
 import model.GameMetaData;
 import ui.ServerFacade;
 
-import javax.naming.ldap.StartTlsRequest;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -46,7 +45,7 @@ public class ChessClient {
     private int gameID;
 
     // Observe info
-    private ChessBoard currentObservingBoard;
+    private ChessBoard observingBoard;
     private ChessGame observingGame;
     private GameData observingGameData;
 
@@ -76,7 +75,7 @@ public class ChessClient {
         this.gameID = 0; // No game at the beginning
 
         // Observe info
-        this.currentObservingBoard = null;
+        this.observingBoard = null;
         this.observingGame = null;
         this.observingGameData = null;
 
@@ -136,11 +135,11 @@ public class ChessClient {
     }
 
     public ChessBoard getObservingBoard(){
-        return this.currentObservingBoard;
+        return this.observingBoard;
     }
 
-    public void setCurrentObservingBoard(ChessBoard observingBoard){
-        this.currentObservingBoard = observingBoard;
+    public void setObservingBoard(ChessBoard observingBoard){
+        this.observingBoard = observingBoard;
     }
 
     public AuthData getAuthData(){
@@ -460,7 +459,7 @@ public class ChessClient {
 
             // Update the menu state
             this.setMenuState(STATE_GAME);
-            
+
             result = "join";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
@@ -485,14 +484,8 @@ public class ChessClient {
         try{
             this.serverFacade.observe(command[1], this.authData.authToken());
 
-            ChessBoard tempBoardUntilPhaseSix = new ChessBoard();
-            tempBoardUntilPhaseSix.resetBoard();
-            this.setCurrentObservingBoard(tempBoardUntilPhaseSix);
-
+            // Temporary until Phase 6
             ChessGame tempObservingGameUntilPhaseSix = new ChessGame();
-            tempObservingGameUntilPhaseSix.setBoard(tempBoardUntilPhaseSix);
-            this.setObservingGame(tempObservingGameUntilPhaseSix);
-
             GameData tempObservingGameDataUntilPhaseSix = new GameData(
                     0,
                     "white",
@@ -501,9 +494,10 @@ public class ChessClient {
                     tempObservingGameUntilPhaseSix
             );
 
-            this.setObservingGameData(tempObservingGameDataUntilPhaseSix);
+            this.updateObservingGameInfo(tempObservingGameDataUntilPhaseSix);
 
             this.setMenuState(STATE_OBSERVE);
+
             result = "observe";
         } catch (ServerFacadeException exception){
             switch (exception.getStatusCode()){
@@ -649,6 +643,16 @@ public class ChessClient {
         this.setGame(updatedGame);
         this.setBoard(updatedBoard);
         this.setGameID(updatedGameID);
+        return;
+    }
+
+    private void updateObservingGameInfo(GameData newObservingGameData) {
+        ChessGame updatedObservingGame = newObservingGameData.game();
+        ChessBoard updatedObservingBoard = updatedObservingGame.getBoard();
+
+        this.setObservingGameData(newObservingGameData);
+        this.setObservingGame(updatedObservingGame);
+        this.setObservingBoard(updatedObservingBoard);
         return;
     }
 }
