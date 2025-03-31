@@ -589,17 +589,14 @@ public class ChessClient {
         }
         try {
             this.serverFacade.resignGame(this.getAuthData().authToken(), this.getUsername());
-            if (this.getMenuState().equals(STATE_GAME)) {
-                this.clearGameInfo();
-            } else if (this.getMenuState().equals(STATE_OBSERVE)) {
-                this.clearObservingGameInfo();
-            }
+            // You can only resign when you are playing a game, not observing.
+            this.clearGameInfo();
             this.setMenuState(STATE_POSTLOGIN);
         } catch (ServerFacadeException exception) {
-            return "Cannot leave game. Are you logged in?";
+            return "Cannot resign from game. Are you logged in? Did you already win? Has the game even started yet?";
         }
 
-        return "leave";
+        return "resign";
     }
 
     /**
