@@ -23,6 +23,15 @@ public class NotificationHandler {
         this.chessUI = chessUI;
     }
 
+    // TODO: this should NOT be using the exclude parameters, that is for the server to handle.
+
+    /**
+     * Listens for notifications coming from the websocket.
+     */
+    public void listen(){
+        throw new RuntimeException("Not implemented.");
+    }
+
     /**
      * Notifies that a user joined, with name and color.
      * @param exclude if not null, exclude that user from the message
