@@ -555,14 +555,14 @@ public class ChessClient {
         return "move";
     }
 
-    private String evalLeave(String[] command){
+    private String evalLeave(){
         if(!(this.getMenuState().equals(STATE_GAME) || this.getMenuState().equals(STATE_OBSERVE))) {
             return "Sorry you have to have joined or be observing a game to use that command.";
         }
         throw new RuntimeException("Not implemented.");
     }
 
-    private String evalResign(String[] command){
+    private String evalResign(){
         if(!this.getMenuState().equals(STATE_GAME)){
             return "Sorry you have to have joined a game to use that command.";
         }
@@ -586,10 +586,7 @@ public class ChessClient {
         }
         return moves.toArray(new ChessMove[0]);
     }
-
-
-
-
+    
     private ChessPosition locationToPosition(String location) throws ChessPositionException {
         // Convert to lowercase in case
         location = location.toLowerCase();
