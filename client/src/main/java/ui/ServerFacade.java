@@ -142,6 +142,10 @@ public class ServerFacade {
         throw new ServerFacadeException(0, "Not implemented");
     }
 
+    public void leaveGame(String authToken) throws ServerFacadeException {
+        throw new ServerFacadeException(0, "Not implemented.");
+    }
+
 
     private <T> T makeHttpRequest(String method,
                                   String path,

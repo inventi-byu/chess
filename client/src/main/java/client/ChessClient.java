@@ -559,7 +559,19 @@ public class ChessClient {
         if(!(this.getMenuState().equals(STATE_GAME) || this.getMenuState().equals(STATE_OBSERVE))) {
             return "Sorry you have to have joined or be observing a game to use that command.";
         }
-        throw new RuntimeException("Not implemented.");
+        try {
+            this.serverFacade.leaveGame(this.getAuthData().authToken());
+            if (this.getMenuState().equals(STATE_GAME)) {
+                this.clearGameInfo();
+            } else if (this.getMenuState().equals(STATE_OBSERVE)) {
+                this.clearObservingGameInfo();
+            }
+            this.setMenuState(STATE_POSTLOGIN);
+        } catch (ServerFacadeException exception) {
+            return "Cannot leave game. Are you logged in?";
+        }
+
+        return "leave";
     }
 
     private String evalResign(){
@@ -654,6 +666,21 @@ public class ChessClient {
         this.setObservingGameData(newObservingGameData);
         this.setObservingGame(updatedObservingGame);
         this.setObservingBoard(updatedObservingBoard);
+        return;
+    }
+
+    private void clearGameInfo(){
+        this.setGameData(null);
+        this.setGame(null);
+        this.setBoard(null);
+        this.setGameID(0);
+        return;
+    }
+
+    private void clearObservingGameInfo(){
+        this.setObservingGameData(null);
+        this.setObservingGame(null);
+        this.setObservingBoard(null);
         return;
     }
 }
