@@ -6,17 +6,20 @@ import model.GameMetaData;
 import org.junit.jupiter.api.*;
 import server.Server;
 import ui.ServerFacade;
+import ui.WebSocketFacade;
 
 public class ServerFacadeTests {
 
     private static Server server;
     private static ServerFacade serverFacade;
+    private static WebSocketFacade webSocketFacade;
 
     @BeforeAll
     public static void init() {
         server = new Server();
         var port = server.run(0);
         serverFacade = new ServerFacade("http://localhost:" + port);
+        webSocketFacade = new WebSocketFacade("http://localhost:" + port);
         System.out.println("Started test HTTP server on " + port);
     }
 
@@ -213,7 +216,7 @@ public class ServerFacadeTests {
             Assertions.assertNotEquals(0, serverFacade.createGame(gameName, authData.authToken()));
 
             // There is nothing to call because this is not implemented until phase 6
-            serverFacade.observeGame("0", authData.authToken());
+            webSocketFacade.observeGame("0", authData.authToken());
             Assertions.assertTrue(true);
         } catch (ServerFacadeException exception) {
             Assertions.fail("Exception thrown for good input. Message:" + exception);
@@ -232,7 +235,7 @@ public class ServerFacadeTests {
             Assertions.assertNotEquals(0, serverFacade.createGame(gameName, authData.authToken()));
 
             // There is nothing to call because this is not implemented until phase 6
-            serverFacade.observeGame("0", authData.authToken());
+            webSocketFacade.observeGame("0", authData.authToken());
             boolean observeWorked = true;
             Assertions.assertTrue(observeWorked);
         } catch (ServerFacadeException exception) {
