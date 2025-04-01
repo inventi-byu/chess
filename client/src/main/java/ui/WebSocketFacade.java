@@ -6,12 +6,14 @@ import com.google.gson.Gson;
 import exceptions.ServerFacadeException;
 import exceptions.WebSocketFacadeException;
 import model.GameData;
+import websocket.commands.ConnectCommand;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
+import java.io.IOException;
 import java.net.URI;
 
 public class WebSocketFacade extends Endpoint {
@@ -19,6 +21,7 @@ public class WebSocketFacade extends Endpoint {
     private Session session;
     private NotificationHandler notificationHandler;
     private String webSocketURL;
+
 
     public WebSocketFacade(String webSocketURL, NotificationHandler notificationHandler) throws WebSocketFacadeException {
         this.webSocketURL = webSocketURL;
@@ -47,8 +50,13 @@ public class WebSocketFacade extends Endpoint {
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig){}
 
-    public GameData joinGame(String teamColor, Integer gameID, String authToken){
-        throw new RuntimeException("Not implemented.");
+    public GameData joinGame(String teamColor, Integer gameID, String authToken) throws WebSocketFacadeException {
+        try {
+            ConnectCommand command = new ConnectCommand(authToken, gameID, teamColor, false);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException exception){
+            throw new WebSocketFacadeException(500, exception.getMessage());
+        }
     }
 
     public void observeGame(String gameID, String authToken) throws ServerFacadeException {

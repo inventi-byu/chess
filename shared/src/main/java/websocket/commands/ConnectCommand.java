@@ -1,8 +1,12 @@
 package websocket.commands;
 
 public class ConnectCommand extends UserGameCommand {
-    public ConnectCommand(String authToken, Integer gameID) {
+    private String teamColor;
+    private boolean observing;
+    public ConnectCommand(String authToken, Integer gameID, String teamColor, boolean observing) {
         super(CommandType.CONNECT, authToken, gameID);
+        this.teamColor = teamColor;
+        this.observing = observing;
     }
     public ConnectCommand(){
         super(CommandType.CONNECT);

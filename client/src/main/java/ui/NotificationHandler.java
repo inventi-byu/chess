@@ -4,6 +4,7 @@ package ui;
 import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
+import model.GameData;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
@@ -22,8 +23,10 @@ import websocket.messages.ServerMessage;
  */
 public class NotificationHandler {
 
+    private GameData currentGameData;
 
     public NotificationHandler(){
+        this.currentGameData = null;
     }
 
     // TODO: this should NOT be using the exclude parameters, that is for the server to handle.
