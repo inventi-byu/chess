@@ -3,6 +3,7 @@ package websocket;
 import com.google.gson.Gson;
 import websocket.messages.NotificationMessage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ConnectionsManager {
@@ -29,17 +30,17 @@ public class ConnectionsManager {
         return this.connections;
     }
 
-    public void notifyAllUsers(NotificationMessage notification){
-        this.notify(this.currentUsers.toArray(new String[0]), NotificationMessage notification);
+    public void notifyAllUsers(NotificationMessage notification) throws IOException {
+        this.notify(this.currentUsers.toArray(new String[0]), notification);
     }
 
-    public void notifyAllExcept(String exclude, , NotificationMessage notification){
+    public void notifyAllExcept(String exclude, NotificationMessage notification) throws IOException {
         ArrayList<String> allUsersExcept = new ArrayList<String>(this.currentUsers);
         allUsersExcept.remove(exclude);
-        this.notify(allUsersExcept.toArray(new String[0]), NotificationMessage notification);
+        this.notify(allUsersExcept.toArray(new String[0]), notification);
     }
 
-    public void notifyAllExcept(String[] excludes, NotificationMessage notification){
+    public void notifyAllExcept(String[] excludes, NotificationMessage notification) throws IOException {
         ArrayList<String> allUsersExcept = new ArrayList<String>(this.currentUsers);
 
         for (String user : excludes){
@@ -48,24 +49,16 @@ public class ConnectionsManager {
             } catch (Exception exception){}
         }
 
-        this.notify(allUsersExcept.toArray(new String[0]), NotificationMessage notification);
+        this.notify(allUsersExcept.toArray(new String[0]), notification);
     }
 
-    public void notify(String[] usernames, NotificationMessage notification){
+    public void notify(String[] usernames, NotificationMessage notification) throws IOException {
         for (String user : usernames){
             this.notify(user, notification);
         }
     }
 
-    public void notify(String username, NotificationMessage notification){
-        Connection connection = this.getConnectionFromUsername(username);
-        if(connection == null){
-            // TODO: Do nothing or do something?
-            return;
-        }
-        if (connection.session.isOpen()){
-            connection.send(new Gson().toJson(notification));
-        }
+    public void notify(String username, NotificationMessage notification) throws IOException {
         throw new RuntimeException("Not implemented.");
     }
 

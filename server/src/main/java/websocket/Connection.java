@@ -1,6 +1,7 @@
 package websocket;
 
 import javax.websocket.Session;
+import java.io.IOException;
 
 public class Connection {
     public String username;
@@ -25,6 +26,10 @@ public class Connection {
 
     public Session getSession(){
         return this.session;
+    }
+
+    public void send(String message) throws IOException {
+        this.session.getBasicRemote().sendText(message);
     }
 
 }
