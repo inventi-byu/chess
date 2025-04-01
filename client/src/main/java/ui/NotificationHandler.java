@@ -39,30 +39,30 @@ public class NotificationHandler {
         ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
         switch (serverMessage.getServerMessageType()){
             case LOAD_GAME:
-                LoadGameMessage loadGameMessage = (LoadGameMessage)serverMessage;
-                this.handleLoadGameMessage();
+                LoadGameMessage loadGameMessage = new Gson().fromJson(message, LoadGameMessage.class);
+                this.handleLoadGameMessage(loadGameMessage);
                 break;
             case NOTIFICATION:
-                NotificationMessage notificationMessage = (NotificationMessage)serverMessage;
-                this.handleNotificationMessage();
+                NotificationMessage notificationMessage = new Gson().fromJson(message, NotificationMessage.class);
+                this.handleNotificationMessage(notificationMessage);
                 break;
             case ERROR:
-                ErrorMessage errorMessage = (ErrorMessage)serverMessage;
-                this.handleErrorMessage();
+                ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
+                this.handleErrorMessage(errorMessage);
                 break;
         }
     }
 
-    public void handleLoadGameMessage(){
-        throw new RuntimeException("Not implemetned.");
+    public void handleLoadGameMessage(LoadGameMessage loadGameMessage){
+        throw new RuntimeException("Not implemented.");
     }
 
-    public void handleNotificationMessage(){
-        throw new RuntimeException("Not implemetned.");
+    public void handleNotificationMessage(NotificationMessage notificationMessage){
+        throw new RuntimeException("Not implemented.");
     }
 
-    public void handleErrorMessage(){
-        throw new RuntimeException("Not implemetned.");
+    public void handleErrorMessage(ErrorMessage errorMessage){
+        throw new RuntimeException("Not implemented.");
     }
 
     /**
