@@ -17,10 +17,8 @@ import chess.ChessMove;
  */
 public class NotificationHandler {
 
-    private ChessUI chessUI;
 
-    public NotificationHandler(ChessUI chessUI){
-        this.chessUI = chessUI;
+    public NotificationHandler(){
     }
 
     // TODO: this should NOT be using the exclude parameters, that is for the server to handle.

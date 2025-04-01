@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ui.ChessUI;
+import ui.NotificationHandler;
 import ui.ServerFacade;
 import ui.WebSocketFacade;
 
@@ -25,7 +26,7 @@ public class ChessUITests {
         this.board = new ChessBoard();
         this.board.resetBoard();
         this.serverFacade = new ServerFacade("http://localhost:0");
-        this.webSocketFacade = new WebSocketFacade("http://localhost:0");
+        this.webSocketFacade = new WebSocketFacade("http://localhost:0", new NotificationHandler());
         this.client = new ChessClient(this.serverFacade, this.webSocketFacade);
         this.chessUI = new ChessUI(this.serverFacade, this.client);
     }

@@ -5,6 +5,7 @@ import model.AuthData;
 import model.GameMetaData;
 import org.junit.jupiter.api.*;
 import server.Server;
+import ui.NotificationHandler;
 import ui.ServerFacade;
 import ui.WebSocketFacade;
 
@@ -19,7 +20,7 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         serverFacade = new ServerFacade("http://localhost:" + port);
-        webSocketFacade = new WebSocketFacade("http://localhost:" + port);
+        webSocketFacade = new WebSocketFacade("http://localhost:" + port, new NotificationHandler());
         System.out.println("Started test HTTP server on " + port);
     }
 
