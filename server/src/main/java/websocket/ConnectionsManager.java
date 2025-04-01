@@ -1,5 +1,6 @@
 package websocket;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ConnectionsManager {
@@ -31,11 +32,21 @@ public class ConnectionsManager {
     }
 
     public void notifyAllExcept(String exclude){
+        ArrayList<String> allUsersExcept = new ArrayList<String>(this.currentUsers);
 
+        allUsersExcept.remove(exclude);
+        this.notify(allUsersExcept.toArray(new String[0]));
     }
 
     public void notifyAllExcept(String[] excludes){
+        ArrayList<Connection> connectionsExcept = this.connections
+        throw new RuntimeException("Not implemented.");
+    }
 
+    public void notify(String[] usernames){
+        for (String user : usernames){
+            this.notify(user);
+        }
     }
 
     public void notify(String username){
@@ -45,12 +56,7 @@ public class ConnectionsManager {
             // TODO: Do nothing or do something?
             return;
         }
-    }
-
-    public void notify(String[] usernames){
-        for (String user : usernames){
-            this.notify(user);
-        }
+        throw new RuntimeException("Not implemented.");
     }
 
     private Connection getConnectionFromUsername(String username){
