@@ -33,14 +33,20 @@ public class ConnectionsManager {
 
     public void notifyAllExcept(String exclude){
         ArrayList<String> allUsersExcept = new ArrayList<String>(this.currentUsers);
-
         allUsersExcept.remove(exclude);
         this.notify(allUsersExcept.toArray(new String[0]));
     }
 
     public void notifyAllExcept(String[] excludes){
-        ArrayList<Connection> connectionsExcept = this.connections
-        throw new RuntimeException("Not implemented.");
+        ArrayList<String> allUsersExcept = new ArrayList<String>(this.currentUsers);
+
+        for (String user : excludes){
+            try {
+                allUsersExcept.remove(user);
+            } catch (Exception exception){}
+        }
+
+        this.notify(allUsersExcept.toArray(new String[0]));
     }
 
     public void notify(String[] usernames){
