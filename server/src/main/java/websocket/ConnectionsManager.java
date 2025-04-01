@@ -1,6 +1,8 @@
 package websocket;
 
-import java.lang.reflect.Array;
+import com.google.gson.Gson;
+import websocket.messages.NotificationMessage;
+
 import java.util.ArrayList;
 
 public class ConnectionsManager {
@@ -27,17 +29,17 @@ public class ConnectionsManager {
         return this.connections;
     }
 
-    public void notifyAllUsers(){
-        this.notify(this.currentUsers.toArray(new String[0]));
+    public void notifyAllUsers(NotificationMessage notification){
+        this.notify(this.currentUsers.toArray(new String[0]), NotificationMessage notification);
     }
 
-    public void notifyAllExcept(String exclude){
+    public void notifyAllExcept(String exclude, , NotificationMessage notification){
         ArrayList<String> allUsersExcept = new ArrayList<String>(this.currentUsers);
         allUsersExcept.remove(exclude);
-        this.notify(allUsersExcept.toArray(new String[0]));
+        this.notify(allUsersExcept.toArray(new String[0]), NotificationMessage notification);
     }
 
-    public void notifyAllExcept(String[] excludes){
+    public void notifyAllExcept(String[] excludes, NotificationMessage notification){
         ArrayList<String> allUsersExcept = new ArrayList<String>(this.currentUsers);
 
         for (String user : excludes){
@@ -46,21 +48,23 @@ public class ConnectionsManager {
             } catch (Exception exception){}
         }
 
-        this.notify(allUsersExcept.toArray(new String[0]));
+        this.notify(allUsersExcept.toArray(new String[0]), NotificationMessage notification);
     }
 
-    public void notify(String[] usernames){
+    public void notify(String[] usernames, NotificationMessage notification){
         for (String user : usernames){
-            this.notify(user);
+            this.notify(user, notification);
         }
     }
 
-    public void notify(String username){
+    public void notify(String username, NotificationMessage notification){
         Connection connection = this.getConnectionFromUsername(username);
-
         if(connection == null){
             // TODO: Do nothing or do something?
             return;
+        }
+        if (connection.session.isOpen()){
+            connection.send(new Gson().toJson(notification));
         }
         throw new RuntimeException("Not implemented.");
     }
