@@ -40,7 +40,7 @@ public class WebSocketFacade extends Endpoint {
             });
 
         } catch (Exception exception){
-            throw new WebSocketFacadeException(500, "Unknown error occured.");
+            throw new WebSocketFacadeException(500, exception.getMessage());
         }
     }
 
