@@ -2,17 +2,22 @@ package ui;
 
 import chess.ChessGame;
 import chess.ChessPosition;
+import com.google.gson.Gson;
 import exceptions.ServerFacadeException;
 import exceptions.WebSocketFacadeException;
 import model.GameData;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
+import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
 import java.net.URI;
 
 public class WebSocketFacade extends Endpoint {
 
-    Session session;
-    NotificationHandler notificationHandler;
+    private Session session;
+    private NotificationHandler notificationHandler;
     private String webSocketURL;
 
     public WebSocketFacade(String webSocketURL, NotificationHandler notificationHandler) throws WebSocketFacadeException {
@@ -22,10 +27,17 @@ public class WebSocketFacade extends Endpoint {
         try {
             webSocketURL = webSocketURL.replace("http", "ws");
             URI socketURI = new URI(webSocketURL + "/ws");
-            this.notificationHandler = notificationHandler;
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
+
+            this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+                @Override
+                public void onMessage(String message){
+                    notificationHandler.handle(message);
+                }
+
+            });
 
         } catch (Exception exception){
             throw new WebSocketFacadeException(500, "Unknown error occured.");

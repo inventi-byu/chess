@@ -3,6 +3,11 @@ package ui;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import com.google.gson.Gson;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
+import websocket.messages.ServerMessage;
 
 /**
  * When the following events occur, notification messages should be displayed on the screen of each player that is involved in the game (player or observer).
@@ -25,9 +30,38 @@ public class NotificationHandler {
 
     /**
      * Listens for notifications coming from the websocket.
+     * @param message the json of the ServerMessage that came in
      */
-    public void listen(){
+    public void handle(String message){
+        ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+        switch (serverMessage.getServerMessageType()){
+            case LOAD_GAME:
+                LoadGameMessage loadGameMessage = (LoadGameMessage)serverMessage;
+                this.handleLoadGameMessage();
+                break;
+            case NOTIFICATION:
+                NotificationMessage notificationMessage = (NotificationMessage)serverMessage;
+                this.handleNotificationMessage();
+                break;
+            case ERROR:
+                ErrorMessage errorMessage = (ErrorMessage)serverMessage;
+                this.handleErrorMessage();
+                break;
+        }
+
         throw new RuntimeException("Not implemented.");
+    }
+
+    public void handleLoadGameMessage(){
+        throw new RuntimeException("Not implemetned.");
+    }
+
+    public void handleNotificationMessage(){
+        throw new RuntimeException("Not implemetned.");
+    }
+
+    public void handleErrorMessage(){
+        throw new RuntimeException("Not implemetned.");
     }
 
     /**
