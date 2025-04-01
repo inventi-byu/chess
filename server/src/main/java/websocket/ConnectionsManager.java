@@ -15,7 +15,7 @@ public class ConnectionsManager {
         this.connections = new ArrayList<Connection>();
         this.currentUsers = new ArrayList<String>();
     }
-    
+
     public void addConnection(Connection connection){
         this.connections.add(connection);
         this.currentUsers.add(connection.getUsername());
