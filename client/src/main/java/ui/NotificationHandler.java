@@ -48,8 +48,6 @@ public class NotificationHandler {
                 this.handleErrorMessage();
                 break;
         }
-
-        throw new RuntimeException("Not implemented.");
     }
 
     public void handleLoadGameMessage(){
