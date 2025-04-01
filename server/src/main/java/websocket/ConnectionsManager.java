@@ -15,8 +15,7 @@ public class ConnectionsManager {
         this.connections = new ArrayList<Connection>();
         this.currentUsers = new ArrayList<String>();
     }
-
-
+    
     public void addConnection(Connection connection){
         this.connections.add(connection);
         this.currentUsers.add(connection.getUsername());
@@ -59,7 +58,16 @@ public class ConnectionsManager {
     }
 
     public void notify(String username, NotificationMessage notification) throws IOException {
-        throw new RuntimeException("Not implemented.");
+        Connection connection = this.getConnectionFromUsername(username);
+        if(connection == null){
+            // TODO: Do nothing or do something?
+            return;
+        }
+        if (connection.session.isOpen()){
+            connection.send(new Gson().toJson(notification));
+        } else {
+            this.removeConnection(connection);
+        }
     }
 
     private Connection getConnectionFromUsername(String username){
@@ -73,4 +81,8 @@ public class ConnectionsManager {
         return connectionToReturn;
     }
 
+    public void removeConnection(Connection connection){
+        this.connections.remove(connection);
+        this.currentUsers.remove(connection.username);
+    }
 }
