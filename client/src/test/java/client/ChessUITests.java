@@ -3,6 +3,7 @@ package client;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import exceptions.WebSocketFacadeException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,11 @@ public class ChessUITests {
         this.board = new ChessBoard();
         this.board.resetBoard();
         this.serverFacade = new ServerFacade("http://localhost:0");
-        this.webSocketFacade = new WebSocketFacade("http://localhost:0", new NotificationHandler());
+        try {
+            this.webSocketFacade = new WebSocketFacade("http://localhost:0", new NotificationHandler());
+        } catch (WebSocketFacadeException exception) {
+            Assertions.fail(exception);
+        }
         this.client = new ChessClient(this.serverFacade, this.webSocketFacade);
         this.chessUI = new ChessUI(this.serverFacade, this.client);
     }

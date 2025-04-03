@@ -6,6 +6,7 @@ import chess.ChessMove;
 import chess.ChessPosition;
 import exceptions.ChessPositionException;
 import exceptions.ServerFacadeException;
+import exceptions.WebSocketFacadeException;
 import model.AuthData;
 import model.GameData;
 import model.GameMetaData;
@@ -457,7 +458,8 @@ public class ChessClient {
         try{
             this.serverFacade.joinGame(stringTeamColor, curGameID, this.authData.authToken());
 
-            GameData gameData = this.webSocketFacade.joinGame(stringTeamColor, curGameID, this.authData.authToken());
+            this.webSocketFacade.joinGame(this.username, stringTeamColor, curGameID, this.authData.authToken());
+
             // This is for phase 6 to implement gameplay
             //ChessGame tempGameUntilPhaseSix = new ChessGame();
             //GameData tempGameDataUntilPhaseSix = new GameData(0, "NULL", "NULL", "NOT_IMPLEMENTED", tempGameUntilPhaseSix);
@@ -513,7 +515,7 @@ public class ChessClient {
             this.setMenuState(STATE_OBSERVE);
 
             result = "observe";
-        } catch (ServerFacadeException exception){
+        } catch (WebSocketFacadeException exception){
             switch (exception.getStatusCode()){
                 case 401 -> result = "You can\'t observe a game when you\'re logged out!";
                 case 500 -> result = "Failed to observe game " + command[1] + ".";

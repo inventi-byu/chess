@@ -46,9 +46,9 @@ public class WebSocketFacade extends Endpoint {
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig){}
 
-    public void joinGame(String teamColor, Integer gameID, String authToken) throws WebSocketFacadeException {
+    public void joinGame(String username, String teamColor, Integer gameID, String authToken) throws WebSocketFacadeException {
         try {
-            ConnectCommand command = new ConnectCommand(authToken, gameID, teamColor, false);
+            ConnectCommand command = new ConnectCommand(username, authToken, gameID, teamColor, false);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException exception){
             throw new WebSocketFacadeException(500, exception.getMessage());
@@ -56,6 +56,8 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void observeGame(String gameID, String authToken) throws WebSocketFacadeException {
+        return;
+        /*
         try {
             ConnectCommand command = new ConnectCommand(authToken, Integer.parseInt(gameID), null, false);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
@@ -64,7 +66,8 @@ public class WebSocketFacade extends Endpoint {
         }
         return;
         // Not implemented until phase 6
-    }
+        */
+}
 
     public GameData makeMove(ChessGame.TeamColor teamColor, ChessPosition start, ChessPosition end) throws ServerFacadeException {
         throw new ServerFacadeException(0, "Not implemented");

@@ -1,6 +1,7 @@
 package client;
 
 import exceptions.ServerFacadeException;
+import exceptions.WebSocketFacadeException;
 import model.AuthData;
 import model.GameMetaData;
 import org.junit.jupiter.api.*;
@@ -20,7 +21,11 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         serverFacade = new ServerFacade("http://localhost:" + port);
-        webSocketFacade = new WebSocketFacade("http://localhost:" + port, new NotificationHandler());
+        try {
+            webSocketFacade = new WebSocketFacade("http://localhost:" + port, new NotificationHandler());
+        } catch (WebSocketFacadeException exception) {
+            Assertions.fail(exception);
+        }
         System.out.println("Started test HTTP server on " + port);
     }
 
@@ -217,7 +222,11 @@ public class ServerFacadeTests {
             Assertions.assertNotEquals(0, serverFacade.createGame(gameName, authData.authToken()));
 
             // There is nothing to call because this is not implemented until phase 6
-            webSocketFacade.observeGame("0", authData.authToken());
+            try {
+                webSocketFacade.observeGame("0", authData.authToken());
+            } catch (WebSocketFacadeException exception){
+                Assertions.fail(exception);
+            }
             Assertions.assertTrue(true);
         } catch (ServerFacadeException exception) {
             Assertions.fail("Exception thrown for good input. Message:" + exception);
@@ -236,7 +245,11 @@ public class ServerFacadeTests {
             Assertions.assertNotEquals(0, serverFacade.createGame(gameName, authData.authToken()));
 
             // There is nothing to call because this is not implemented until phase 6
-            webSocketFacade.observeGame("0", authData.authToken());
+            try {
+                webSocketFacade.observeGame("0", authData.authToken());
+            } catch (WebSocketFacadeException exception){
+                Assertions.fail(exception);
+            }
             boolean observeWorked = true;
             Assertions.assertTrue(observeWorked);
         } catch (ServerFacadeException exception) {

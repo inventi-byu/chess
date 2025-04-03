@@ -2,6 +2,7 @@ package websocket;
 
 import com.google.gson.Gson;
 import websocket.messages.NotificationMessage;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,17 +30,17 @@ public class ConnectionsManager {
         return this.connections;
     }
 
-    public void notifyAllUsers(NotificationMessage notification) throws IOException {
+    public void notifyAllUsers(ServerMessage notification) throws IOException {
         this.notify(this.currentUsers.toArray(new String[0]), notification);
     }
 
-    public void notifyAllExcept(String exclude, NotificationMessage notification) throws IOException {
+    public void notifyAllExcept(String exclude, ServerMessage notification) throws IOException {
         ArrayList<String> allUsersExcept = new ArrayList<String>(this.currentUsers);
         allUsersExcept.remove(exclude);
         this.notify(allUsersExcept.toArray(new String[0]), notification);
     }
 
-    public void notifyAllExcept(String[] excludes, NotificationMessage notification) throws IOException {
+    public void notifyAllExcept(String[] excludes, ServerMessage notification) throws IOException {
         ArrayList<String> allUsersExcept = new ArrayList<String>(this.currentUsers);
 
         for (String user : excludes){
@@ -51,13 +52,13 @@ public class ConnectionsManager {
         this.notify(allUsersExcept.toArray(new String[0]), notification);
     }
 
-    public void notify(String[] usernames, NotificationMessage notification) throws IOException {
+    public void notify(String[] usernames, ServerMessage notification) throws IOException {
         for (String user : usernames){
             this.notify(user, notification);
         }
     }
 
-    public void notify(String username, NotificationMessage notification) throws IOException {
+    public void notify(String username, ServerMessage notification) throws IOException {
         Connection connection = this.getConnectionFromUsername(username);
         if(connection == null){
             // TODO: Do nothing or do something?
