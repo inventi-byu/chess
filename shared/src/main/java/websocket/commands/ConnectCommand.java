@@ -10,9 +10,6 @@ public class ConnectCommand extends UserGameCommand {
         this.observing = observing;
         this.username = username;
     }
-    public ConnectCommand(){
-        super(CommandType.CONNECT);
-    }
 
     public String getTeamColor(){
         return this.teamColor;

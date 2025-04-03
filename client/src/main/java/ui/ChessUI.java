@@ -40,10 +40,7 @@ public class ChessUI {
 
     private Random rand;
 
-    private ServerFacade serverFacade;
-
-    public ChessUI(ServerFacade serverFacade, ChessClient client) {
-        this.serverFacade = serverFacade;
+    public ChessUI(ChessClient client) {
         this.client = client;
 
         this.menuBGColor = EscapeSequences.SET_BG_COLOR_BLACK;

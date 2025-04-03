@@ -709,4 +709,8 @@ public class ChessClient {
         this.setObservingBoard(null);
         return;
     }
+
+    public void updateWebSocketFacade(WebSocketFacade updatedWebSocketFacade){
+        this.webSocketFacade = updatedWebSocketFacade;
+    }
 }

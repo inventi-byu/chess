@@ -10,8 +10,4 @@ public class MakeMoveCommand extends UserGameCommand {
         this.move = move;
     }
 
-    public MakeMoveCommand(ChessMove move){
-        super(CommandType.MAKE_MOVE);
-        this.move = move;
-    }
 }
