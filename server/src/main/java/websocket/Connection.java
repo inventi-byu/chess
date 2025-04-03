@@ -1,6 +1,7 @@
 package websocket;
 
-import javax.websocket.Session;
+import org.eclipse.jetty.websocket.api.Session;
+
 import java.io.IOException;
 
 public class Connection {
@@ -29,7 +30,7 @@ public class Connection {
     }
 
     public void send(String message) throws IOException {
-        this.session.getBasicRemote().sendText(message);
+        this.session.getRemote().sendString(message);
     }
 
 }

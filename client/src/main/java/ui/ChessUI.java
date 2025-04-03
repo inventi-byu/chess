@@ -12,7 +12,7 @@ import model.GameMetaData;
 
 public class ChessUI {
 
-    private ChessClient client;
+    public ChessClient client;
 
     private static final String SPACE = " ";
     private static final String EMPTY_SPACE = "   ";

@@ -24,9 +24,11 @@ import websocket.messages.ServerMessage;
 public class NotificationHandler {
 
     private GameData currentGameData;
+    private ChessUI chessUI;
 
-    public NotificationHandler(){
+    public NotificationHandler(ChessUI chessUI){
         this.currentGameData = null;
+        this.chessUI = chessUI;
     }
 
     // TODO: this should NOT be using the exclude parameters, that is for the server to handle.
@@ -54,6 +56,13 @@ public class NotificationHandler {
     }
 
     public void handleLoadGameMessage(LoadGameMessage loadGameMessage){
+        this.currentGameData = loadGameMessage.getGame();
+        if(loadGameMessage.isObserving()){
+            this.chessUI.client.updateObservingGameInfo(currentGameData);
+        } else {
+            this.chessUI.client.updateGameInfo(currentGameData);
+        }
+
         throw new RuntimeException("Not implemented.");
     }
 

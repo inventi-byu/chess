@@ -4,10 +4,12 @@ import model.GameData;
 
 public class LoadGameMessage extends ServerMessage {
     private GameData game;
+    private boolean observing;
 
-    public LoadGameMessage(GameData game){
+    public LoadGameMessage(GameData game, Boolean observing){
         super(ServerMessageType.LOAD_GAME);
         this.game = game;
+        this.observing = observing;
     }
 
     public void setGame(GameData game){
@@ -16,6 +18,10 @@ public class LoadGameMessage extends ServerMessage {
 
     public GameData getGame(){
         return this.game;
+    }
+
+    public boolean isObserving(){
+        return observing;
     }
 
     @Override

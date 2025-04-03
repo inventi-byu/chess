@@ -672,7 +672,8 @@ public class ChessClient {
         return new ChessPosition(row, col);
     }
 
-    private void updateGameInfo(GameData newGameData) {
+    // Public because they are used by the NotificationHandler
+    public void updateGameInfo(GameData newGameData) {
         ChessGame updatedGame = newGameData.game();
         ChessBoard updatedBoard = updatedGame.getBoard();
         int updatedGameID = newGameData.gameID();
@@ -684,7 +685,7 @@ public class ChessClient {
         return;
     }
 
-    private void updateObservingGameInfo(GameData newObservingGameData) {
+    public void updateObservingGameInfo(GameData newObservingGameData) {
         ChessGame updatedObservingGame = newObservingGameData.game();
         ChessBoard updatedObservingBoard = updatedObservingGame.getBoard();
 
@@ -694,7 +695,7 @@ public class ChessClient {
         return;
     }
 
-    private void clearGameInfo(){
+    public void clearGameInfo(){
         this.setGameData(null);
         this.setGame(null);
         this.setBoard(null);
@@ -702,7 +703,7 @@ public class ChessClient {
         return;
     }
 
-    private void clearObservingGameInfo(){
+    public void clearObservingGameInfo(){
         this.setObservingGameData(null);
         this.setObservingGame(null);
         this.setObservingBoard(null);

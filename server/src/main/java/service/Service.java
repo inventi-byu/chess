@@ -11,7 +11,7 @@ public class Service {
 
     protected AuthDAO authDAO;
     protected UserDAO userDAO;
-    protected GameDAO gameDAO;
+    public GameDAO gameDAO;
 
     protected AdminDAO adminDAO;
 

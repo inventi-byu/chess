@@ -1,23 +1,29 @@
 package websocket;
 
 import com.google.gson.Gson;
-import org.eclipse.jetty.websocket.api.Session;
+import model.AuthData;
+
+import model.GameData;
 import org.eclipse.jetty.websocket.api.WebSocketException;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import service.UserService;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.api.Session;
+import server.service.exception.ResponseException;
+import service.GameService;
 import websocket.commands.*;
 import websocket.messages.ErrorMessage;
-import websocket.messages.NotificationMessage;
+import websocket.messages.LoadGameMessage;
 
 import java.io.IOException;
 
+@WebSocket
 public class WebSocketHandler {
-    UserService userService;
+    GameService gameService;
 
     private final ConnectionsManager connections = new ConnectionsManager();
 
-    public WebSocketHandler(UserService userService){
-        this.userService = userService;
+    public WebSocketHandler(GameService gameService){
+        this.gameService = gameService;
     }
 
     @OnWebSocketMessage
@@ -26,7 +32,7 @@ public class WebSocketHandler {
         switch (userCommand.getCommandType()){
             case CONNECT -> {
                 ConnectCommand command = new Gson().fromJson(message, ConnectCommand.class);
-                this.connectUser(command);
+                this.connectUser(session, command);
             }
             case MAKE_MOVE -> {
                 MakeMoveCommand command = new Gson().fromJson(message, MakeMoveCommand.class);
@@ -43,10 +49,45 @@ public class WebSocketHandler {
         }
     }
 
-    public void connectUser(ConnectCommand command){
-        if(command.getGameID() == null || command.getAuthToken() == null){
-            this.sendError("Invalid gameID.", command.getUsername());
+    public void connectUser(Session session, ConnectCommand command){
+        if (command.getUsername() == null){
+            try {
+                session.getRemote().sendString(new Gson().toJson(
+                        new ErrorMessage("You don't have a username, are you logged in?"))
+                );
+            } catch (IOException exception){
+                throw new ResponseException(0, exception.getMessage());
+            }
         }
+        String username = command.getUsername();
+        if(command.getGameID() == null){
+            this.sendError("Invalid gameID.", username);
+        }
+        if(command.getAuthToken() == null) {
+            this.sendError("Invalid credentials.", username);
+        }
+        // Authenticate
+        AuthData authData = null;
+        try{
+            authData = this.gameService.authenticateWithToken(command.getAuthToken());
+
+            // Add the connection
+            this.connections.addConnection(new Connection(username, session));
+
+            // Get the GameData
+            GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
+            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
+
+            this.connections.notify(username, loadGameMessage);
+
+        } catch (ResponseException exception) {
+            this.sendError("Invalid credentials.", username);
+
+        } catch (IOException exception){
+            this.sendError("Sorry could not connect to game.", username);
+        }
+
+
         throw new RuntimeException("Not implemented.");
     }
 

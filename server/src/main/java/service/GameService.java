@@ -93,7 +93,6 @@ public class GameService extends Service {
             default:
                 throw new ResponseException(400, "Error: bad request");
         }
-
     }
 }
 
