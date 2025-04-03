@@ -19,7 +19,7 @@ public class UserGameCommand {
         this.authToken = authToken;
         this.gameID = gameID;
     }
-    
+
     public enum CommandType {
         CONNECT,
         MAKE_MOVE,

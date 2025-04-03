@@ -16,6 +16,7 @@ import service.GameService;
 import server.service.exception.ResponseException;
 
 import spark.*;
+import websocket.WebSocketHandler;
 
 
 public class Server {
@@ -36,6 +37,8 @@ public class Server {
     private SessionHandler sessionHandler;
     private GameHandler gameHandler;
 
+    private WebSocketHandler webSocketHandler;
+
     public Server(){
 
         this.authDAO = new MySQLAuthDAO();
@@ -53,6 +56,8 @@ public class Server {
         this.userHandler = new UserHandler(this.userService);
         this.sessionHandler = new SessionHandler(this.loginService, this.logoutService);
         this.gameHandler = new GameHandler(this.gameService);
+
+        this.webSocketHandler = new WebSocketHandler(this.gameService);
     }
 
     public int run(int desiredPort) {

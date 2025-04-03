@@ -76,7 +76,7 @@ public class WebSocketHandler {
 
             // Get the GameData
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
-            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
+            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData, command.isObserving());
 
             this.connections.notify(username, loadGameMessage);
 

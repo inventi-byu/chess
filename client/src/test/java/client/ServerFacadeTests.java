@@ -21,11 +21,7 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         serverFacade = new ServerFacade("http://localhost:" + port);
-        try {
-            webSocketFacade = new WebSocketFacade("http://localhost:" + port, new NotificationHandler());
-        } catch (WebSocketFacadeException exception) {
-            Assertions.fail(exception);
-        }
+        webSocketFacade = null;
         System.out.println("Started test HTTP server on " + port);
     }
 

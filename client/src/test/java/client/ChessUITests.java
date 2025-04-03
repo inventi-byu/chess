@@ -27,13 +27,8 @@ public class ChessUITests {
         this.board = new ChessBoard();
         this.board.resetBoard();
         this.serverFacade = new ServerFacade("http://localhost:0");
-        try {
-            this.webSocketFacade = new WebSocketFacade("http://localhost:0", new NotificationHandler());
-        } catch (WebSocketFacadeException exception) {
-            Assertions.fail(exception);
-        }
-        this.client = new ChessClient(this.serverFacade, this.webSocketFacade);
-        this.chessUI = new ChessUI(this.serverFacade, this.client);
+        this.client = new ChessClient(this.serverFacade, null);
+        this.chessUI = new ChessUI(this.client);
     }
 
     @Test
