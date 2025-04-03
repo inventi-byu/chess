@@ -11,4 +11,12 @@ public class ConnectCommand extends UserGameCommand {
     public ConnectCommand(){
         super(CommandType.CONNECT);
     }
+
+    public String getTeamColor(){
+        return this.teamColor;
+    }
+
+    public boolean isObserving(){
+        return this.observing;
+    }
 }

@@ -34,6 +34,7 @@ public class WebSocketHandler {
     }
 
     public void connectUser(ConnectCommand command){
+        if(command.getGameID() == null || command.getAuthToken())
         throw new RuntimeException("Not implemented.");
     }
 

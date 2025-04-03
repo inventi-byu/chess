@@ -7,10 +7,6 @@ import exceptions.ServerFacadeException;
 import exceptions.WebSocketFacadeException;
 import model.GameData;
 import websocket.commands.ConnectCommand;
-import websocket.messages.ErrorMessage;
-import websocket.messages.LoadGameMessage;
-import websocket.messages.NotificationMessage;
-import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -59,7 +55,13 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void observeGame(String gameID, String authToken) throws ServerFacadeException {
+    public void observeGame(String gameID, String authToken) throws WebSocketFacadeException {
+        try {
+            ConnectCommand command = new ConnectCommand(authToken, Integer.parseInt(gameID), null, false);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException exception){
+            throw new WebSocketFacadeException(500, exception.getMessage());
+        }
         return;
         // Not implemented until phase 6
     }
