@@ -557,11 +557,11 @@ public class ChessClient {
         try {
             ChessPosition start = this.locationToPosition(command[1]);
             ChessPosition end = this.locationToPosition(command[2]);
-            GameData newGameData = this.webSocketFacade.makeMove(this.getTeamColor(), start, end);
-            this.updateGameInfo(newGameData);
+            // TODO: Add promotion piece logic (it would be required in the command)
+            this.webSocketFacade.makeMove(this.authData, this.gameID, this.teamColor, start, end, null);
         } catch (ChessPositionException exception) {
             return "Sorry that move is not valid. Check your position notation: each position should start with a letter from a to h, and end with a number from 1 to 8.";
-        } catch (ServerFacadeException exception) {
+        } catch (WebSocketFacadeException exception) {
             return "Sorry that move is not valid. Did you include a start and end position?";
         }
         return "move";

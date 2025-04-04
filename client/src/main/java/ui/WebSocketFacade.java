@@ -1,12 +1,16 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
 import chess.ChessPosition;
 import com.google.gson.Gson;
 import exceptions.ServerFacadeException;
 import exceptions.WebSocketFacadeException;
+import model.AuthData;
 import model.GameData;
 import websocket.commands.ConnectCommand;
+import websocket.commands.MakeMoveCommand;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -69,8 +73,13 @@ public class WebSocketFacade extends Endpoint {
         */
 }
 
-    public GameData makeMove(ChessGame.TeamColor teamColor, ChessPosition start, ChessPosition end) throws ServerFacadeException {
-        throw new ServerFacadeException(0, "Not implemented");
+    public void makeMove(AuthData authData, Integer gameID, ChessGame.TeamColor teamColor, ChessPosition start, ChessPosition end, ChessPiece.PieceType promotionPiece) throws WebSocketFacadeException {
+        try {
+            MakeMoveCommand command = new MakeMoveCommand(authData.username(), teamColor, new ChessMove(start, end, promotionPiece),authData.authToken(), gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException exception){
+            throw new WebSocketFacadeException(500, exception.getMessage());
+        }
     }
 
     public void leaveGame(String authToken, String username) throws ServerFacadeException {
