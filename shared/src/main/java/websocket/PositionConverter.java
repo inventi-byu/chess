@@ -49,4 +49,38 @@ public class PositionConverter {
         return new ChessPosition(row, col);
     }
 
+    /**
+     * Convert a ChessPosition to a location (i.e. "a1")
+     * @param position the ChessPosition to convert
+     * @return a String version of the position as a chess location (i.e. "a1")
+     * @throws ChessPositionException
+     */
+    private static String positionToLocation(ChessPosition position) throws ChessPositionException {
+        int row = position.getRow();
+        int col = position.getColumn();
+        StringBuilder sb = new StringBuilder();
+        try {
+            // Convert col number to letter
+            switch (col) {
+                case 1 -> sb.append("a");
+                case 2 -> sb.append("b");
+                case 3 -> sb.append("c");
+                case 4 -> sb.append("d");
+                case 5 -> sb.append("e");
+                case 6 -> sb.append("f");
+                case 7 -> sb.append("g");
+                case 8 -> sb.append("h");
+                default -> {
+                    throw new ChessPositionException("Invalid position.");
+                }
+            }
+            sb.append(row);
+            return sb.toString();
+
+        } catch (Exception exception) {
+            throw new ChessPositionException("Invalid position");
+        }
+    }
+
+
 }
