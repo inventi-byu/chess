@@ -59,11 +59,10 @@ public class NotificationHandler {
         this.currentGameData = loadGameMessage.getGame();
         if(loadGameMessage.isObserving()){
             this.chessUI.client.updateObservingGameInfo(currentGameData);
+            this.chessUI.displayChessBoard(currentGameData.game().getBoard(), );
         } else {
             this.chessUI.client.updateGameInfo(currentGameData);
         }
-
-        throw new RuntimeException("Not implemented.");
     }
 
     public void handleNotificationMessage(NotificationMessage notificationMessage){

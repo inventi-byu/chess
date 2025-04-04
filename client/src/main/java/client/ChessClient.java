@@ -15,6 +15,7 @@ import ui.WebSocketFacade;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class ChessClient {
     private String loginStatus;
@@ -459,6 +460,8 @@ public class ChessClient {
             this.serverFacade.joinGame(stringTeamColor, curGameID, this.authData.authToken());
 
             this.webSocketFacade.joinGame(this.username, stringTeamColor, curGameID, this.authData.authToken());
+
+            TimeUnit.SECONDS.sleep(5);
 
             if (stringTeamColor.equals("WHITE")){
                 this.setTeamColor(ChessGame.TeamColor.WHITE);
