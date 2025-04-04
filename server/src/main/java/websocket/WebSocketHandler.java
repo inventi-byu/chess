@@ -86,9 +86,6 @@ public class WebSocketHandler {
         } catch (IOException exception){
             this.sendError("Sorry could not connect to game.", username);
         }
-
-
-        throw new RuntimeException("Not implemented.");
     }
 
     public void makeMove(MakeMoveCommand command){

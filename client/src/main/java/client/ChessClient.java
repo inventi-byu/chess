@@ -460,13 +460,6 @@ public class ChessClient {
 
             this.webSocketFacade.joinGame(this.username, stringTeamColor, curGameID, this.authData.authToken());
 
-            // This is for phase 6 to implement gameplay
-            //ChessGame tempGameUntilPhaseSix = new ChessGame();
-            //GameData tempGameDataUntilPhaseSix = new GameData(0, "NULL", "NULL", "NOT_IMPLEMENTED", tempGameUntilPhaseSix);
-            //this.updateGameInfo(tempGameDataUntilPhaseSix);
-
-            this.updateGameInfo(gameData);
-
             if (stringTeamColor.equals("WHITE")){
                 this.setTeamColor(ChessGame.TeamColor.WHITE);
             } else {
