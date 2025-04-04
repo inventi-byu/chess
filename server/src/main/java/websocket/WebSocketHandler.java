@@ -1,5 +1,7 @@
 package websocket;
 
+import chess.ChessMove;
+import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import model.AuthData;
@@ -155,6 +157,8 @@ public class WebSocketHandler {
             this.gameService.gameDAO.updateGame(gameData);
 
             LoadGameMessage loadGameMessagePlayers = new LoadGameMessage(gameData, false);
+
+            // TODO: Load game from observers
             LoadGameMessage loadGameMessageObservers = new LoadGameMessage(gameData, true);
 
             this.connections.notify(username, loadGameMessagePlayers);
@@ -165,8 +169,11 @@ public class WebSocketHandler {
             String teamColor = command.getTeamColor();
             String message = "";
 
+            ChessMove move = command.getMove();
+            String start =
+
             if (teamColor != null) {
-                message = username + " joined the game as " + teamColor + "!";
+                message = username + "made a move from " + start + " to " + end + ".";
                 if (teamColor.equals("WHITE")) {
                     opponentUsername = gameData.blackUsername();
                 } else {
