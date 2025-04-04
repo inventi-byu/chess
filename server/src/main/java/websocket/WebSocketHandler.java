@@ -190,6 +190,7 @@ public class WebSocketHandler {
                     opponentUsername = gameData.whiteUsername();
                 }
                 if (opponentUsername != null) {
+                    this.connections.notify(opponentUsername, loadGameMessagePlayers);
                     this.connections.notify(opponentUsername, new NotificationMessage(message));
                     String[] observerList = {};
                     this.connections.notify(observerList, new NotificationMessage(message));
