@@ -16,6 +16,8 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebSocket
 public class WebSocketHandler {
@@ -102,6 +104,13 @@ public class WebSocketHandler {
             } else {
                 // The person who joined is observing
                 message = username + " joined the game as an observer!";
+                ArrayList<String> notifyList = new ArrayList<>();
+                notifyList.add(gameData.whiteUsername());
+                notifyList.add(gameData.blackUsername());
+                String[] observerList = {};
+                notifyList.addAll(List.of(observerList));
+
+                this.connections.notify(notifyList.toArray(new String[0]), new NotificationMessage(message));
             }
 
         } catch (ResponseException exception) {
