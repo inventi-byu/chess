@@ -13,6 +13,7 @@ import service.GameService;
 import websocket.commands.*;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 
 import java.io.IOException;
 
@@ -79,6 +80,18 @@ public class WebSocketHandler {
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData, command.isObserving());
 
             this.connections.notify(username, loadGameMessage);
+
+            // Notify that someone joined
+            // TODO: Right now this only works for those who joined, not including the people who are observing
+            String opponentUsername = null;
+            if(command.getTeamColor().equals("WHITE")) {
+                opponentUsername = gameData.blackUsername();
+            } else{
+                opponentUsername = gameData.blackUsername();
+            }
+            if (opponentUsername != null){
+                this.connections.notify(opponentUsername, new NotificationMessage(username + " joined the game!"));
+            }
 
         } catch (ResponseException exception) {
             this.sendError("Invalid credentials.", username);
