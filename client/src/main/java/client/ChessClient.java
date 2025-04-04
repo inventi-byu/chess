@@ -461,7 +461,7 @@ public class ChessClient {
 
             this.webSocketFacade.joinGame(this.username, stringTeamColor, curGameID, this.authData.authToken());
 
-            TimeUnit.SECONDS.sleep(5);
+            //TimeUnit.SECONDS.sleep(5);
 
             if (stringTeamColor.equals("WHITE")){
                 this.setTeamColor(ChessGame.TeamColor.WHITE);

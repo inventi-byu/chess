@@ -259,7 +259,7 @@ public class ChessUI {
     }
 
     public void displayGameMenu(ChessBoard board, ChessGame.TeamColor perspective) {
-        this.displayChessBoard(board, perspective,null);
+        //this.displayChessBoard(board, perspective,null);
     }
 
     public void displayPrompt(){
