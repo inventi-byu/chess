@@ -87,7 +87,7 @@ public class WebSocketHandler {
             if(command.getTeamColor().equals("WHITE")) {
                 opponentUsername = gameData.blackUsername();
             } else{
-                opponentUsername = gameData.blackUsername();
+                opponentUsername = gameData.whiteUsername();
             }
             if (opponentUsername != null){
                 this.connections.notify(opponentUsername, new NotificationMessage(username + " joined the game!"));

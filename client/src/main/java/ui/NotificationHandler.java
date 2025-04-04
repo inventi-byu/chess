@@ -71,7 +71,9 @@ public class NotificationHandler {
     }
 
     public void handleNotificationMessage(NotificationMessage notificationMessage){
-        throw new RuntimeException("Not implemented.");
+        this.chessUIdisplayln("");
+        this.chessUI.displayln(notificationMessage.getMessage());
+        this.chessUI.displayPrompt();
     }
 
     public void handleErrorMessage(ErrorMessage errorMessage){
