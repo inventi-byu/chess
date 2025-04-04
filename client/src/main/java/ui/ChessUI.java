@@ -159,7 +159,7 @@ public class ChessUI {
 
                     case "move":
                         // Just reprint the chessboard with a fun message
-                        this.displayChessBoard(client.getBoard(), client.getTeamColor(), null);
+                        //this.displayChessBoard(client.getBoard(), client.getTeamColor(), null);
 
                         switch (this.rand.nextInt(5)){
                             case 0 -> this.println("You moved! One more move towards chess victory!");

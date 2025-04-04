@@ -1,5 +1,6 @@
 package websocket;
 
+import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
 import chess.InvalidMoveException;
@@ -150,7 +151,15 @@ public class WebSocketHandler {
             // Get the GameData
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
             try {
+
+                // Make the move and set the new team turn
                 gameData.game().makeMove(command.getMove());
+                if (command.getTeamColor().equals("WHITE")){
+                    gameData.game().setTeamTurn(ChessGame.TeamColor.BLACK);
+                } else {
+                    gameData.game().setTeamTurn(ChessGame.TeamColor.WHITE);
+                }
+
             } catch (InvalidMoveException exception){
                 this.sendError("Invalid move.", username);
             }
