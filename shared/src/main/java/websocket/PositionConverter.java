@@ -1,6 +1,7 @@
 package websocket;
 
 import chess.ChessPosition;
+import websocket.exception.ChessPositionException;
 
 public class PositionConverter {
 
@@ -47,5 +48,5 @@ public class PositionConverter {
 
         return new ChessPosition(row, col);
     }
-    
+
 }

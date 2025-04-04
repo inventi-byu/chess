@@ -4,7 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
-import exceptions.ChessPositionException;
+import websocket.exception.ChessPositionException;
 import exceptions.ServerFacadeException;
 import exceptions.WebSocketFacadeException;
 import model.AuthData;
@@ -15,7 +15,6 @@ import ui.WebSocketFacade;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 public class ChessClient {
     private String loginStatus;

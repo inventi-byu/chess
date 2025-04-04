@@ -1,4 +1,4 @@
-package exceptions;
+package websocket.exception;
 
 /**
  * A special exception class to handle invalid positions in the client code.
