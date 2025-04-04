@@ -85,16 +85,23 @@ public class WebSocketHandler {
             // TODO: Right now this only works for those who joined, not including the people who are observing
             String opponentUsername = null;
             String teamColor = command.getTeamColor();
+            String message = "";
 
             if (teamColor != null) {
+                message = username + " joined the game as " + teamColor + "!";
                 if (teamColor.equals("WHITE")) {
                     opponentUsername = gameData.blackUsername();
                 } else {
                     opponentUsername = gameData.whiteUsername();
                 }
                 if (opponentUsername != null) {
-                    this.connections.notify(opponentUsername, new NotificationMessage(username + " joined the game as " + teamColor + "!"));
+                    this.connections.notify(opponentUsername, new NotificationMessage(message));
+                    String[] observerList = {};
+                    this.connections.notify(observerList, new NotificationMessage(message));
                 }
+            } else {
+                // The person who joined is observing
+                message = username + " joined the game as an observer!";
             }
 
         } catch (ResponseException exception) {
