@@ -622,4 +622,12 @@ public class ChessUI {
         return rowTilesToHighlightAsList.toArray(new ChessPosition[0]);
     }
 
+    public void displayln(String string){
+        this.println(string);
+    }
+
+    public void display(String string){
+        this.print(string);
+    }
+
 }

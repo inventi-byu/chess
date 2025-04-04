@@ -58,12 +58,15 @@ public class NotificationHandler {
     public void handleLoadGameMessage(LoadGameMessage loadGameMessage){
         this.currentGameData = loadGameMessage.getGame();
         if(loadGameMessage.isObserving()){
-            this.chessUI.client.updateObservingGameInfo(currentGameData);
-            //this.chessUI.displayln();
+            this.chessUI.client.updateObservingGameInfo(this.currentGameData);
+            this.chessUI.displayln("");
             this.chessUI.displayChessBoard(this.chessUI.client.getObservingBoard(), ChessGame.TeamColor.WHITE, null);
+            this.chessUI.displayPrompt();
         } else {
-            this.chessUI.client.updateGameInfo(currentGameData);
+            this.chessUI.client.updateGameInfo(this.currentGameData);
+            this.chessUI.displayln("");
             this.chessUI.displayChessBoard(this.chessUI.client.getBoard(), this.chessUI.client.getTeamColor(), null);
+            this.chessUI.displayPrompt();
         }
     }
 
