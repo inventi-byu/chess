@@ -71,7 +71,7 @@ public class NotificationHandler {
     }
 
     public void handleNotificationMessage(NotificationMessage notificationMessage){
-        this.chessUIdisplayln("");
+        this.chessUI.displayln("");
         this.chessUI.displayln(notificationMessage.getMessage());
         this.chessUI.displayPrompt();
     }
