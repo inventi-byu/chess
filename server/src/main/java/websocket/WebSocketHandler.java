@@ -170,10 +170,11 @@ public class WebSocketHandler {
             String message = "";
 
             ChessMove move = command.getMove();
-            String start =
+            String start = PositionConverter.positionToLocation(move.getStartPosition());
+            String end = PositionConverter.positionToLocation(move.getEndPosition());
 
+            message = username + "made a move from " + start + " to " + end + ".";
             if (teamColor != null) {
-                message = username + "made a move from " + start + " to " + end + ".";
                 if (teamColor.equals("WHITE")) {
                     opponentUsername = gameData.blackUsername();
                 } else {
@@ -186,7 +187,6 @@ public class WebSocketHandler {
                 }
             } else {
                 // The person who joined is observing
-                message = username + " joined the game as an observer!";
                 ArrayList<String> notifyList = new ArrayList<>();
                 notifyList.add(gameData.whiteUsername());
                 notifyList.add(gameData.blackUsername());

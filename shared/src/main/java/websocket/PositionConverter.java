@@ -5,7 +5,7 @@ import websocket.exception.ChessPositionException;
 
 public class PositionConverter {
 
-    private static ChessPosition locationToPosition(String location) throws ChessPositionException {
+    public static ChessPosition locationToPosition(String location) throws ChessPositionException {
         // Convert to lowercase in case
         location = location.toLowerCase();
         char[] locationAsArray = location.toCharArray();
@@ -55,7 +55,7 @@ public class PositionConverter {
      * @return a String version of the position as a chess location (i.e. "a1")
      * @throws ChessPositionException
      */
-    private static String positionToLocation(ChessPosition position) throws ChessPositionException {
+    public static String positionToLocation(ChessPosition position) throws ChessPositionException {
         int row = position.getRow();
         int col = position.getColumn();
         StringBuilder sb = new StringBuilder();

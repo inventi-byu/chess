@@ -87,4 +87,16 @@ public class MemoryGameDAO implements GameDAO {
     public void clearGameTable(){
         this.gameDB = new ArrayList<GameData>();
     }
+
+
+    public boolean updateGame(GameData gameData){
+        for (GameData game : this.gameDB){
+            if (game.gameID() == gameData.gameID()){
+                gameDB.remove(game);
+                gameDB.add(gameData);
+                return true;
+            }
+        }
+        return false;
+    }
 }

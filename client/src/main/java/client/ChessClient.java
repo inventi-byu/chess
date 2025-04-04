@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
+import websocket.PositionConverter;
 import websocket.exception.ChessPositionException;
 import exceptions.ServerFacadeException;
 import exceptions.WebSocketFacadeException;
@@ -530,7 +531,7 @@ public class ChessClient {
         }
         String chessStylePosition = command[1];
         try {
-            ChessPosition position = this.locationToPosition(chessStylePosition);
+            ChessPosition position = PositionConverter.locationToPosition(chessStylePosition);
             this.setHighlightPosition(position);
         } catch (ChessPositionException exception){
             return "Sorry, \"" + chessStylePosition + "\" is not valid position.";
@@ -554,8 +555,8 @@ public class ChessClient {
             return "Could not observe chess game. Did you forget to enter the game id?";
         }
         try {
-            ChessPosition start = this.locationToPosition(command[1]);
-            ChessPosition end = this.locationToPosition(command[2]);
+            ChessPosition start = PositionConverter.locationToPosition(command[1]);
+            ChessPosition end = PositionConverter.locationToPosition(command[2]);
             // TODO: Add promotion piece logic (it would be required in the command)
             this.webSocketFacade.makeMove(this.authData, this.gameID, this.teamColor, start, end, null);
         } catch (ChessPositionException exception) {
@@ -621,50 +622,6 @@ public class ChessClient {
             // There are no moves
             return null;
         }
-    }
-
-    private ChessPosition locationToPosition(String location) throws ChessPositionException {
-        // Convert to lowercase in case
-        location = location.toLowerCase();
-        char[] locationAsArray = location.toCharArray();
-        if (locationAsArray.length != 2){
-            throw new ChessPositionException("Invalid notation.");
-        }
-        int row = 0;
-        int col = 0;
-        try {
-            // Convert letter to number
-            switch (locationAsArray[0]) {
-                case 'a' -> col = 1;
-                case 'b' -> col = 2;
-                case 'c' -> col = 3;
-                case 'd' -> col = 4;
-                case 'e' -> col = 5;
-                case 'f' -> col = 6;
-                case 'g' -> col = 7;
-                case 'h' -> col = 8;
-                default -> {
-                    throw new ChessPositionException("Invalid notation.");
-                }
-            }
-            switch (locationAsArray[1]) {
-                case '1' -> row = 1;
-                case '2' -> row = 2;
-                case '3' -> row = 3;
-                case '4' -> row = 4;
-                case '5' -> row = 5;
-                case '6' -> row = 6;
-                case '7' -> row = 7;
-                case '8' -> row = 8;
-                default -> {
-                    throw new ChessPositionException("Invalid notation");
-                }
-            }
-        } catch (ArrayIndexOutOfBoundsException exception) {
-            throw new ChessPositionException("Invalid notation");
-        }
-
-        return new ChessPosition(row, col);
     }
 
     // Public because they are used by the NotificationHandler

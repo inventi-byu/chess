@@ -35,4 +35,11 @@ public interface GameDAO {
      * @return true if the user was added to the game.
      */
     public boolean addUserToGame(int gameID, String playerColor, String username);
+
+    /**
+     * Updates the game information in the game database.
+     * @param gameData the gameData with the information
+     * @return true if the game was successfully updated.
+     */
+    public boolean updateGame(GameData gameData);
 }

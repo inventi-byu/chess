@@ -134,4 +134,21 @@ public class MySQLGameDAO implements GameDAO {
             );
         }
     }
+
+    public boolean updateGame(GameData gameData){
+        String statement = "UPDATE " + GAME_TABLE + " SET " +
+                GAME_TABLE_GAME +
+                "=? WHERE " + GAME_TABLE_GAME_ID + "=?;";
+        try {
+            DatabaseManager.updateDB(statement, gameData.game(), gameData.gameID());
+            return true;
+
+        } catch (DataAccessException exception){
+            throw new ResponseException(500, String.format("Could not update game with id %s. " +
+                            "Message from database: %s",
+                    gameData.gameID(),
+                    exception)
+            );
+        }
+    }
 }
