@@ -75,7 +75,7 @@ public class ConnectionsManager {
         if (connection.session.isOpen()){
             connection.send(new Gson().toJson(notification));
         } else {
-            this.removeConnection(connection);
+            this.removeConnection(username);
         }
     }
 

@@ -277,7 +277,7 @@ public class WebSocketHandler {
 
             // Remove the connection after notifying the user that the connection is closed
             this.connections.removeConnection(username);
-            this.gameService.gameDAO.removeUserFromGame(username);
+            this.gameService.gameDAO.removeUserFromGame(command.getGameID(), username);
 
             // Notify that someone left
             String opponentUsername = null;

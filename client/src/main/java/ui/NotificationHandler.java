@@ -72,6 +72,7 @@ public class NotificationHandler {
             }
             this.chessUI.displayPostLoginMenu();
             this.chessUI.displayHelpPostLogin();
+            this.chessUI.displayPrompt();
             return;
         }
 

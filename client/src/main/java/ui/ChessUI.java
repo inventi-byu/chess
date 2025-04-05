@@ -153,8 +153,8 @@ public class ChessUI {
                         break;
 
                     case "leave":
-                        this.displayPostLoginMenu();
-                        this.displayHelpPostLogin();
+                        //this.displayPostLoginMenu();
+                        //this.displayHelpPostLogin();
                         break;
 
                     case "move":

@@ -153,8 +153,38 @@ public class MySQLGameDAO implements GameDAO {
         }
     }
 
-    public boolean removeUserFromGame(String username){
-        throw new RuntimeException("Not implemented.");
+    public boolean removeUserFromGame(int gameID, String username){
+        GameData gameData = this.getGame(gameID);
+        String playerColor = null;
+        if (username.equals(gameData.whiteUsername())){
+            playerColor = "WHITE";
+        } else if (username.equals(gameData.blackUsername())){
+            playerColor = "BLACK";
+        } else {
+            return false;
+        }
+        String statement = null;
+        switch (playerColor){
+            case "WHITE" -> statement = "UPDATE " + GAME_TABLE + " SET " +
+                    GAME_TABLE_WHITE_USERNAME +
+                    "=? WHERE " + GAME_TABLE_GAME_ID + "=?;";
+            case "BLACK" -> statement = "UPDATE " + GAME_TABLE + " SET " +
+                    GAME_TABLE_BLACK_USERNAME +
+                    "=? WHERE " + GAME_TABLE_GAME_ID + "=?;";
+        }
+        try {
+            DatabaseManager.updateDB(statement, "NULL", gameID);
+            return true;
+
+        } catch (DataAccessException exception){
+            throw new ResponseException(500, String.format("Could not add user %s to game id=%s as %s player. " +
+                            "Message from database: %s",
+                    username,
+                    gameID,
+                    playerColor,
+                    exception)
+            );
+        }
     }
 
     public String[] getObserverList(int gameID){

@@ -10,6 +10,7 @@ import exceptions.WebSocketFacadeException;
 import model.AuthData;
 import model.GameData;
 import websocket.commands.ConnectCommand;
+import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
 
 import javax.websocket.*;
@@ -83,8 +84,13 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void leaveGame(int gameID, String authToken, String username) throws ServerFacadeException {
-        throw new ServerFacadeException(0, "Not implemented.");
+    public void leaveGame(String username, String teamColor, String authToken, int gameID, boolean observing) throws WebSocketFacadeException {
+        try {
+            LeaveCommand command = new LeaveCommand(username, teamColor, authToken, gameID, observing);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException exception){
+            throw new WebSocketFacadeException(500, exception.getMessage());
+        }
     }
 
     public void resignGame(String authToken, String username) throws ServerFacadeException {

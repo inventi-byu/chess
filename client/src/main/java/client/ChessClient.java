@@ -573,15 +573,22 @@ public class ChessClient {
         }
         try {
 
+            String teamColor = null;
+            if (this.teamColor == ChessGame.TeamColor.WHITE){
+                teamColor = "WHITE";
+            } else {
+                teamColor = "BLACK";
+            }
+
             if (this.getMenuState().equals(STATE_GAME)) {
-                this.webSocketFacade.leaveGame(this.getGameID(), this.getAuthData().authToken(), this.getUsername());
+                this.webSocketFacade.leaveGame(this.username, teamColor, this.getAuthData().authToken(), this.getGameID(), false);
                 this.clearGameInfo();
             } else if (this.getMenuState().equals(STATE_OBSERVE)) {
-                this.webSocketFacade.leaveGame(this.getObservingGameData().gameID(), this.getAuthData().authToken(), this.getUsername());
+                this.webSocketFacade.leaveGame(this.username, teamColor, this.getAuthData().authToken(), this.getObservingGameData().gameID(), true);
                 this.clearObservingGameInfo();
             }
             this.setMenuState(STATE_POSTLOGIN);
-        } catch (ServerFacadeException exception) {
+        } catch (WebSocketFacadeException exception) {
             return "Cannot leave game. Are you logged in?";
         }
 

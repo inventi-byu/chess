@@ -48,7 +48,7 @@ public interface GameDAO {
      */
     public boolean updateGame(GameData gameData);
 
-    public boolean removeUserFromGame(String username);
+    public boolean removeUserFromGame(int gameID, String username);
 
     public String[] getObserverList(int gameID);
 
