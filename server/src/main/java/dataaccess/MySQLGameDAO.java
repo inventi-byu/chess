@@ -140,7 +140,8 @@ public class MySQLGameDAO implements GameDAO {
                 GAME_TABLE_GAME +
                 "=? WHERE " + GAME_TABLE_GAME_ID + "=?;";
         try {
-            DatabaseManager.updateDB(statement, gameData.game(), gameData.gameID());
+            String gameAsJSON = new Gson().toJson(gameData.game());
+            DatabaseManager.updateDB(statement, gameAsJSON, gameData.gameID());
             return true;
 
         } catch (DataAccessException exception){

@@ -6,7 +6,7 @@ public class LoadGameMessage extends ServerMessage {
     private GameData game;
     private boolean observing;
 
-    public LoadGameMessage(GameData game, Boolean observing){
+    public LoadGameMessage(GameData game, boolean observing){
         super(ServerMessageType.LOAD_GAME);
         this.game = game;
         this.observing = observing;
