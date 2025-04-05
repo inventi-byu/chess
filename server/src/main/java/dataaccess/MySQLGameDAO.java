@@ -152,4 +152,20 @@ public class MySQLGameDAO implements GameDAO {
             );
         }
     }
+
+    public boolean removeUserFromGame(String username){
+        throw new RuntimeException("Not implemented.");
+    }
+
+    public String[] getObserverList(int gameID){
+        throw new ResponseException(0, "Get observer list Not implemented.");
+    }
+
+    public boolean addObserverToGame(){
+        throw new RuntimeException("Not implemented.");
+    }
+
+    public boolean removeObserverFromGame(String username){
+        throw new RuntimeException("Not implemented").
+    }
 }

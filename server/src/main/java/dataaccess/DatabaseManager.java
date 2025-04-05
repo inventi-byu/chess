@@ -31,6 +31,7 @@ public class DatabaseManager {
     public static final String GAME_TABLE_WHITE_USERNAME = "white_username";
     public static final String GAME_TABLE_BLACK_USERNAME = "black_username";
     public static final String GAME_TABLE_GAME_NAME = "game_name";
+    public static final String GAME_TABLE_OBSERVER_LIST = "observer_list";
     public static final String GAME_TABLE_GAME = "game";
 
     /*
@@ -239,6 +240,7 @@ public class DatabaseManager {
                     GAME_TABLE_WHITE_USERNAME + " VARCHAR(255)," +
                     GAME_TABLE_BLACK_USERNAME + " VARCHAR(255)," +
                     GAME_TABLE_GAME_NAME + " VARCHAR(255) NOT NULL," +
+                    GAME_TABLE_OBSERVER_LIST + " MEDIUMTEXT," +
                     GAME_TABLE_GAME + " MEDIUMTEXT," +
                     "FOREIGN KEY(" + GAME_TABLE_WHITE_USERNAME +  ") REFERENCES user_table(" + USER_TABLE_USERNAME + ")," +
                     "FOREIGN KEY(" + GAME_TABLE_BLACK_USERNAME + ") REFERENCES user_table(" + USER_TABLE_USERNAME + ")" +

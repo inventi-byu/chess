@@ -210,7 +210,7 @@ public class WebSocketHandler {
             // Notify observers
             String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
             this.connections.notify(observerList, new NotificationMessage(message));
-            
+
         } catch (ResponseException exception) {
             this.sendError("Invalid credentials.", username);
 
