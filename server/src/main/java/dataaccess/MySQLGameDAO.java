@@ -161,11 +161,32 @@ public class MySQLGameDAO implements GameDAO {
         throw new ResponseException(0, "Get observer list Not implemented.");
     }
 
-    public boolean addObserverToGame(){
+    public boolean addObserverToGame(String username, int gameID){
+        ArrayList<String> observerList = new ArrayList<>(
+                List.of(this.getObserverList(gameID))
+        );
+        observerList.add(username);
+        String statement = "UPDATE " + GAME_TABLE + " SET " +
+                GAME_TABLE_OBSERVER_LIST +
+                "=? WHERE " + GAME_TABLE_GAME_ID + "=?;";
+        try {
+            String observerArrayAsJSON = new Gson().toJson(
+                    observerList.toArray(new String[0])
+            );
+            DatabaseManager.updateDB(statement, observerArrayAsJSON, gameID);
+            return true;
+
+        } catch (DataAccessException exception){
+            throw new ResponseException(500, String.format("Could not update observer list for game with id %s. " +
+                            "Message from database: %s",
+                    gameID,
+                    exception)
+            );
+        }
         throw new RuntimeException("Not implemented.");
     }
 
     public boolean removeObserverFromGame(String username){
-        throw new RuntimeException("Not implemented").
+        throw new RuntimeException("Not implemented");
     }
 }
