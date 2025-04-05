@@ -245,7 +245,83 @@ public class WebSocketHandler {
     }
 
     public void leave(Session session, LeaveCommand command){
-        throw new RuntimeException("Not implemented.");
+        if (command.getUsername() == null){
+            try {
+                session.getRemote().sendString(new Gson().toJson(
+                        new ErrorMessage("You don't have a username, are you logged in?"))
+                );
+            } catch (IOException exception){
+                throw new ResponseException(0, exception.getMessage());
+            }
+        }
+        String username = command.getUsername();
+        if(command.getGameID() == null){
+            this.sendError("Invalid gameID.", username);
+        }
+        if(command.getAuthToken() == null) {
+            this.sendError("Invalid credentials.", username);
+        }
+        // Authenticate
+        AuthData authData = null;
+        try{
+            authData = this.gameService.authenticateWithToken(command.getAuthToken());
+            GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
+
+            if(command.isObserving()){
+                this.gameService.gameDAO.removeObserverFromGame(command.getUsername(), command.getGameID());
+            }
+
+            // Tell the user to clear their game or observing game data
+            LoadGameMessage loadGameMessage = new LoadGameMessage(null, command.isObserving());
+            this.connections.notify(username, loadGameMessage);
+
+            // Remove the connection after notifying the user that the connection is closed
+            this.connections.removeConnection(username);
+            this.gameService.gameDAO.removeUserFromGame(username);
+
+            // Notify that someone left
+            String opponentUsername = null;
+            String message = "";
+
+            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+
+            if (!command.isObserving()) {
+                message = username + " left the game.";
+                if (command.getTeamColor() != null && command.getTeamColor().equals("WHITE")) {
+                    opponentUsername = gameData.blackUsername();
+                } else {
+                    opponentUsername = gameData.whiteUsername();
+                }
+                if (opponentUsername != null) {
+                    this.connections.notify(opponentUsername, new NotificationMessage(message));
+                }
+                if(observerList != null) {
+                    this.connections.notify(observerList, new NotificationMessage(message));
+                }
+            } else {
+                // The person who joined is observing
+                message = username + " stopped observing the game.";
+                ArrayList<String> notifyList = new ArrayList<>();
+                String whiteUsername = gameData.whiteUsername();
+                String blackUsername = gameData.blackUsername();
+                if (whiteUsername != null){
+                    notifyList.add(gameData.whiteUsername());
+                }
+                if (blackUsername != null){
+                    notifyList.add(gameData.blackUsername());
+                }
+                if(observerList != null){
+                    notifyList.addAll(List.of(observerList));
+                }
+                this.connections.notifyExcept(notifyList.toArray(new String[0]), username, new NotificationMessage(message));
+            }
+
+        } catch (ResponseException exception) {
+            this.sendError("Invalid credentials.", username);
+
+        } catch (IOException exception){
+            this.sendError("Sorry could not connect to game.", username);
+        }
     }
 
     public void resign(Session session, ResignCommand command){

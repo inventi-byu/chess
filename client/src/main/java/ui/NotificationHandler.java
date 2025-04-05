@@ -57,6 +57,24 @@ public class NotificationHandler {
 
     public void handleLoadGameMessage(LoadGameMessage loadGameMessage){
         this.currentGameData = loadGameMessage.getGame();
+        if (loadGameMessage.getGame() == null){
+            String gameName = null;
+            if (loadGameMessage.isObserving()){
+                if (this.chessUI.client.getObservingGameData() != null){
+                    gameName = this.chessUI.client.getGameData().gameName();
+                }
+                this.chessUI.client.clearObservingGameInfo();;
+            } else {
+                if (this.chessUI.client.getGameData() != null) {
+                    gameName = this.chessUI.client.getGameData().gameName();
+                }
+                this.chessUI.client.clearGameInfo();
+            }
+            this.chessUI.displayPostLoginMenu();
+            this.chessUI.displayHelpPostLogin();
+            return;
+        }
+
         if(loadGameMessage.isObserving()){
             // Reset text color
             this.chessUI.display(this.chessUI.menuBGColor + this.chessUI.menuTextColorObserve);

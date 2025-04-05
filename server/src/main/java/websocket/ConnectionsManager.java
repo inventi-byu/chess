@@ -94,7 +94,8 @@ public class ConnectionsManager {
         return connectionToReturn;
     }
 
-    public void removeConnection(Connection connection){
+    public void removeConnection(String username){
+        Connection connection = getConnectionFromUsername(username);
         this.connections.remove(connection);
         this.currentUsers.remove(connection.username);
     }
