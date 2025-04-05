@@ -173,7 +173,7 @@ public class MySQLGameDAO implements GameDAO {
                     "=? WHERE " + GAME_TABLE_GAME_ID + "=?;";
         }
         try {
-            DatabaseManager.updateDB(statement, "NULL", gameID);
+            DatabaseManager.updateDB(statement, null, gameID);
             return true;
 
         } catch (DataAccessException exception){
