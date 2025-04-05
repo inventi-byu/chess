@@ -493,22 +493,8 @@ public class ChessClient {
         }
         String result = "";
         try{
-            this.webSocketFacade.observeGame(command[1], this.authData.authToken());
-
-            // Temporary until Phase 6
-            ChessGame tempObservingGameUntilPhaseSix = new ChessGame();
-            GameData tempObservingGameDataUntilPhaseSix = new GameData(
-                    0,
-                    "white",
-                    "black",
-                    "tempGameUntilPhaseSix",
-                    tempObservingGameUntilPhaseSix
-            );
-
-            this.updateObservingGameInfo(tempObservingGameDataUntilPhaseSix);
-
+            this.webSocketFacade.observeGame(this.username, command[1], this.authData.authToken());
             this.setMenuState(STATE_OBSERVE);
-
             result = "observe";
         } catch (WebSocketFacadeException exception){
             switch (exception.getStatusCode()){

@@ -219,7 +219,7 @@ public class ServerFacadeTests {
 
             // There is nothing to call because this is not implemented until phase 6
             try {
-                webSocketFacade.observeGame("0", authData.authToken());
+                webSocketFacade.observeGame(username, "0", authData.authToken());
             } catch (WebSocketFacadeException exception){
                 Assertions.fail(exception);
             }
@@ -242,7 +242,7 @@ public class ServerFacadeTests {
 
             // There is nothing to call because this is not implemented until phase 6
             try {
-                webSocketFacade.observeGame("0", authData.authToken());
+                webSocketFacade.observeGame(username,"0", authData.authToken());
             } catch (WebSocketFacadeException exception){
                 Assertions.fail(exception);
             }
