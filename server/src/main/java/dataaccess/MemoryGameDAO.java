@@ -1,28 +1,36 @@
 package dataaccess;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 import model.GameData;
 import model.GameMetaData;
 import server.service.exception.ResponseException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import static dataaccess.DatabaseManager.*;
 
 public class MemoryGameDAO implements GameDAO {
 
     private ArrayList<GameData> gameDB;
+    private HashMap<Integer, String[]> observers;
     private int lastID;
 
 
     public MemoryGameDAO(){
         this.gameDB = new ArrayList<GameData>();
         this.lastID = 0;
+        this.observers = new HashMap<>();
     }
 
     public int addGame(String gameName){
         int newGameID = this.getNewID();
         GameData gameData = new GameData(newGameID, null, null, gameName, new ChessGame());
         this.gameDB.add(gameData);
+        this.observers.put(newGameID, new String[0]);
         return newGameID;
 
     }
@@ -98,5 +106,29 @@ public class MemoryGameDAO implements GameDAO {
             }
         }
         return false;
+    }
+
+    public boolean removeUserFromGame(String username){
+        throw new RuntimeException("Not implemented.");
+    }
+
+    public String[] getObserverList(int gameID){
+        return this.observers.get(gameID);
+    }
+
+    public boolean addObserverToGame(String username, int gameID){
+        ArrayList<String> observersAsArrayList = new ArrayList<>(List.of(this.observers.get(gameID)));
+        observersAsArrayList.add(username);
+        this.observers.remove(gameID);
+        this.observers.put(gameID, observersAsArrayList.toArray(new String[0]));
+        return true;
+    }
+
+    public boolean removeObserverFromGame(String username, int gameID){
+        ArrayList<String> observersAsArrayList = new ArrayList<>(List.of(this.observers.get(gameID)));
+        observersAsArrayList.remove(username);
+        this.observers.remove(gameID);
+        this.observers.put(gameID, observersAsArrayList.toArray(new String[0]));
+        return true;
     }
 }

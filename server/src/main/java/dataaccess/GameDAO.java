@@ -1,9 +1,14 @@
 package dataaccess;
 
+import com.google.gson.Gson;
 import model.GameData;
 import model.GameMetaData;
+import server.service.exception.ResponseException;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static dataaccess.DatabaseManager.*;
 
 public interface GameDAO {
 
@@ -42,4 +47,12 @@ public interface GameDAO {
      * @return true if the game was successfully updated.
      */
     public boolean updateGame(GameData gameData);
+
+    public boolean removeUserFromGame(String username);
+
+    public String[] getObserverList(int gameID);
+
+    public boolean addObserverToGame(String username, int gameID);
+
+    public boolean removeObserverFromGame(String username, int gameID);
 }

@@ -117,7 +117,7 @@ public class WebSocketHandler {
                 }
                 if (opponentUsername != null) {
                     this.connections.notify(opponentUsername, new NotificationMessage(message));
-                    String[] observerList = gameData.getObserverList(command.getGameID());
+                    String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
                     this.connections.notify(observerList, new NotificationMessage(message));
                 }
             } else if (command.isObserving()){

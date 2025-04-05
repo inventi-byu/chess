@@ -158,7 +158,28 @@ public class MySQLGameDAO implements GameDAO {
     }
 
     public String[] getObserverList(int gameID){
-        throw new ResponseException(0, "Get observer list Not implemented.");
+        String statement = "SELECT " +
+                GAME_TABLE_OBSERVER_LIST +
+                " FROM " + GAME_TABLE +
+                " WHERE " + GAME_TABLE_GAME_ID + "=?;";
+
+        try {
+            String[] expectedLabels = {
+                    GAME_TABLE_OBSERVER_LIST
+            };
+
+            ArrayList<String> data = DatabaseManager.queryDB(statement, expectedLabels, gameID);
+
+            if(data.isEmpty()){
+                return null;
+            }
+
+            return new Gson().fromJson(data.get(1), String[].class);
+
+        } catch (DataAccessException exception){
+            throw new ResponseException(500, String.format("Error: Something went wrong getting the game. Message: %s", exception));
+        }
+
     }
 
     public boolean addObserverToGame(String username, int gameID){
@@ -177,16 +198,37 @@ public class MySQLGameDAO implements GameDAO {
             return true;
 
         } catch (DataAccessException exception){
-            throw new ResponseException(500, String.format("Could not update observer list for game with id %s. " +
+            throw new ResponseException(500, String.format("Could not add %s to observer list for game with id %s. " +
                             "Message from database: %s",
+                    username,
                     gameID,
                     exception)
             );
         }
-        throw new RuntimeException("Not implemented.");
     }
 
-    public boolean removeObserverFromGame(String username){
-        throw new RuntimeException("Not implemented");
+    public boolean removeObserverFromGame(String username, int gameID){
+        ArrayList<String> observerList = new ArrayList<>(
+                List.of(this.getObserverList(gameID))
+        );
+        observerList.remove(username);
+        String statement = "UPDATE " + GAME_TABLE + " SET " +
+                GAME_TABLE_OBSERVER_LIST +
+                "=? WHERE " + GAME_TABLE_GAME_ID + "=?;";
+        try {
+            String observerArrayAsJSON = new Gson().toJson(
+                    observerList.toArray(new String[0])
+            );
+            DatabaseManager.updateDB(statement, observerArrayAsJSON, gameID);
+            return true;
+
+        } catch (DataAccessException exception){
+            throw new ResponseException(500, String.format("Could not remove %s from observer list for game with id %s. " +
+                            "Message from database: %s",
+                    username,
+                    gameID,
+                    exception)
+            );
+        }
     }
 }
