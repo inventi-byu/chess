@@ -90,6 +90,9 @@ public class WebSocketHandler {
         try{
             authData = this.gameService.authenticateWithToken(command.getAuthToken());
 
+            if(command.isObserving()){
+                this.gameService.gameDAO.addObserverToGame(command.getUsername(), command.getGameID());
+            }
             // Add the connection
             this.connections.addConnection(new Connection(username, session));
 
@@ -114,16 +117,16 @@ public class WebSocketHandler {
                 }
                 if (opponentUsername != null) {
                     this.connections.notify(opponentUsername, new NotificationMessage(message));
-                    String[] observerList = {};
+                    String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
                     this.connections.notify(observerList, new NotificationMessage(message));
                 }
-            } else {
+            } else if (command.isObserving()){
                 // The person who joined is observing
                 message = username + " joined the game as an observer!";
                 ArrayList<String> notifyList = new ArrayList<>();
                 notifyList.add(gameData.whiteUsername());
                 notifyList.add(gameData.blackUsername());
-                String[] observerList = {};
+                String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
                 notifyList.addAll(List.of(observerList));
 
                 this.connections.notify(notifyList.toArray(new String[0]), new NotificationMessage(message));
