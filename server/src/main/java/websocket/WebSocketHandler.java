@@ -9,6 +9,7 @@ import model.AuthData;
 
 import model.GameData;
 import org.eclipse.jetty.websocket.api.WebSocketException;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.api.Session;
@@ -53,6 +54,17 @@ public class WebSocketHandler {
                 ResignCommand command = new Gson().fromJson(message, ResignCommand.class);
                 this.resign(session, command);
             }
+        }
+    }
+
+    @OnWebSocketError
+    public void onError(Session session, Throwable error){
+        try {
+            session.getRemote().sendString(new Gson().toJson(
+                    new ErrorMessage(error.getMessage())
+            ));
+        } catch (IOException exception){
+            throw new ResponseException(0, exception.getMessage());
         }
     }
 
@@ -212,7 +224,6 @@ public class WebSocketHandler {
         } catch (IOException exception){
             this.sendError("Sorry could not connect to game.", username);
         }
-        throw new RuntimeException("Not implemented.");
     }
 
     public void leave(Session session, LeaveCommand command){

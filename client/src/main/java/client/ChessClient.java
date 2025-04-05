@@ -458,6 +458,7 @@ public class ChessClient {
         }
         try{
             this.serverFacade.joinGame(stringTeamColor, curGameID, this.authData.authToken());
+            this.setGameID(curGameID);
 
             this.webSocketFacade.joinGame(this.username, stringTeamColor, curGameID, this.authData.authToken());
 
@@ -470,6 +471,7 @@ public class ChessClient {
             }
 
             // Update the menu state
+            this.setGameID(curGameID);
             this.setMenuState(STATE_GAME);
 
             result = "join";
