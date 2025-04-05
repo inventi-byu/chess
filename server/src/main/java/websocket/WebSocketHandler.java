@@ -117,7 +117,7 @@ public class WebSocketHandler {
                 }
                 if (opponentUsername != null) {
                     this.connections.notify(opponentUsername, new NotificationMessage(message));
-                    String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+                    String[] observerList = gameData.getObserverList(command.getGameID());
                     this.connections.notify(observerList, new NotificationMessage(message));
                 }
             } else if (command.isObserving()){
@@ -198,29 +198,19 @@ public class WebSocketHandler {
             String end = PositionConverter.positionToLocation(move.getEndPosition());
 
             message = username + " made a move from " + start + " to " + end + ".";
-            if (teamColor != null) {
-                if (teamColor.equals("WHITE")) {
-                    opponentUsername = gameData.blackUsername();
-                } else {
-                    opponentUsername = gameData.whiteUsername();
-                }
-                if (opponentUsername != null) {
-                    this.connections.notify(opponentUsername, loadGameMessagePlayers);
-                    this.connections.notify(opponentUsername, new NotificationMessage(message));
-                    String[] observerList = {};
-                    this.connections.notify(observerList, new NotificationMessage(message));
-                }
+            if (teamColor.equals("WHITE")) {
+                opponentUsername = gameData.blackUsername();
             } else {
-                // The person who joined is observing
-                ArrayList<String> notifyList = new ArrayList<>();
-                notifyList.add(gameData.whiteUsername());
-                notifyList.add(gameData.blackUsername());
-                String[] observerList = {};
-                notifyList.addAll(List.of(observerList));
-
-                this.connections.notify(notifyList.toArray(new String[0]), new NotificationMessage(message));
+                opponentUsername = gameData.whiteUsername();
             }
-
+            if (opponentUsername != null) {
+                this.connections.notify(opponentUsername, loadGameMessagePlayers);
+                this.connections.notify(opponentUsername, new NotificationMessage(message));
+            }
+            // Notify observers
+            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+            this.connections.notify(observerList, new NotificationMessage(message));
+            
         } catch (ResponseException exception) {
             this.sendError("Invalid credentials.", username);
 
