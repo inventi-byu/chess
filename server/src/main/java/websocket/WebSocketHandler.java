@@ -194,7 +194,7 @@ public class WebSocketHandler {
             String start = PositionConverter.positionToLocation(move.getStartPosition());
             String end = PositionConverter.positionToLocation(move.getEndPosition());
 
-            message = username + "made a move from " + start + " to " + end + ".";
+            message = username + " made a move from " + start + " to " + end + ".";
             if (teamColor != null) {
                 if (teamColor.equals("WHITE")) {
                     opponentUsername = gameData.blackUsername();

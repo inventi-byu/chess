@@ -1,9 +1,6 @@
 package client;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.*;
 import websocket.PositionConverter;
 import websocket.exception.ChessPositionException;
 import exceptions.ServerFacadeException;
@@ -556,9 +553,23 @@ public class ChessClient {
         if (command.length != 3){
             return "Could not observe chess game. Did you forget to enter the game id?";
         }
+        if (this.game.getTeamTurn() != this.getTeamColor()){
+            return "You can't move, it's not your turn!";
+        }
         try {
             ChessPosition start = PositionConverter.locationToPosition(command[1]);
+
+            ChessPiece startPiece = this.getBoard().getPiece(start);
+            if(startPiece == null){
+                return "There's no piece at " + command[1] + " to move!";
+            }
+
+            if (startPiece.getTeamColor() != this.teamColor){
+                return "You can't move your opponent's pieces.";
+            }
+
             ChessPosition end = PositionConverter.locationToPosition(command[2]);
+
             // TODO: Add promotion piece logic (it would be required in the command)
             this.webSocketFacade.makeMove(this.authData, this.gameID, this.teamColor, start, end, null);
         } catch (ChessPositionException exception) {
