@@ -108,8 +108,19 @@ public class MemoryGameDAO implements GameDAO {
         return false;
     }
 
-    public boolean removeUserFromGame(String username){
-        throw new RuntimeException("Not implemented.");
+    public boolean removeUserFromGame(int gameID, String username){
+        GameData gameData = this.getGame(gameID);
+        GameData gameDataWithUserRemoved = null;
+        if (gameData.whiteUsername().equals(username)){
+            gameDataWithUserRemoved = new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.game());
+        } else if (gameData.blackUsername().equals(username)){
+            gameDataWithUserRemoved = new GameData(gameData.gameID(), gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
+        } else {
+            return false;
+        }
+        this.gameDB.remove(gameID);
+        this.gameDB.add(gameID, gameDataWithUserRemoved);
+        return true;
     }
 
     public String[] getObserverList(int gameID){
