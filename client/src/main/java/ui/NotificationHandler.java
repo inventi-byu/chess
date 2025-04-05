@@ -3,6 +3,7 @@ package ui;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import client.ChessClient;
 import com.google.gson.Gson;
 import model.GameData;
 import websocket.messages.ErrorMessage;
@@ -70,6 +71,7 @@ public class NotificationHandler {
                 }
                 this.chessUI.client.clearGameInfo();
             }
+            this.chessUI.client.setMenuState(ChessClient.STATE_POSTLOGIN);
             this.chessUI.displayPostLoginMenu();
             this.chessUI.displayHelpPostLogin();
             this.chessUI.displayPrompt();

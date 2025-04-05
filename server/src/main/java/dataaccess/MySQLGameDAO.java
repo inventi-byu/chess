@@ -248,13 +248,16 @@ public class MySQLGameDAO implements GameDAO {
                 List.of(this.getObserverList(gameID))
         );
         observerList.remove(username);
+        String observerArrayAsJSON = null;
+        if (!observerList.isEmpty()){
+            observerArrayAsJSON = new Gson().toJson(
+                    observerList.toArray(new String[0])
+            );
+        }
         String statement = "UPDATE " + GAME_TABLE + " SET " +
                 GAME_TABLE_OBSERVER_LIST +
                 "=? WHERE " + GAME_TABLE_GAME_ID + "=?;";
         try {
-            String observerArrayAsJSON = new Gson().toJson(
-                    observerList.toArray(new String[0])
-            );
             DatabaseManager.updateDB(statement, observerArrayAsJSON, gameID);
             return true;
 
