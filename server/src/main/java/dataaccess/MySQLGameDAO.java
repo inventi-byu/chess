@@ -174,7 +174,7 @@ public class MySQLGameDAO implements GameDAO {
                 return null;
             }
 
-            return new Gson().fromJson(data.get(1), String[].class);
+            return new Gson().fromJson(data.getFirst(), String[].class);
 
         } catch (DataAccessException exception){
             throw new ResponseException(500, String.format("Error: Something went wrong getting the game. Message: %s", exception));
@@ -183,9 +183,15 @@ public class MySQLGameDAO implements GameDAO {
     }
 
     public boolean addObserverToGame(String username, int gameID){
-        ArrayList<String> observerList = new ArrayList<>(
-                List.of(this.getObserverList(gameID))
-        );
+        String[] observers = this.getObserverList(gameID);
+        ArrayList<String> observerList;
+        if (observers == null){
+            observerList = new ArrayList<>();
+        } else {
+            observerList = new ArrayList<>(
+                    List.of(observers)
+            );
+        }
         observerList.add(username);
         String statement = "UPDATE " + GAME_TABLE + " SET " +
                 GAME_TABLE_OBSERVER_LIST +

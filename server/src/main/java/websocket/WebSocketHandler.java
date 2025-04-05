@@ -22,6 +22,7 @@ import websocket.messages.NotificationMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @WebSocket
@@ -60,11 +61,27 @@ public class WebSocketHandler {
     @OnWebSocketError
     public void onError(Session session, Throwable error){
         try {
+            String[] stackTrace = (String[])Arrays.stream(error.getStackTrace()).toArray();
+            StringBuilder sb = new StringBuilder();
+            for (String line : stackTrace){
+                sb.append(line);
+                sb.append("\n");
+            }
             session.getRemote().sendString(new Gson().toJson(
-                    new ErrorMessage(error.getMessage())
+                    new ErrorMessage(error.toString() +
+                            "\n" +
+                            sb.toString())
             ));
         } catch (IOException exception){
-            throw new ResponseException(0, exception.getMessage());
+            String[]  stackTrace = (String[])Arrays.stream(exception.getStackTrace()).toArray();
+            StringBuilder sb = new StringBuilder();
+            for (String line : stackTrace){
+                sb.append(line);
+                sb.append("\n");
+            }
+            throw new ResponseException(0, exception.toString() + "" +
+                    "\n" +
+                    sb.toString());
         }
     }
 
@@ -103,12 +120,13 @@ public class WebSocketHandler {
             this.connections.notify(username, loadGameMessage);
 
             // Notify that someone joined
-            // TODO: Right now this only works for those who joined, not including the people who are observing
             String opponentUsername = null;
             String teamColor = command.getTeamColor();
             String message = "";
 
-            if (teamColor != null) {
+            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+
+            if (!command.isObserving()) {
                 message = username + " joined the game as " + teamColor + "!";
                 if (teamColor.equals("WHITE")) {
                     opponentUsername = gameData.blackUsername();
@@ -117,19 +135,26 @@ public class WebSocketHandler {
                 }
                 if (opponentUsername != null) {
                     this.connections.notify(opponentUsername, new NotificationMessage(message));
-                    String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+                }
+                if(observerList != null) {
                     this.connections.notify(observerList, new NotificationMessage(message));
                 }
-            } else if (command.isObserving()){
+            } else {
                 // The person who joined is observing
                 message = username + " joined the game as an observer!";
                 ArrayList<String> notifyList = new ArrayList<>();
-                notifyList.add(gameData.whiteUsername());
-                notifyList.add(gameData.blackUsername());
-                String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
-                notifyList.addAll(List.of(observerList));
-
-                this.connections.notify(notifyList.toArray(new String[0]), new NotificationMessage(message));
+                String whiteUsername = gameData.whiteUsername();
+                String blackUsername = gameData.blackUsername();
+                if (whiteUsername != null){
+                    notifyList.add(gameData.whiteUsername());
+                }
+                if (blackUsername != null){
+                    notifyList.add(gameData.blackUsername());
+                }
+                if(observerList != null){
+                    notifyList.addAll(List.of(observerList));
+                }
+                this.connections.notifyExcept(notifyList.toArray(new String[0]), username, new NotificationMessage(message));
             }
 
         } catch (ResponseException exception) {
@@ -183,12 +208,13 @@ public class WebSocketHandler {
             LoadGameMessage loadGameMessagePlayers = new LoadGameMessage(gameData, false);
 
             // TODO: Load game from observers
+            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
             LoadGameMessage loadGameMessageObservers = new LoadGameMessage(gameData, true);
 
             this.connections.notify(username, loadGameMessagePlayers);
+            this.connections.notify(observerList, loadGameMessageObservers);
 
-            // Notify that someone joined
-            // TODO: Right now this only works for those who joined, not including the people who are observing
+            // Notify opponent that someone joined
             String opponentUsername = null;
             String teamColor = command.getTeamColor();
             String message = "";
@@ -207,8 +233,7 @@ public class WebSocketHandler {
                 this.connections.notify(opponentUsername, loadGameMessagePlayers);
                 this.connections.notify(opponentUsername, new NotificationMessage(message));
             }
-            // Notify observers
-            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+            // Notify observers someone joined the game
             this.connections.notify(observerList, new NotificationMessage(message));
 
         } catch (ResponseException exception) {

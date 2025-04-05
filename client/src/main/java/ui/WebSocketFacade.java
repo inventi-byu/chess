@@ -83,7 +83,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void leaveGame(String authToken, String username) throws ServerFacadeException {
+    public void leaveGame(int gameID, String authToken, String username) throws ServerFacadeException {
         throw new ServerFacadeException(0, "Not implemented.");
     }
 

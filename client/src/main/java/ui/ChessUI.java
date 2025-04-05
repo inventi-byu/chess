@@ -17,12 +17,12 @@ public class ChessUI {
     private static final String SPACE = " ";
     private static final String EMPTY_SPACE = "   ";
 
-    private String menuBGColor;
+    public String menuBGColor;
     private String menuTextColorPreLogin;
     private String menuTextColorLoggedIn;
     private String menuTextColorPostLogin;
-    private String menuTextColorGame;
-    private String menuTextColorObserve;
+    public String menuTextColorGame;
+    public String menuTextColorObserve;
 
     private String emptyColor;
     private String bgColor;
@@ -308,38 +308,7 @@ public class ChessUI {
     }
 
     public void displayObserveMenu(ChessBoard board){
-        this.displayChessBoard(board, ChessGame.TeamColor.WHITE, null);
-
-        // Reset text color
-        this.print(this.menuBGColor + this.menuTextColorObserve);
-
-        String gameName = null;
-        String whiteUser = null;
-        String blackUser = null;
-        GameData curGameData = this.client.getObservingGameData();
-        if (curGameData != null) {
-            gameName = curGameData.gameName();
-            whiteUser = curGameData.whiteUsername();
-            blackUser = curGameData.blackUsername();
-            if (whiteUser == null || whiteUser.isEmpty()) {
-                whiteUser = "No white user";
-            }
-            if (blackUser == null || blackUser.isEmpty()) {
-                blackUser = "no black user";
-            }
-
-            this.println(
-                    this.menuBGColor + this.menuTextColorObserve +
-                            "You are now observing the " +
-                            gameName +
-                            "game."
-            );
-            this.println(
-                    whiteUser + " and " + blackUser + " are playing right now."
-            );
-        } else {
-            this.println("Now observing.");
-        }
+        return;
     }
 
     public void displayListOfGames(){

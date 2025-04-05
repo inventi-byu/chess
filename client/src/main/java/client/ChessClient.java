@@ -319,6 +319,7 @@ public class ChessClient {
             this.setAuthData(
                     this.serverFacade.register(command[1], command[2], command[3])
             );
+            this.setUsername(this.getAuthData().username());
             this.setLoginStatus(STATUS_LOGGED_IN);
             this.setMenuState(STATE_POSTLOGIN);
             result = "register";
@@ -571,10 +572,12 @@ public class ChessClient {
             return "Sorry you have to have joined or be observing a game to use that command.";
         }
         try {
-            this.webSocketFacade.leaveGame(this.getAuthData().authToken(), this.getUsername());
+
             if (this.getMenuState().equals(STATE_GAME)) {
+                this.webSocketFacade.leaveGame(this.getGameID(), this.getAuthData().authToken(), this.getUsername());
                 this.clearGameInfo();
             } else if (this.getMenuState().equals(STATE_OBSERVE)) {
+                this.webSocketFacade.leaveGame(this.getObservingGameData().gameID(), this.getAuthData().authToken(), this.getUsername());
                 this.clearObservingGameInfo();
             }
             this.setMenuState(STATE_POSTLOGIN);

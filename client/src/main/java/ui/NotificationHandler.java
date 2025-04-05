@@ -58,16 +58,46 @@ public class NotificationHandler {
     public void handleLoadGameMessage(LoadGameMessage loadGameMessage){
         this.currentGameData = loadGameMessage.getGame();
         if(loadGameMessage.isObserving()){
-            this.chessUI.client.updateObservingGameInfo(this.currentGameData);
+            // Reset text color
+            this.chessUI.display(this.chessUI.menuBGColor + this.chessUI.menuTextColorObserve);
+
+            String gameName = null;
+            String whiteUser = null;
+            String blackUser = null;
+            GameData oldGameData = this.chessUI.client.getObservingGameData();
+            GameData newGameData = loadGameMessage.getGame();
+            if (oldGameData == null) {
+                gameName = newGameData.gameName();
+                whiteUser = newGameData.whiteUsername();
+                blackUser = newGameData.blackUsername();
+                if (whiteUser == null || whiteUser.isEmpty()) {
+                    whiteUser = "No white user";
+                }
+                if (blackUser == null || blackUser.isEmpty()) {
+                    blackUser = "no black user";
+                }
+                this.chessUI.displayln("");
+                this.chessUI.displayln(
+                        this.chessUI.menuBGColor + this.chessUI.menuTextColorObserve +
+                                "You are now observing the " +
+                                gameName +
+                                " game."
+                );
+                this.chessUI.displayln(
+                        whiteUser + " and " + blackUser + " are playing right now."
+                );
+            }
+            this.chessUI.client.updateObservingGameInfo(loadGameMessage.getGame());
             this.chessUI.displayln("");
             this.chessUI.displayChessBoard(this.chessUI.client.getObservingBoard(), ChessGame.TeamColor.WHITE, null);
             this.chessUI.displayPrompt();
         } else {
-            this.chessUI.client.updateGameInfo(this.currentGameData);
+            this.chessUI.client.updateGameInfo(loadGameMessage.getGame());
             this.chessUI.displayln("");
             this.chessUI.displayChessBoard(this.chessUI.client.getBoard(), this.chessUI.client.getTeamColor(), null);
             this.chessUI.displayPrompt();
         }
+
     }
 
     public void handleNotificationMessage(NotificationMessage notificationMessage){
