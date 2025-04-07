@@ -100,9 +100,11 @@ public class WebSocketHandler {
         String username = command.getUsername();
         if(command.getGameID() == null){
             this.sendError(session, "Invalid gameID.");
+            return;
         }
         if(command.getAuthToken() == null) {
             this.sendError(session, "Invalid credentials.");
+            return;
         }
         // Authenticate
         AuthData authData = null;
@@ -180,9 +182,11 @@ public class WebSocketHandler {
         String username = command.getUsername();
         if(command.getGameID() == null){
             this.sendError(session, "Invalid gameID.");
+            return;
         }
         if(command.getAuthToken() == null) {
             this.sendError(session, "Invalid credentials.");
+            return;
         }
 
         // Authenticate
@@ -192,6 +196,12 @@ public class WebSocketHandler {
 
             // Get the GameData
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
+
+            if(gameData.game().isCompleted()){
+                this.sendError(session, "Sorry you can't move, the game is already over!");
+                return;
+            }
+
             try {
 
                 // Make the move and set the new team turn
@@ -259,9 +269,11 @@ public class WebSocketHandler {
         String username = command.getUsername();
         if(command.getGameID() == null){
             this.sendError(session, "Invalid gameID.");
+            return;
         }
         if(command.getAuthToken() == null) {
             this.sendError(session, "Invalid credentials.");
+            return;
         }
         // Authenticate
         AuthData authData = null;
@@ -364,6 +376,7 @@ public class WebSocketHandler {
                 gameData.game().setCompleted();
                 if (whiteUsername == null && blackUsername == null){
                     this.sendError(session, "Sorry you can't resign when you're playing by yourself.");
+                    return;
                 }
 
             } catch (Exception exception){
@@ -417,7 +430,7 @@ public class WebSocketHandler {
     private void sendError(Session session, String message){
         try {
             session.getRemote().sendString(new Gson().toJson(
-                    new ErrorMessage("Could not resign, are you still logged in?"))
+                    new ErrorMessage(message))
             );
         } catch (IOException exception){
             throw new ResponseException(0, exception.getMessage());

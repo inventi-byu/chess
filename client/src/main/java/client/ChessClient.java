@@ -537,8 +537,11 @@ public class ChessClient {
         if(!this.getMenuState().equals(STATE_GAME)){
             return "Sorry you have to have joined a game to use that command.";
         }
+        if (this.game.isCompleted()){
+            return "Sorry you can't move, the game is already over!";
+        }
         if (command.length != 3){
-            return "Could not observe chess game. Did you forget to enter the game id?";
+            return "Could not move. Did you forget to enter a start and end position?";
         }
         if (this.game.getTeamTurn() != this.getTeamColor()){
             return "You can't move, it's not your turn!";
@@ -604,7 +607,7 @@ public class ChessClient {
             // You can only resign when you are playing a game, not observing.
             this.clearGameInfo();
             this.setMenuState(STATE_POSTLOGIN);
-        } catch (ServerFacadeException exception) {
+        } catch (WebSocketFacadeException exception) {
             return "Cannot resign from game. Are you logged in? Did you already win? Has the game even started yet?";
         }
 
