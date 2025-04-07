@@ -12,6 +12,7 @@ import model.GameData;
 import websocket.commands.ConnectCommand;
 import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
+import websocket.commands.ResignCommand;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -93,8 +94,13 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void resignGame(String authToken, String username) throws ServerFacadeException {
-        throw new ServerFacadeException(0, "Not implemented.");
+    public void resignGame(String authToken, int gameID) throws WebSocketFacadeException {
+        try {
+            ResignCommand command = new ResignCommand(authToken, gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException exception){
+            throw new WebSocketFacadeException(500, exception.getMessage());
+        }
     }
 
     private void connect(String authoken, Integer gameID) {

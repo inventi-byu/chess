@@ -58,6 +58,7 @@ public class WebSocketHandler {
         }
     }
 
+    /*
     @OnWebSocketError
     public void onError(Session session, Throwable error){
         try {
@@ -84,6 +85,7 @@ public class WebSocketHandler {
                     sb.toString());
         }
     }
+     */
 
     public void connectUser(Session session, ConnectCommand command){
         if (command.getUsername() == null){

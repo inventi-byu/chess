@@ -85,6 +85,7 @@ public class NotificationHandler {
             String gameName = null;
             String whiteUser = null;
             String blackUser = null;
+
             GameData oldGameData = this.chessUI.client.getObservingGameData();
             GameData newGameData = loadGameMessage.getGame();
             if (oldGameData == null) {

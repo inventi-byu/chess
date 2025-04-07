@@ -600,7 +600,7 @@ public class ChessClient {
             return "Sorry you have to have joined a game to use that command.";
         }
         try {
-            this.webSocketFacade.resignGame(this.getAuthData().authToken(), this.getUsername());
+            this.webSocketFacade.resignGame(this.getAuthData().authToken(), this.gameID);
             // You can only resign when you are playing a game, not observing.
             this.clearGameInfo();
             this.setMenuState(STATE_POSTLOGIN);
