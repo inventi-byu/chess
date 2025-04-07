@@ -54,7 +54,7 @@ public class WebSocketFacade extends Endpoint {
 
     public void joinGame(String username, String teamColor, Integer gameID, String authToken) throws WebSocketFacadeException {
         try {
-            ConnectCommand command = new ConnectCommand(username, authToken, gameID, teamColor, false);
+            ConnectCommand command = new ConnectCommand(authToken, gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException exception){
             throw new WebSocketFacadeException(500, exception.getMessage());
@@ -63,7 +63,7 @@ public class WebSocketFacade extends Endpoint {
 
     public void observeGame(String username, String gameID, String authToken) throws WebSocketFacadeException {
         try {
-            ConnectCommand command = new ConnectCommand(username, authToken, Integer.valueOf(gameID), "WHITE", true);
+            ConnectCommand command = new ConnectCommand(authToken, Integer.valueOf(gameID));
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException exception){
             throw new WebSocketFacadeException(500, exception.getMessage());

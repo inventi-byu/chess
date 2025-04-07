@@ -88,55 +88,79 @@ public class WebSocketHandler {
      */
 
     public void connectUser(Session session, ConnectCommand command){
-        if (command.getUsername() == null){
-            try {
-                session.getRemote().sendString(new Gson().toJson(
-                        new ErrorMessage("You don't have a username, are you logged in?"))
-                );
-            } catch (IOException exception){
-                throw new ResponseException(0, exception.getMessage());
-            }
-        }
-        String username = command.getUsername();
-        if(command.getGameID() == null){
-            this.sendError(session, "Invalid gameID.");
-            return;
-        }
+//        if (command.getUsername() == null){
+//            try {
+//                session.getRemote().sendString(new Gson().toJson(
+//                        new ErrorMessage("You don't have a username, are you logged in?"))
+//                );
+//            } catch (IOException exception){
+//                throw new ResponseException(0, exception.getMessage());
+//            }
+//        }
+//        String username = command.getUsername();
+
         if(command.getAuthToken() == null) {
             this.sendError(session, "Invalid credentials.");
             return;
         }
+        if(command.getGameID() == null){
+            this.sendError(session, "Invalid gameID.");
+            return;
+        }
+
         // Authenticate
         AuthData authData = null;
+        String username = null;
+        String whiteUsername = null;
+        String blackUsername = null;
+        boolean observing = false;
+        ChessGame.TeamColor teamColor = null;
+        String opponentUsername = null;
+
         try{
             authData = this.gameService.authenticateWithToken(command.getAuthToken());
-
-            if(command.isObserving()){
-                this.gameService.gameDAO.addObserverToGame(command.getUsername(), command.getGameID());
-            }
-            // Add the connection
-            this.connections.addConnection(new Connection(username, session));
+            username = authData.username();
 
             // Get the GameData
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
-            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData, command.isObserving());
+
+            whiteUsername = gameData.whiteUsername();
+            blackUsername = gameData.blackUsername();
+
+            if (whiteUsername == null && blackUsername == null){
+                observing = true;
+            }
+            if(whiteUsername == null && !username.equals(blackUsername)){
+                observing = true;
+            } else if (blackUsername == null && !username.equals(whiteUsername)) {
+                observing = true;
+
+            } else {
+                if (username.equals(whiteUsername)){
+                    teamColor = ChessGame.TeamColor.WHITE;
+                    opponentUsername = blackUsername;
+                } else if (username.equals(blackUsername)){
+                    teamColor = ChessGame.TeamColor.BLACK;
+                    opponentUsername = whiteUsername;
+                }
+            }
+
+            if(observing){
+                this.gameService.gameDAO.addObserverToGame(username, command.getGameID());
+            }
+            // Add the connection and create a LoadGameMessage
+            this.connections.addConnection(new Connection(username, session));
+            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData, observing);
 
             this.connections.notify(username, loadGameMessage);
 
             // Notify that someone joined
-            String opponentUsername = null;
-            String teamColor = command.getTeamColor();
             String message = "";
 
             String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
 
-            if (!command.isObserving()) {
+            if (!observing) {
                 message = username + " joined the game as " + teamColor + "!";
-                if (teamColor.equals("WHITE")) {
-                    opponentUsername = gameData.blackUsername();
-                } else {
-                    opponentUsername = gameData.whiteUsername();
-                }
                 if (opponentUsername != null) {
                     this.connections.notify(opponentUsername, new NotificationMessage(message));
                 }
@@ -147,8 +171,6 @@ public class WebSocketHandler {
                 // The person who joined is observing
                 message = username + " joined the game as an observer!";
                 ArrayList<String> notifyList = new ArrayList<>();
-                String whiteUsername = gameData.whiteUsername();
-                String blackUsername = gameData.blackUsername();
                 if (whiteUsername != null){
                     notifyList.add(gameData.whiteUsername());
                 }
