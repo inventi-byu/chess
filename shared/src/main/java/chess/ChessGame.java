@@ -12,11 +12,13 @@ import java.util.*;
 public class ChessGame {
         private ChessBoard board;
         private ChessGame.TeamColor turn;
+        private boolean completed;
 
         public ChessGame() {
             this.board = new ChessBoard();
             this.board.resetBoard();
             this.turn = TeamColor.WHITE;
+            this.completed = false;
         }
 
         /**
@@ -41,6 +43,14 @@ public class ChessGame {
         public enum TeamColor {
             WHITE,
             BLACK
+        }
+
+        public void setCompleted(){
+            this.completed = true;
+        }
+
+        public boolean isCompleted(){
+            return this.completed;
         }
 
         /**
@@ -185,6 +195,7 @@ public class ChessGame {
                         }
                     }
                 }
+                this.setCompleted(); // The game is over
                 return true;
             }
             return false;
