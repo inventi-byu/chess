@@ -99,10 +99,10 @@ public class WebSocketHandler {
         }
         String username = command.getUsername();
         if(command.getGameID() == null){
-            this.sendError("Invalid gameID.", username);
+            this.sendError(session, "Invalid gameID.");
         }
         if(command.getAuthToken() == null) {
-            this.sendError("Invalid credentials.", username);
+            this.sendError(session, "Invalid credentials.");
         }
         // Authenticate
         AuthData authData = null;
@@ -160,10 +160,10 @@ public class WebSocketHandler {
             }
 
         } catch (ResponseException exception) {
-            this.sendError("Invalid credentials.", username);
+            this.sendError(session, "Invalid credentials.");
 
         } catch (IOException exception){
-            this.sendError("Sorry could not connect to game.", username);
+            this.sendError(session, "Sorry could not connect to game.");
         }
     }
 
@@ -179,10 +179,10 @@ public class WebSocketHandler {
         }
         String username = command.getUsername();
         if(command.getGameID() == null){
-            this.sendError("Invalid gameID.", username);
+            this.sendError(session, "Invalid gameID.");
         }
         if(command.getAuthToken() == null) {
-            this.sendError("Invalid credentials.", username);
+            this.sendError(session, "Invalid credentials.");
         }
 
         // Authenticate
@@ -203,7 +203,7 @@ public class WebSocketHandler {
                 }
 
             } catch (InvalidMoveException exception){
-                this.sendError("Invalid move.", username);
+                this.sendError(session, "Invalid move.");
             }
             this.gameService.gameDAO.updateGame(gameData);
 
@@ -239,10 +239,10 @@ public class WebSocketHandler {
             this.connections.notify(observerList, new NotificationMessage(message));
 
         } catch (ResponseException exception) {
-            this.sendError("Invalid credentials.", username);
+            this.sendError(session, "Invalid credentials.");
 
         } catch (IOException exception){
-            this.sendError("Sorry could not connect to game.", username);
+            this.sendError(session, "Sorry could not connect to game.");
         }
     }
 
@@ -258,10 +258,10 @@ public class WebSocketHandler {
         }
         String username = command.getUsername();
         if(command.getGameID() == null){
-            this.sendError("Invalid gameID.", username);
+            this.sendError(session, "Invalid gameID.");
         }
         if(command.getAuthToken() == null) {
-            this.sendError("Invalid credentials.", username);
+            this.sendError(session, "Invalid credentials.");
         }
         // Authenticate
         AuthData authData = null;
@@ -269,7 +269,7 @@ public class WebSocketHandler {
             authData = this.gameService.authenticateWithToken(command.getAuthToken());
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
 
-            if(command.isObserving()){
+            if (command.isObserving()) {
                 this.gameService.gameDAO.removeObserverFromGame(command.getUsername(), command.getGameID());
             }
 
@@ -297,7 +297,7 @@ public class WebSocketHandler {
                 if (opponentUsername != null) {
                     this.connections.notify(opponentUsername, new NotificationMessage(message));
                 }
-                if(observerList != null) {
+                if (observerList != null) {
                     this.connections.notify(observerList, new NotificationMessage(message));
                 }
             } else {
@@ -306,35 +306,121 @@ public class WebSocketHandler {
                 ArrayList<String> notifyList = new ArrayList<>();
                 String whiteUsername = gameData.whiteUsername();
                 String blackUsername = gameData.blackUsername();
-                if (whiteUsername != null){
+                if (whiteUsername != null) {
                     notifyList.add(gameData.whiteUsername());
                 }
-                if (blackUsername != null){
+                if (blackUsername != null) {
                     notifyList.add(gameData.blackUsername());
                 }
-                if(observerList != null){
+                if (observerList != null) {
                     notifyList.addAll(List.of(observerList));
                 }
                 this.connections.notifyExcept(notifyList.toArray(new String[0]), username, new NotificationMessage(message));
             }
 
         } catch (ResponseException exception) {
-            this.sendError("Invalid credentials.", username);
+            this.sendError(session, "Invalid credentials.");
 
         } catch (IOException exception){
-            this.sendError("Sorry could not connect to game.", username);
+            this.sendError(session, "Sorry could not connect to game.");
         }
     }
 
     public void resign(Session session, ResignCommand command){
-        throw new RuntimeException("Not implemented.");
+        if (command.getAuthToken() == null){
+            try {
+                session.getRemote().sendString(new Gson().toJson(
+                        new ErrorMessage("Could not resign, are you still logged in?"))
+                );
+            } catch (IOException exception){
+                throw new ResponseException(0, exception.getMessage());
+            }
+        }
+        if(command.getGameID() == null) {
+            try {
+                session.getRemote().sendString(new Gson().toJson(
+                        new ErrorMessage("Could not resign, are you still playing a game?"))
+                );
+            } catch (IOException exception){
+                throw new ResponseException(0, exception.getMessage());
+            }
+        }
+
+        // Authenticate
+        AuthData authData = null;
+        String username = null;
+        try{
+            authData = this.gameService.authenticateWithToken(command.getAuthToken());
+            username = authData.username();
+
+            // Get the GameData
+            GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
+            String whiteUsername = gameData.whiteUsername();
+            String blackUsername = gameData.blackUsername();
+
+            try {
+
+                // Set the game as completed
+                gameData.game().setCompleted();
+                if (whiteUsername == null && blackUsername == null){
+                    this.sendError(session, "Sorry you can't resign when you're playing by yourself.");
+                }
+
+            } catch (Exception exception){
+                this.sendError(session, "Failed to resign.");
+            }
+
+            // Update the game data
+            this.gameService.gameDAO.updateGame(gameData);
+
+
+            // Get opponent name
+            String opponentUsername = null;
+            if (username.equals(whiteUsername)) {
+                opponentUsername = blackUsername;
+            } else {
+                opponentUsername = whiteUsername;
+            }
+
+            // Get observers
+            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+
+            // Set up load game messages
+            LoadGameMessage loadGameMessagePlayers = new LoadGameMessage(gameData, false);
+            LoadGameMessage loadGameMessageObservers = new LoadGameMessage(gameData, true);
+
+            String messageForOpponent = username + " resigned. You won the game!";
+            String messageForObservers = username + " resigned. " + opponentUsername + " won the game!";
+
+            // Notify the user and observers to load the game
+            this.connections.notify(username, loadGameMessagePlayers);
+            this.connections.notify(observerList, loadGameMessageObservers);
+
+
+            // Notify the opponent to load the game, and give them their message
+            if (opponentUsername != null) {
+                this.connections.notify(opponentUsername, loadGameMessagePlayers);
+                this.connections.notify(opponentUsername, new NotificationMessage(messageForOpponent));
+            }
+
+            // Notify the observers that the user resigned
+            this.connections.notify(observerList, new NotificationMessage(messageForObservers));
+
+        } catch (ResponseException exception) {
+            this.sendError(session, "Invalid credentials.");
+
+        } catch (IOException exception){
+            this.sendError(session, "Sorry could not connect to game.");
+        }
     }
 
-    private void sendError(String message, String username){
+    private void sendError(Session session, String message){
         try {
-            connections.notify(username, new ErrorMessage("Invalid gameID."));
+            session.getRemote().sendString(new Gson().toJson(
+                    new ErrorMessage("Could not resign, are you still logged in?"))
+            );
         } catch (IOException exception){
-            throw new WebSocketException(exception);
+            throw new ResponseException(0, exception.getMessage());
         }
     }
 
