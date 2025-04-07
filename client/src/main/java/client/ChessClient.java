@@ -604,9 +604,7 @@ public class ChessClient {
         }
         try {
             this.webSocketFacade.resignGame(this.getAuthData().authToken(), this.gameID);
-            // You can only resign when you are playing a game, not observing.
-            this.clearGameInfo();
-            this.setMenuState(STATE_POSTLOGIN);
+            // Don't clear any of the GameData because we are only resigned
         } catch (WebSocketFacadeException exception) {
             return "Cannot resign from game. Are you logged in? Did you already win? Has the game even started yet?";
         }
