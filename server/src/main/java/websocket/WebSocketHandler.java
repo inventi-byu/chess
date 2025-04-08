@@ -34,7 +34,7 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketMessage
-    public void OnMessage(Session session, String message) throws IOException {
+    public void onMessage(Session session, String message) throws IOException {
         UserGameCommand userCommand = new Gson().fromJson(message, UserGameCommand.class);
         switch (userCommand.getCommandType()){
             case CONNECT -> {

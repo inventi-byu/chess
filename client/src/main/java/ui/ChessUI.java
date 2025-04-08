@@ -393,30 +393,13 @@ public class ChessUI {
 
                 if (perspective == ChessGame.TeamColor.WHITE) {
                     for (int j = 1; j < 9; j++) {
-                        boolean doHighlight = false;
-                        if(tilesToHighlight != null) {
-                            for (ChessPosition tile : tilesToHighlight) {
-                                if (tile.getRow() == i && tile.getColumn() == j) {
-                                    doHighlight = true;
-                                }
-                            }
-                        }
-                        sb = this.drawTile(sb, board, i, j, doHighlight, startTile);
+                        sb = this.drawTile(sb, board, i, j, this.findOutIfDoHighlight(tilesToHighlight, i, j), startTile);
                     }
                 } else {
                     for (int j = 8; j > 0; j--) {
-                        boolean doHighlight = false;
-                        if (tilesToHighlight != null) {
-                            for (ChessPosition tile : tilesToHighlight) {
-                                if (tile.getRow() == i && tile.getColumn() == j) {
-                                    doHighlight = true;
-                                }
-                            }
-                        }
-                        sb = this.drawTile(sb, board, i, j, doHighlight, startTile);
+                        sb = this.drawTile(sb, board, i, j, this.findOutIfDoHighlight(tilesToHighlight, i, j), startTile);
                     }
                 }
-
                 sb.append(this.bgColor);
                 sb.append(this.boardLetterColor);
                 sb.append(
@@ -427,6 +410,17 @@ public class ChessUI {
                 break;
         }
         return sb;
+    }
+
+    private boolean findOutIfDoHighlight(ChessPosition[] tilesToHighlight, int i, int j){
+        if(tilesToHighlight != null) {
+            for (ChessPosition tile : tilesToHighlight) {
+                if (tile.getRow() == i && tile.getColumn() == j) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private StringBuilder drawTile(StringBuilder sb, ChessBoard board, int row, int col, boolean doHighlight, ChessPosition startHighlightTile) {
