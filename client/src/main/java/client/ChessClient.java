@@ -574,7 +574,9 @@ public class ChessClient {
             // TODO: Add promotion piece logic (it would be required in the command)
             this.webSocketFacade.makeMove(this.authData, this.gameID, start, end, null);
         } catch (ChessPositionException exception) {
-            return "Sorry that move is not valid. Check your position notation: each position should start with a letter from a to h, and end with a number from 1 to 8.";
+            return "Sorry that move is not valid. Check your position notation:" +
+                    "each position should start with a letter from a to h," +
+                    "and end with a number from 1 to 8.";
         } catch (WebSocketFacadeException exception) {
             return "Sorry that move is not valid. Did you include a start and end position?";
         }

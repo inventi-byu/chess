@@ -210,12 +210,6 @@ public class DatabaseManager {
         for (int i = 0; i < params.length; i++) {
             var param = params[i];
             if (param instanceof String obj) {
-                /*
-                String paramAsString = (String)param;
-                if(paramAsString.equals("NULL")){
-                    preparedStatement.setNull(i + 1, java.sql.Types.);
-                }
-                 */
                 preparedStatement.setString(i + 1, obj);
             } else if (param instanceof Integer obj) {
                 preparedStatement.setInt(i + 1, obj);
