@@ -70,7 +70,13 @@ public class WebSocketFacade extends Endpoint {
         }
 }
 
-    public void makeMove(AuthData authData, Integer gameID, ChessPosition start, ChessPosition end, ChessPiece.PieceType promotionPiece) throws WebSocketFacadeException {
+    public void makeMove(
+            AuthData authData,
+            Integer gameID,
+            ChessPosition start,
+            ChessPosition end,
+            ChessPiece.PieceType promotionPiece)
+            throws WebSocketFacadeException {
         try {
             // TODO: Worry about promotion pieces
             MakeMoveCommand command = new MakeMoveCommand(authData.authToken(), gameID, new ChessMove(start, end, promotionPiece));

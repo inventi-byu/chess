@@ -183,7 +183,11 @@ public class ChessUI {
                         if (client.getMenuState().equals(ChessClient.STATE_GAME)){
                             this.displayChessBoard(client.getBoard(), client.getTeamColor(), client.getLegalMoves(client.getHighlightPosition()));
                         } else if (client.getMenuState().equals(ChessClient.STATE_OBSERVE)){
-                            this.displayChessBoard(client.getObservingBoard(), ChessGame.TeamColor.WHITE, client.getLegalMoves(client.getHighlightPosition()));
+                            this.displayChessBoard(
+                                    client.getObservingBoard(),
+                                    ChessGame.TeamColor.WHITE,
+                                    client.getLegalMoves(client.getHighlightPosition())
+                            );
                         }
                         break;
 
