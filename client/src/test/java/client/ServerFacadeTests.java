@@ -6,6 +6,7 @@ import model.AuthData;
 import model.GameMetaData;
 import org.junit.jupiter.api.*;
 import server.Server;
+import ui.ChessUI;
 import ui.NotificationHandler;
 import ui.ServerFacade;
 import ui.WebSocketFacade;
@@ -21,7 +22,12 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         serverFacade = new ServerFacade("http://localhost:" + port);
-        webSocketFacade = null;
+        ChessUI chessUI = new ChessUI(new ChessClient(serverFacade, webSocketFacade));
+        try {
+            webSocketFacade = new WebSocketFacade("http://localhost:" + port, new NotificationHandler(chessUI));
+        } catch (WebSocketFacadeException exception){
+            Assertions.fail(exception);
+        }
         System.out.println("Started test HTTP server on " + port);
     }
 

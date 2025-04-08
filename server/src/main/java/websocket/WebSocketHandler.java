@@ -328,17 +328,8 @@ public class WebSocketHandler {
                 this.sendError(session, "Could not leave game.");
                 return;
             }
-
-
             this.removeActor(command.getGameID(), session);
-
-            // Tell the user to clear their game or observing game data
-            LoadGameMessage loadGameMessage = new LoadGameMessage(null);
-            this.connections.notify(session, loadGameMessage);
-
-            // Remove the connection after notifying the user that the connection is closed
             this.connections.removeConnection(session);
-
 
             String userToRemove = null;
             boolean observing = false;
