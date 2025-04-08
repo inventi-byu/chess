@@ -2,14 +2,11 @@ package websocket;
 
 import chess.ChessGame;
 import chess.ChessMove;
-import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import model.AuthData;
 
 import model.GameData;
-import org.eclipse.jetty.websocket.api.WebSocketException;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.api.Session;
@@ -21,18 +18,21 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 @WebSocket
 public class WebSocketHandler {
     GameService gameService;
+    HashMap<Integer, ArrayList<Session>> actors;
 
     private final ConnectionsManager connections = new ConnectionsManager();
 
     public WebSocketHandler(GameService gameService){
         this.gameService = gameService;
+        this.actors = new HashMap<>();
     }
 
     @OnWebSocketMessage
@@ -57,6 +57,8 @@ public class WebSocketHandler {
             }
         }
     }
+
+
 
     /*
     @OnWebSocketError
@@ -132,7 +134,7 @@ public class WebSocketHandler {
                 checkBlack = true;
             }
 
-            //observing if we are not white username, and we are not black username
+            // Observing if we are not white username, and we are not black username
 
             if (checkWhite && username.equals(whiteUsername)){
                 teamColor = ChessGame.TeamColor.WHITE;
@@ -146,18 +148,20 @@ public class WebSocketHandler {
             }
 
             if(observing){
-                this.gameService.gameDAO.addObserverToGame(username, command.getGameID());
+                this.actors.addActor(command.getGameID(), session);
+
+                //this.gameService.gameDAO.addObserverToGame(username, command.getGameID());
             }
             // Add the connection and create a LoadGameMessage
             this.connections.addConnection(new Connection(username, session));
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData, observing);
-
-            this.connections.notify(username, loadGameMessage);
+            this.connections.notify(session, loadGameMessage);
 
             // Notify that someone joined
             String message = "";
 
-            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+            ArrayList<Session> observerList = this.getObserverList(command.getGameID());
+            //String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
 
             if (!observing) {
                 message = username + " joined the game as " + teamColor + "!";
@@ -472,5 +476,41 @@ public class WebSocketHandler {
             throw new ResponseException(0, exception.getMessage());
         }
     }
+
+    private ArrayList<Session> getActorList(Integer gameID){
+        try {
+            return this.actors.get(gameID);
+        } catch (Exception exception){
+            // No observer list
+            return null;
+        }
+    }
+
+    private void updateActorList(Integer gameID, ArrayList<Session> newObserverList){
+        try{
+            this.actors.replace(gameID, newObserverList);
+        } catch (Exception exception){
+            return;
+        }
+    }
+
+    private void addActorToGame(Integer gameID, Session session){
+        try {
+            ArrayList<Session> actorsInGame = this.getActorList(gameID);
+            if (actorsInGame != null){
+                actorsInGame.add(session);
+                this.updateActorList(gameID, actorsInGame);
+            } else {
+                // Add a new list because there are no actors yet
+                ArrayList<Session> freshActorList = new ArrayList<Session>();
+                freshActorList.add(session);
+                this.actors.put(gameID, freshActorList);
+            }
+        } catch (Exception exception){
+            return;
+        }
+    }
+
+
 
 }
