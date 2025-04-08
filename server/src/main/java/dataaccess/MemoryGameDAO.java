@@ -122,24 +122,4 @@ public class MemoryGameDAO implements GameDAO {
         this.gameDB.add(gameID, gameDataWithUserRemoved);
         return true;
     }
-
-    public String[] getObserverList(int gameID){
-        return this.observers.get(gameID);
-    }
-
-    public boolean addObserverToGame(String username, int gameID){
-        ArrayList<String> observersAsArrayList = new ArrayList<>(List.of(this.observers.get(gameID)));
-        observersAsArrayList.add(username);
-        this.observers.remove(gameID);
-        this.observers.put(gameID, observersAsArrayList.toArray(new String[0]));
-        return true;
-    }
-
-    public boolean removeObserverFromGame(String username, int gameID){
-        ArrayList<String> observersAsArrayList = new ArrayList<>(List.of(this.observers.get(gameID)));
-        observersAsArrayList.remove(username);
-        this.observers.remove(gameID);
-        this.observers.put(gameID, observersAsArrayList.toArray(new String[0]));
-        return true;
-    }
 }
