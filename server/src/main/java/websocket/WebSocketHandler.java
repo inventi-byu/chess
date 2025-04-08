@@ -113,6 +113,11 @@ public class WebSocketHandler {
             // Get the GameData
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
 
+            if (gameData == null){
+                this.sendError(session, "Invalid game. Could not connect.");
+                return;
+            }
+
             whiteUsername = gameData.whiteUsername();
             blackUsername = gameData.blackUsername();
 
