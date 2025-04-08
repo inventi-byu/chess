@@ -148,7 +148,7 @@ public class WebSocketHandler {
             }
 
             if(observing){
-                this.actors.addActor(command.getGameID(), session);
+                this.addActorToGame(command.getGameID(), session);
 
                 //this.gameService.gameDAO.addObserverToGame(username, command.getGameID());
             }
