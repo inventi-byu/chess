@@ -147,11 +147,11 @@ public class WebSocketHandler {
                 observing = true;
             }
 
-            if(observing){
-                this.addActorToGame(command.getGameID(), session);
+            this.addActorToGame(command.getGameID(), session);
 
-                //this.gameService.gameDAO.addObserverToGame(username, command.getGameID());
-            }
+            //If observing old code
+            //this.gameService.gameDAO.addObserverToGame(username, command.getGameID());
+
             // Add the connection and create a LoadGameMessage
             this.connections.addConnection(new Connection(username, session));
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData, observing);
@@ -160,31 +160,37 @@ public class WebSocketHandler {
             // Notify that someone joined
             String message = "";
 
-            ArrayList<Session> observerList = this.getObserverList(command.getGameID());
+            ArrayList<Session> actorList = this.getActorList(command.getGameID());
             //String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
 
             if (!observing) {
                 message = username + " joined the game as " + teamColor + "!";
-                if (opponentUsername != null) {
-                    this.connections.notify(opponentUsername, new NotificationMessage(message));
-                }
-                if(observerList != null) {
-                    this.connections.notify(observerList, new NotificationMessage(message));
-                }
+//                    this.connections.notify(observerList, new NotificationMessage(message));
+//                }
+//                if (opponentUsername != null) {
+//                    this.connections.notify(opponentUsername, new NotificationMessage(message));
+//                }
+//                if(observerList != null) {
+//                    this.connections.notify(observerList, new NotificationMessage(message));
+//                }
             } else {
                 // The person who joined is observing
                 message = username + " joined the game as an observer!";
-                ArrayList<String> notifyList = new ArrayList<>();
-                if (whiteUsername != null){
-                    notifyList.add(gameData.whiteUsername());
-                }
-                if (blackUsername != null){
-                    notifyList.add(gameData.blackUsername());
-                }
-                if(observerList != null){
-                    notifyList.addAll(List.of(observerList));
-                }
-                this.connections.notifyExcept(notifyList.toArray(new String[0]), username, new NotificationMessage(message));
+//
+//                ArrayList<String> notifyList = new ArrayList<>();
+//                if (whiteUsername != null){
+//                    notifyList.add(gameData.whiteUsername());
+//                }
+//                if (blackUsername != null){
+//                    notifyList.add(gameData.blackUsername());
+//                }
+//                if(observerList != null){
+//                    notifyList.addAll(List.of(observerList));
+//                }
+//                this.connections.notifyExcept(notifyList.toArray(new String[0]), username, new NotificationMessage(message));
+            }
+            if(actorList != null) {
+                this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
             }
 
         } catch (ResponseException exception) {
