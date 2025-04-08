@@ -86,8 +86,7 @@ public class ChessUI {
                     case "helpPostLogin":
                         this.displayHelpPostLogin();
                         break;
-                    case "join":
-                    case "helpGame":
+                    case "join", "helpGame":
                         this.displayHelpGame();
                         break;
                     case "helpObserve":
@@ -371,16 +370,10 @@ public class ChessUI {
         return sb.toString();
     }
 
-    private StringBuilder drawChessBoard(StringBuilder sb,
-                                         ChessBoard board, int i,
-                                         String[] boardLabels,
-                                         ChessGame.TeamColor perspective,
-                                         ChessPosition[] tilesToHighlight,
-                                         ChessPosition startTile) {
+    private StringBuilder drawChessBoard(StringBuilder sb, ChessBoard board, int i, String[] boardLabels,
+                                         ChessGame.TeamColor perspective, ChessPosition[] tilesToHighlight, ChessPosition startTile) {
         switch (i) {
-            // Both 0 and 9 have the same string
-            case 0:
-            case 9:
+            case 0, 9:
                 sb.append(this.bgColor);
                 sb.append(this.boardLetterColor);
                 sb.append(ChessUI.EMPTY_SPACE);
@@ -391,14 +384,7 @@ public class ChessUI {
                 sb.append(this.emptyColor);
                 sb.append("\n");
                 break;
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
+            case 1, 2, 3, 4, 5, 6, 7, 8:
                 sb.append(this.bgColor);
                 sb.append(this.boardLetterColor);
                 sb.append(
@@ -471,11 +457,7 @@ public class ChessUI {
             sb.append(blackPieceColor);
             pieceToDraw = curPiece.draw();
         }
-
-        sb.append(
-                this.sandwichString(pieceToDraw)
-        );
-
+        sb.append(this.sandwichString(pieceToDraw));
         return sb;
     }
 
