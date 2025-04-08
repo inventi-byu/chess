@@ -271,13 +271,15 @@ public class WebSocketHandler {
             // Update the game
             this.gameService.gameDAO.updateGame(gameData);
 
-            LoadGameMessage loadGameMessagePlayers = new LoadGameMessage(gameData, false);
-            LoadGameMessage loadGameMessageObservers = new LoadGameMessage(gameData, true);
+            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
 
-            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+            ArrayList<Session> actorList = this.getActorList(command.getGameID());
 
-            this.connections.notify(username, loadGameMessagePlayers);
-            this.connections.notify(observerList, loadGameMessageObservers);
+            //String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+
+            if(actorList != null) {
+                this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
+            }
 
             // Get information about the move
             ChessMove move = command.getMove();
@@ -286,13 +288,11 @@ public class WebSocketHandler {
 
             String message = username + " made a move from " + start + " to " + end + ".";
 
-            if (opponentUsername != null) {
-                this.connections.notify(opponentUsername, loadGameMessagePlayers);
-                this.connections.notify(opponentUsername, new NotificationMessage(message));
+            // Notify people a move was made
+            if(actorList != null){
+                this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
             }
 
-            // Notify observers a move was made
-            this.connections.notify(observerList, new NotificationMessage(message));
 
         } catch (ResponseException exception) {
             this.sendError(session, "Invalid credentials.");
