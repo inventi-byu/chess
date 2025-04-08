@@ -51,7 +51,7 @@ public class ConnectionsManager {
         if (connection.session.isOpen()){
             connection.send(new Gson().toJson(notification));
         } else {
-            this.removeConnection(username);
+            this.removeConnection(session);
         }
     }
 
@@ -70,8 +70,8 @@ public class ConnectionsManager {
         return connectionToReturn;
     }
 
-    public void removeConnection(String username){
-        Connection connection = getConnectionFromUsername(username);
+    public void removeConnection(Session session){
+        Connection connection = getConnectionFromSession(session);
         this.connections.remove(connection);
     }
 }
