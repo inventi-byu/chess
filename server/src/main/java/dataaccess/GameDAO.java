@@ -50,9 +50,4 @@ public interface GameDAO {
 
     public boolean removeUserFromGame(int gameID, String username);
 
-    public String[] getObserverList(int gameID);
-
-    public boolean addObserverToGame(String username, int gameID);
-
-    public boolean removeObserverFromGame(String username, int gameID);
 }

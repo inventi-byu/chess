@@ -98,12 +98,4 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    private void connect(String authoken, Integer gameID) {
-        throw new RuntimeException("Not implemented.");
-    }
-
-    private void disconnect(String authToken, Integer gameID){
-        throw new RuntimeException("Not implemented.");
-    }
-
 }

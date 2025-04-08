@@ -309,7 +309,8 @@ public class WebSocketHandler {
                 message = username + " stopped observing the game.";
             }
             if(actorList != null) {
-                this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
+                this.connections.notifyExcept(actorList.toArray(new Session[0]),
+                        session, new NotificationMessage(message));
             }
 
         } catch (ResponseException exception) {
