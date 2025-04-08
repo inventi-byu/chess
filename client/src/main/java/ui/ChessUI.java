@@ -5,11 +5,8 @@ import chess.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
-
 import client.ChessClient;
-import model.GameData;
 import model.GameMetaData;
-
 public class ChessUI {
 
     public ChessClient client;
@@ -68,12 +65,6 @@ public class ChessUI {
     }
 
     public void run() {
-        /*
-        while command is not quit
-            display main menu
-            switch between help, quit, login, register
-         */
-
         Scanner scanner = new Scanner(System.in);
         String result = "";
         this.displayPreLoginMenu();
@@ -92,58 +83,43 @@ public class ChessUI {
                     case "helpPreLogin":
                         this.displayHelpPreLogin();
                         break;
-
                     case "helpPostLogin":
                         this.displayHelpPostLogin();
                         break;
-
+                    case "join":
                     case "helpGame":
                         this.displayHelpGame();
                         break;
-
                     case "helpObserve":
                         this.displayHelpObserve();
                         break;
-
                     case "quit":
                         break;
-
                     case "register":
                         this.println("Successfully registered. You are now logged in.");
                         this.displayPostLoginMenu();
                         this.displayHelpPostLogin();
                         break;
-
                     case "login":
                         this.println("Successfully logged in.");
                         this.displayPostLoginMenu();
                         this.displayHelpPostLogin();
                         break;
-
                     case "logout":
                         this.println("You successfully logged out.");
                         this.print("\n");
                         this.displayPreLoginMenu();
                         break;
-
                     case "create":
                         this.println("Successfully created game.");
                         break;
-
                     case "list":
                         this.displayListOfGames();
                         break;
-
-                    case "join":
-                        this.displayGameMenu(client.getBoard(), client.getTeamColor());
-                        this.displayHelpGame();
-                        break;
-
                     case "observe":
                         this.displayObserveMenu(client.getObservingBoard());
                         this.displayHelpObserve();
                         break;
-
                     case "redraw":
                         if(this.client.getMenuState().equals(ChessClient.STATE_GAME)){
                             this.displayChessBoard(client.getBoard(), client.getTeamColor(), null);
@@ -151,31 +127,22 @@ public class ChessUI {
                             this.displayChessBoard(client.getObservingBoard(), ChessGame.TeamColor.WHITE, null);
                         }
                         break;
-
                     case "leave":
                         this.displayPostLoginMenu();
                         this.displayHelpPostLogin();
                         break;
-
                     case "move":
-                        // Just reprint the chessboard with a fun message
-                        //this.displayChessBoard(client.getBoard(), client.getTeamColor(), null);
-
-                        switch (this.rand.nextInt(5)){
+                        switch (this.rand.nextInt(3)){
                             case 0 -> this.println("You moved! One more move towards chess victory!");
-                            case 1 -> this.println("You moved! Wow! That was quite a move!");
-                            case 2 -> this.println("You moved! Only an expert would have known to make that move!");
-                            case 3 -> this.println("You moved! And so the tables turn...");
-                            case 4 -> this.println("You moved! And the battle continues...");
+                            case 1 -> this.println("You moved! And so the tables turn...");
+                            case 2 -> this.println("You moved! And the battle continues...");
                         }
                         break;
                     case "resign":
-                        switch (this.rand.nextInt(5)){
+                        switch (this.rand.nextInt(3)){
                             case 0 -> this.println("You resigned! Wow...just...wow.");
                             case 1 -> this.println("You resigned! But you were so close :(");
                             case 2 -> this.println("You resigned! Don't give up next time!");
-                            case 3 -> this.println("You resigned! It\'s all in the mind...");
-                            case 4 -> this.println("You resigned! Well that was unexpected.");
                         }
                         break;
                         
@@ -183,9 +150,7 @@ public class ChessUI {
                         if (client.getMenuState().equals(ChessClient.STATE_GAME)){
                             this.displayChessBoard(client.getBoard(), client.getTeamColor(), client.getLegalMoves(client.getHighlightPosition()));
                         } else if (client.getMenuState().equals(ChessClient.STATE_OBSERVE)){
-                            this.displayChessBoard(
-                                    client.getObservingBoard(),
-                                    ChessGame.TeamColor.WHITE,
+                            this.displayChessBoard(client.getObservingBoard(), ChessGame.TeamColor.WHITE,
                                     client.getLegalMoves(client.getHighlightPosition())
                             );
                         }
@@ -195,7 +160,8 @@ public class ChessUI {
                         // If there was an error, print the user-friendly message.
                         if(client.getMenuState().equals(ChessClient.STATE_POSTLOGIN)){
                             this.println( (this.menuTextColorPostLogin + result) );
-                        } else if ((client.getMenuState().equals(ChessClient.STATE_GAME)) || client.getMenuState().equals(ChessClient.STATE_OBSERVE)){
+                        } else if ((client.getMenuState().equals(ChessClient.STATE_GAME)) ||
+                                client.getMenuState().equals(ChessClient.STATE_OBSERVE)){
                             this.println( (this.menuTextColorGame + result) );
                         } else {
                             this.println( (this.menuTextColorPreLogin + result) );
@@ -217,13 +183,11 @@ public class ChessUI {
                 highlight <LOCATION> - Highlights legal moves for the piece at LOCATION.
                                        Location should be in chess notation (i.e. a1 or A1).
                 move <START> <END> - Move chess piece at START to the END position.
-                                     START and END should be in lowercase chess
-                                     notation (i.e. a1).
+                                     START and END should be in lowercase chess notation (i.e. a1).
                 leave - Leave the game without forfeiting.
                 resign - Forfeit and end the game without leaving.
                 help - Get help with possible commands
-                """
-        );
+                """);
     }
 
     public void displayHelpObserve(){
@@ -235,8 +199,7 @@ public class ChessUI {
                                        Location should be in chess notation (i.e. a1 or A1).
                 leave - Leave the game you are observing.
                 help - Get help with possible commands
-                """
-        );
+                """);
     }
 
     public void displayPostLoginMenu(){
@@ -246,8 +209,7 @@ public class ChessUI {
                 
                 Welcome to Chess! To start, choose an option below:
                 
-                """
-        );
+                """);
     }
 
     public void displayPreLoginMenu() {
@@ -256,12 +218,7 @@ public class ChessUI {
             """
             ====== Welcome to Chess ======
             Type "help" to get started!
-            """
-        );
-    }
-
-    public void displayGameMenu(ChessBoard board, ChessGame.TeamColor perspective) {
-        //this.displayChessBoard(board, perspective,null);
+            """);
     }
 
     public void displayPrompt(){
@@ -358,8 +315,6 @@ public class ChessUI {
      * @param buf the String to print to the console (the buffer to print).
      */
     private void print(String buf) {
-//        PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-//        out.print(buf);
         System.out.print(buf);
     }
 
@@ -487,7 +442,6 @@ public class ChessUI {
         }
         return sb;
     }
-
 
     private StringBuilder drawTile(StringBuilder sb, ChessBoard board, int row, int col, boolean doHighlight, ChessPosition startHighlightTile) {
         ChessPosition curPos = new ChessPosition(row, col);
