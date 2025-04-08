@@ -52,7 +52,7 @@ public class WebSocketFacade extends Endpoint {
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig){}
 
-    public void joinGame(String username, String teamColor, Integer gameID, String authToken) throws WebSocketFacadeException {
+    public void joinGame(String authToken, Integer gameID) throws WebSocketFacadeException {
         try {
             ConnectCommand command = new ConnectCommand(authToken, gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));

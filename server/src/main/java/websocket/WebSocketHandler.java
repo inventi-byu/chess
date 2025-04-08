@@ -116,22 +116,28 @@ public class WebSocketHandler {
             whiteUsername = gameData.whiteUsername();
             blackUsername = gameData.blackUsername();
 
-            if (whiteUsername == null && blackUsername == null){
-                observing = true;
-            }
-            if(whiteUsername == null && !username.equals(blackUsername)){
-                observing = true;
-            } else if (blackUsername == null && !username.equals(whiteUsername)) {
-                observing = true;
+            // Make sure .equals does not throw null pointer exception
+            boolean checkWhite = false;
+            boolean checkBlack = false;
 
+            if (whiteUsername != null){
+                checkWhite = true;
+            }
+            if (blackUsername != null){
+                checkBlack = true;
+            }
+
+            //observing if we are not white username, and we are not black username
+
+            if (checkWhite && username.equals(whiteUsername)){
+                teamColor = ChessGame.TeamColor.WHITE;
+                opponentUsername = blackUsername;
+            } else if (checkBlack && username.equals(blackUsername)){
+                teamColor = ChessGame.TeamColor.BLACK;
+                opponentUsername = whiteUsername;
             } else {
-                if (username.equals(whiteUsername)){
-                    teamColor = ChessGame.TeamColor.WHITE;
-                    opponentUsername = blackUsername;
-                } else if (username.equals(blackUsername)){
-                    teamColor = ChessGame.TeamColor.BLACK;
-                    opponentUsername = whiteUsername;
-                }
+                // You aren't white or black, so observe
+                observing = true;
             }
 
             if(observing){

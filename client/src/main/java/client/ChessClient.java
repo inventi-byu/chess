@@ -458,7 +458,7 @@ public class ChessClient {
             this.serverFacade.joinGame(stringTeamColor, curGameID, this.authData.authToken());
             this.setGameID(curGameID);
 
-            this.webSocketFacade.joinGame(this.username, stringTeamColor, curGameID, this.authData.authToken());
+            this.webSocketFacade.joinGame(this.authData.authToken(), curGameID);
 
             //TimeUnit.SECONDS.sleep(5);
 
