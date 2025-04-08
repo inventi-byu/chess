@@ -480,7 +480,7 @@ public class WebSocketHandler {
 
             // Notify the user and observers to load the game
             if(actorList != null) {
-                this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
+                //this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
                 this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
             }
 
