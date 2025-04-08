@@ -254,6 +254,11 @@ public class WebSocketHandler {
                 return;
             }
 
+            if(gameData.game().getTeamTurn() != teamColor){
+                this.sendError(session, "Sorry you can't move, its not your turn!");
+                return;
+            }
+
             try {
                 // Make the move and set the new team turn
                 gameData.game().makeMove(command.getMove());
@@ -266,6 +271,7 @@ public class WebSocketHandler {
 
             } catch (InvalidMoveException exception){
                 this.sendError(session, "Invalid move.");
+                return;
             }
 
             // Update the game
