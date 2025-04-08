@@ -18,10 +18,8 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 @WebSocket
 public class WebSocketHandler {
@@ -58,37 +56,6 @@ public class WebSocketHandler {
         }
     }
 
-
-
-    /*
-    @OnWebSocketError
-    public void onError(Session session, Throwable error){
-        try {
-            String[] stackTrace = (String[])Arrays.stream(error.getStackTrace()).toArray();
-            StringBuilder sb = new StringBuilder();
-            for (String line : stackTrace){
-                sb.append(line);
-                sb.append("\n");
-            }
-            session.getRemote().sendString(new Gson().toJson(
-                    new ErrorMessage(error.toString() +
-                            "\n" +
-                            sb.toString())
-            ));
-        } catch (IOException exception){
-            String[]  stackTrace = (String[])Arrays.stream(exception.getStackTrace()).toArray();
-            StringBuilder sb = new StringBuilder();
-            for (String line : stackTrace){
-                sb.append(line);
-                sb.append("\n");
-            }
-            throw new ResponseException(0, exception.toString() + "" +
-                    "\n" +
-                    sb.toString());
-        }
-    }
-     */
-
     public void connectUser(Session session, ConnectCommand command){
         if(command.getAuthToken() == null) {
             this.sendError(session, "Invalid credentials.");
@@ -106,7 +73,6 @@ public class WebSocketHandler {
         String blackUsername = null;
         boolean observing = false;
         ChessGame.TeamColor teamColor = null;
-        String opponentUsername = null;
 
         try{
             authData = this.gameService.authenticateWithToken(command.getAuthToken());
@@ -138,19 +104,14 @@ public class WebSocketHandler {
 
             if (checkWhite && username.equals(whiteUsername)){
                 teamColor = ChessGame.TeamColor.WHITE;
-                opponentUsername = blackUsername;
             } else if (checkBlack && username.equals(blackUsername)){
                 teamColor = ChessGame.TeamColor.BLACK;
-                opponentUsername = whiteUsername;
             } else {
                 // You aren't white or black, so observe
                 observing = true;
             }
 
             this.addActorToGame(command.getGameID(), session);
-
-            //If observing old code
-            //this.gameService.gameDAO.addObserverToGame(username, command.getGameID());
 
             // Add the connection and create a LoadGameMessage
             this.connections.addConnection(new Connection(username, session));
@@ -165,29 +126,9 @@ public class WebSocketHandler {
 
             if (!observing) {
                 message = username + " joined the game as " + teamColor + "!";
-//                    this.connections.notify(observerList, new NotificationMessage(message));
-//                }
-//                if (opponentUsername != null) {
-//                    this.connections.notify(opponentUsername, new NotificationMessage(message));
-//                }
-//                if(observerList != null) {
-//                    this.connections.notify(observerList, new NotificationMessage(message));
-//                }
             } else {
                 // The person who joined is observing
                 message = username + " joined the game as an observer!";
-//
-//                ArrayList<String> notifyList = new ArrayList<>();
-//                if (whiteUsername != null){
-//                    notifyList.add(gameData.whiteUsername());
-//                }
-//                if (blackUsername != null){
-//                    notifyList.add(gameData.blackUsername());
-//                }
-//                if(observerList != null){
-//                    notifyList.addAll(List.of(observerList));
-//                }
-//                this.connections.notifyExcept(notifyList.toArray(new String[0]), username, new NotificationMessage(message));
             }
             if(actorList != null) {
                 this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
@@ -222,7 +163,6 @@ public class WebSocketHandler {
         String whiteUsername = null;
         String blackUsername = null;
         ChessGame.TeamColor teamColor = null;
-        String opponentUsername = null;
 
         try{
             // Authenticate and get GameData
@@ -239,10 +179,8 @@ public class WebSocketHandler {
 
             if (username.equals(whiteUsername)){
                 teamColor = ChessGame.TeamColor.WHITE;
-                opponentUsername = blackUsername;
             } else if (username.equals(blackUsername)){
                 teamColor = ChessGame.TeamColor.BLACK;
-                opponentUsername = whiteUsername;
             } else {
                 this.sendError(session, "Sorry you can't move when you're observing!");
                 return;
@@ -280,8 +218,6 @@ public class WebSocketHandler {
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
 
             ArrayList<Session> actorList = this.getActorList(command.getGameID());
-
-            //String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
 
             if(actorList != null) {
                 this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
@@ -362,11 +298,9 @@ public class WebSocketHandler {
             }
 
             // Notify that someone left
-//            String opponentUsername = null;
             String message = "";
 
             ArrayList<Session> actorList = this.getActorList(command.getGameID());
-//            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
 
             if (!observing) {
                 message = username + " left the game.";
@@ -437,7 +371,6 @@ public class WebSocketHandler {
             }
 
             // Observing if we are not white username, and we are not black username
-
             if (checkWhite && username.equals(whiteUsername)){
                 opponentUsername = blackUsername;
             } else if (checkBlack && username.equals(blackUsername)){
@@ -457,14 +390,12 @@ public class WebSocketHandler {
             }
 
             try {
-
                 // Set the game as completed
                 gameData.game().setCompleted();
                 if (whiteUsername == null && blackUsername == null){
                     this.sendError(session, "Sorry you can't resign when you're observing.");
                     return;
                 }
-
             } catch (Exception exception){
                 this.sendError(session, "Failed to resign.");
             }
@@ -475,8 +406,6 @@ public class WebSocketHandler {
             // Get observers
             ArrayList<Session> actorList = this.getActorList(command.getGameID());
 
-            //String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
-
             // Set up load game messages
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
 
@@ -484,7 +413,6 @@ public class WebSocketHandler {
 
             // Notify the user and observers to load the game
             if(actorList != null) {
-                //this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
                 this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
             }
 
@@ -553,7 +481,4 @@ public class WebSocketHandler {
             return;
         }
     }
-
-
-
 }
