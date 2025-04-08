@@ -70,15 +70,10 @@ public class WebSocketFacade extends Endpoint {
         }
 }
 
-    public void makeMove(AuthData authData, Integer gameID, ChessGame.TeamColor teamColor, ChessPosition start, ChessPosition end, ChessPiece.PieceType promotionPiece) throws WebSocketFacadeException {
+    public void makeMove(AuthData authData, Integer gameID, ChessPosition start, ChessPosition end, ChessPiece.PieceType promotionPiece) throws WebSocketFacadeException {
         try {
-            String teamColorString = "";
-            if(teamColor == ChessGame.TeamColor.WHITE){
-                teamColorString = "WHITE";
-            } else {
-                teamColorString = "BLACK";
-            }
-            MakeMoveCommand command = new MakeMoveCommand(authData.username(), teamColorString, new ChessMove(start, end, promotionPiece),authData.authToken(), gameID);
+            // TODO: Worry about promotion pieces
+            MakeMoveCommand command = new MakeMoveCommand(authData.authToken(), gameID, new ChessMove(start, end, promotionPiece));
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException exception){
             throw new WebSocketFacadeException(500, exception.getMessage());

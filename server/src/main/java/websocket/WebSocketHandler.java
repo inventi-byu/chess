@@ -88,17 +88,6 @@ public class WebSocketHandler {
      */
 
     public void connectUser(Session session, ConnectCommand command){
-//        if (command.getUsername() == null){
-//            try {
-//                session.getRemote().sendString(new Gson().toJson(
-//                        new ErrorMessage("You don't have a username, are you logged in?"))
-//                );
-//            } catch (IOException exception){
-//                throw new ResponseException(0, exception.getMessage());
-//            }
-//        }
-//        String username = command.getUsername();
-
         if(command.getAuthToken() == null) {
             this.sendError(session, "Invalid credentials.");
             return;
@@ -192,43 +181,63 @@ public class WebSocketHandler {
     }
 
     public void makeMove(Session session, MakeMoveCommand command){
-        if (command.getUsername() == null){
-            try {
-                session.getRemote().sendString(new Gson().toJson(
-                        new ErrorMessage("You don't have a username, are you logged in?"))
-                );
-            } catch (IOException exception){
-                throw new ResponseException(0, exception.getMessage());
-            }
+        if (command.getAuthToken() == null) {
+            this.sendError(session, "Invalid credentials.");
+            return;
         }
-        String username = command.getUsername();
-        if(command.getGameID() == null){
+        if (command.getGameID() == null){
             this.sendError(session, "Invalid gameID.");
             return;
         }
-        if(command.getAuthToken() == null) {
-            this.sendError(session, "Invalid credentials.");
+
+        if (command.getMove() == null){
+            this.sendError(session, "Invalid move.");
             return;
         }
 
         // Authenticate
         AuthData authData = null;
+        String username = null;
+        String whiteUsername = null;
+        String blackUsername = null;
+        ChessGame.TeamColor teamColor = null;
+        String opponentUsername = null;
+
         try{
+            // Authenticate and get GameData
             authData = this.gameService.authenticateWithToken(command.getAuthToken());
 
             // Get the GameData
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
 
+            // Grab username and find the team color
+            username = authData.username();
+
+            whiteUsername = gameData.whiteUsername();
+            blackUsername = gameData.blackUsername();
+
+            if (username.equals(whiteUsername)){
+                teamColor = ChessGame.TeamColor.WHITE;
+                opponentUsername = blackUsername;
+            } else if (username.equals(blackUsername)){
+                teamColor = ChessGame.TeamColor.BLACK;
+                opponentUsername = whiteUsername;
+            } else {
+                this.sendError(session, "Sorry you can't move when you're observing!");
+                return;
+            }
+
+            // Make sure the game is still going
             if(gameData.game().isCompleted()){
                 this.sendError(session, "Sorry you can't move, the game is already over!");
                 return;
             }
 
             try {
-
                 // Make the move and set the new team turn
                 gameData.game().makeMove(command.getMove());
-                if (command.getTeamColor().equals("WHITE")){
+
+                if (teamColor == ChessGame.TeamColor.WHITE){
                     gameData.game().setTeamTurn(ChessGame.TeamColor.BLACK);
                 } else {
                     gameData.game().setTeamTurn(ChessGame.TeamColor.WHITE);
@@ -237,37 +246,31 @@ public class WebSocketHandler {
             } catch (InvalidMoveException exception){
                 this.sendError(session, "Invalid move.");
             }
+
+            // Update the game
             this.gameService.gameDAO.updateGame(gameData);
 
             LoadGameMessage loadGameMessagePlayers = new LoadGameMessage(gameData, false);
-
-            // TODO: Load game from observers
-            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
             LoadGameMessage loadGameMessageObservers = new LoadGameMessage(gameData, true);
+
+            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
 
             this.connections.notify(username, loadGameMessagePlayers);
             this.connections.notify(observerList, loadGameMessageObservers);
 
-            // Notify opponent that someone joined
-            String opponentUsername = null;
-            String teamColor = command.getTeamColor();
-            String message = "";
-
+            // Get information about the move
             ChessMove move = command.getMove();
             String start = PositionConverter.positionToLocation(move.getStartPosition());
             String end = PositionConverter.positionToLocation(move.getEndPosition());
 
-            message = username + " made a move from " + start + " to " + end + ".";
-            if (teamColor.equals("WHITE")) {
-                opponentUsername = gameData.blackUsername();
-            } else {
-                opponentUsername = gameData.whiteUsername();
-            }
+            String message = username + " made a move from " + start + " to " + end + ".";
+
             if (opponentUsername != null) {
                 this.connections.notify(opponentUsername, loadGameMessagePlayers);
                 this.connections.notify(opponentUsername, new NotificationMessage(message));
             }
-            // Notify observers someone joined the game
+
+            // Notify observers a move was made
             this.connections.notify(observerList, new NotificationMessage(message));
 
         } catch (ResponseException exception) {
