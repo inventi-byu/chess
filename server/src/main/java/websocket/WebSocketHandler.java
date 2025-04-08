@@ -154,7 +154,7 @@ public class WebSocketHandler {
 
             // Add the connection and create a LoadGameMessage
             this.connections.addConnection(new Connection(username, session));
-            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData, observing);
+            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
             this.connections.notify(session, loadGameMessage);
 
             // Notify that someone joined
@@ -319,7 +319,7 @@ public class WebSocketHandler {
             String username = authData.username();
 
             if(gameData == null){
-                this.sendError(session, "Invalid game.");
+                this.sendError(session, "Could not leave game.");
                 return;
             }
 
@@ -418,15 +418,40 @@ public class WebSocketHandler {
 
             // Get the GameData
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
+            if(gameData == null){
+                this.sendError(session, "Could not resign from game.");
+                return;
+            }
+
             String whiteUsername = gameData.whiteUsername();
             String blackUsername = gameData.blackUsername();
+            String opponentUsername = null;
+
+            // Make sure .equals does not throw null pointer exception
+            boolean checkWhite = false;
+            boolean checkBlack = false;
+
+            if (whiteUsername != null){
+                checkWhite = true;
+            }
+            if (blackUsername != null){
+                checkBlack = true;
+            }
+
+            // Observing if we are not white username, and we are not black username
+
+            if (checkWhite && username.equals(whiteUsername)){
+                opponentUsername = blackUsername;
+            } else if (checkBlack && username.equals(blackUsername)){
+                opponentUsername = whiteUsername;
+            }
 
             try {
 
                 // Set the game as completed
                 gameData.game().setCompleted();
                 if (whiteUsername == null && blackUsername == null){
-                    this.sendError(session, "Sorry you can't resign when you're playing by yourself.");
+                    this.sendError(session, "Sorry you can't resign when you're observing.");
                     return;
                 }
 
@@ -437,38 +462,21 @@ public class WebSocketHandler {
             // Update the game data
             this.gameService.gameDAO.updateGame(gameData);
 
-
-            // Get opponent name
-            String opponentUsername = null;
-            if (username.equals(whiteUsername)) {
-                opponentUsername = blackUsername;
-            } else {
-                opponentUsername = whiteUsername;
-            }
-
             // Get observers
-            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+            ArrayList<Session> actorList = this.getActorList(command.getGameID());
+
+            //String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
 
             // Set up load game messages
-            LoadGameMessage loadGameMessagePlayers = new LoadGameMessage(gameData, false);
-            LoadGameMessage loadGameMessageObservers = new LoadGameMessage(gameData, true);
+            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
 
-            String messageForOpponent = username + " resigned. You won the game!";
-            String messageForObservers = username + " resigned. " + opponentUsername + " won the game!";
+            String message = username + " resigned. " + opponentUsername + " won the game!";
 
             // Notify the user and observers to load the game
-            this.connections.notify(username, loadGameMessagePlayers);
-            this.connections.notify(observerList, loadGameMessageObservers);
-
-
-            // Notify the opponent to load the game, and give them their message
-            if (opponentUsername != null) {
-                this.connections.notify(opponentUsername, loadGameMessagePlayers);
-                this.connections.notify(opponentUsername, new NotificationMessage(messageForOpponent));
+            if(actorList != null) {
+                this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
+                this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
             }
-
-            // Notify the observers that the user resigned
-            this.connections.notify(observerList, new NotificationMessage(messageForObservers));
 
         } catch (ResponseException exception) {
             this.sendError(session, "Invalid credentials.");
