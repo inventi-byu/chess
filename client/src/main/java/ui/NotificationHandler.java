@@ -60,7 +60,7 @@ public class NotificationHandler {
         this.currentGameData = loadGameMessage.getGame();
         if (loadGameMessage.getGame() == null){
             String gameName = null;
-            if (loadGameMessage.isObserving()){
+            if (this.chessUI.client.isObserving()){
                 if (this.chessUI.client.getObservingGameData() != null){
                     gameName = this.chessUI.client.getGameData().gameName();
                 }
@@ -78,7 +78,7 @@ public class NotificationHandler {
             return;
         }
 
-        if(loadGameMessage.isObserving()){
+        if(this.chessUI.client.isObserving()){
             // Reset text color
             this.chessUI.display(this.chessUI.menuBGColor + this.chessUI.menuTextColorObserve);
 

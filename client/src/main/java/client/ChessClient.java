@@ -46,6 +46,7 @@ public class ChessClient {
     private int gameID;
 
     // Observe info
+    private boolean observing;
     private ChessBoard observingBoard;
     private ChessGame observingGame;
     private GameData observingGameData;
@@ -77,6 +78,7 @@ public class ChessClient {
         this.gameID = 0; // No game at the beginning
 
         // Observe info
+        this.observing = false;
         this.observingBoard = null;
         this.observingGame = null;
         this.observingGameData = null;
@@ -203,6 +205,14 @@ public class ChessClient {
 
     public ChessPosition getHighlightPosition(){
         return this.highlightPosition;
+    }
+
+    public void setObserving(boolean observing){
+        this.observing = observing;
+    }
+
+    public boolean isObserving(){
+        return this.observing;
     }
 
     public String getUsername(){
@@ -495,6 +505,7 @@ public class ChessClient {
         String result = "";
         try{
             this.webSocketFacade.observeGame(this.username, command[1], this.authData.authToken());
+            this.setObserving(true);
             this.setMenuState(STATE_OBSERVE);
             result = "observe";
         } catch (WebSocketFacadeException exception){

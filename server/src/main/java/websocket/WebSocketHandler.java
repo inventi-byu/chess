@@ -303,18 +303,8 @@ public class WebSocketHandler {
     }
 
     public void leave(Session session, LeaveCommand command){
-        if (command.getUsername() == null){
-            try {
-                session.getRemote().sendString(new Gson().toJson(
-                        new ErrorMessage("You don't have a username, are you logged in?"))
-                );
-            } catch (IOException exception){
-                throw new ResponseException(0, exception.getMessage());
-            }
-        }
-        String username = command.getUsername();
         if(command.getGameID() == null){
-            this.sendError(session, "Invalid gameID.");
+            this.sendError(session, "Invalid game.");
             return;
         }
         if(command.getAuthToken() == null) {
@@ -326,54 +316,69 @@ public class WebSocketHandler {
         try{
             authData = this.gameService.authenticateWithToken(command.getAuthToken());
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
+            String username = authData.username();
 
-            if (command.isObserving()) {
-                this.gameService.gameDAO.removeObserverFromGame(command.getUsername(), command.getGameID());
+            if(gameData == null){
+                this.sendError(session, "Invalid game.");
+                return;
             }
 
+
+            this.removeActor(command.getGameID(), session);
+
             // Tell the user to clear their game or observing game data
-            LoadGameMessage loadGameMessage = new LoadGameMessage(null, command.isObserving());
-            this.connections.notify(username, loadGameMessage);
+            LoadGameMessage loadGameMessage = new LoadGameMessage(null);
+            this.connections.notify(session, loadGameMessage);
 
             // Remove the connection after notifying the user that the connection is closed
-            this.connections.removeConnection(username);
-            this.gameService.gameDAO.removeUserFromGame(command.getGameID(), username);
+            this.connections.removeConnection(session);
+
+
+            String userToRemove = null;
+            boolean observing = false;
+            String whiteUsername = gameData.whiteUsername();
+            String blackUsername = gameData.blackUsername();
+
+            // Make sure .equals does not throw null pointer exception
+            boolean checkWhite = false;
+            boolean checkBlack = false;
+
+            if (whiteUsername != null){
+                checkWhite = true;
+            }
+            if (blackUsername != null){
+                checkBlack = true;
+            }
+
+            // Observing if we are not white username, and we are not black username
+
+            if (checkWhite && username.equals(whiteUsername)){
+                userToRemove = whiteUsername;
+            } else if (checkBlack && username.equals(blackUsername)){
+                userToRemove = blackUsername;
+            } else {
+                observing = true;
+            }
+
+            if(userToRemove != null){
+                this.gameService.gameDAO.removeUserFromGame(command.getGameID(), userToRemove);
+            }
 
             // Notify that someone left
-            String opponentUsername = null;
+//            String opponentUsername = null;
             String message = "";
 
-            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
+            ArrayList<Session> actorList = this.getActorList(command.getGameID());
+//            String[] observerList = this.gameService.gameDAO.getObserverList(command.getGameID());
 
-            if (!command.isObserving()) {
+            if (!observing) {
                 message = username + " left the game.";
-                if (command.getTeamColor() != null && command.getTeamColor().equals("WHITE")) {
-                    opponentUsername = gameData.blackUsername();
-                } else {
-                    opponentUsername = gameData.whiteUsername();
-                }
-                if (opponentUsername != null) {
-                    this.connections.notify(opponentUsername, new NotificationMessage(message));
-                }
-                if (observerList != null) {
-                    this.connections.notify(observerList, new NotificationMessage(message));
-                }
             } else {
-                // The person who joined is observing
+                // The person who left is observing
                 message = username + " stopped observing the game.";
-                ArrayList<String> notifyList = new ArrayList<>();
-                String whiteUsername = gameData.whiteUsername();
-                String blackUsername = gameData.blackUsername();
-                if (whiteUsername != null) {
-                    notifyList.add(gameData.whiteUsername());
-                }
-                if (blackUsername != null) {
-                    notifyList.add(gameData.blackUsername());
-                }
-                if (observerList != null) {
-                    notifyList.addAll(List.of(observerList));
-                }
-                this.connections.notifyExcept(notifyList.toArray(new String[0]), username, new NotificationMessage(message));
+            }
+            if(actorList != null) {
+                this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
             }
 
         } catch (ResponseException exception) {
@@ -511,6 +516,20 @@ public class WebSocketHandler {
                 ArrayList<Session> freshActorList = new ArrayList<Session>();
                 freshActorList.add(session);
                 this.actors.put(gameID, freshActorList);
+            }
+        } catch (Exception exception){
+            return;
+        }
+    }
+
+    private void removeActor(Integer gameID, Session session){
+        try {
+            ArrayList<Session> actorsInGame = this.getActorList(gameID);
+            if (actorsInGame != null){
+                actorsInGame.remove(session);
+                this.updateActorList(gameID, actorsInGame);
+            } else {
+                return;
             }
         } catch (Exception exception){
             return;
