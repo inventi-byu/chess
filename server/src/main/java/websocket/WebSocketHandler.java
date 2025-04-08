@@ -432,6 +432,7 @@ public class WebSocketHandler {
             String whiteUsername = gameData.whiteUsername();
             String blackUsername = gameData.blackUsername();
             String opponentUsername = null;
+            boolean observing = false;
 
             // Make sure .equals does not throw null pointer exception
             boolean checkWhite = false;
@@ -450,6 +451,18 @@ public class WebSocketHandler {
                 opponentUsername = blackUsername;
             } else if (checkBlack && username.equals(blackUsername)){
                 opponentUsername = whiteUsername;
+            } else {
+                observing = true;
+            }
+
+            if (observing){
+                this.sendError(session, "You can't resign when you are just observing!");
+                return;
+            }
+
+            if (gameData.game().isCompleted()){
+                this.sendError(session, "You cannot resign, the game is already over");
+                return;
             }
 
             try {
