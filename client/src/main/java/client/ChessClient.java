@@ -399,7 +399,7 @@ public class ChessClient {
         if (this.game.isCompleted()){
             return "Sorry you can't move, the game is already over!";
         }
-        if (command.length != 3){
+        if (!(command.length == 3 || command.length == 4)){
             return "Could not move. Did you forget to enter a start and end position?";
         }
         if (this.game.getTeamTurn() != this.getTeamColor()){
@@ -414,8 +414,25 @@ public class ChessClient {
             if (startPiece.getTeamColor() != this.teamColor){
                 return "You can't move your opponent's pieces.";
             }
+
+            ChessPiece.PieceType promotionPiece = null;
+
+            if(command.length == 4){
+                if(startPiece.getPieceType() != ChessPiece.PieceType.PAWN){
+                    return "You can't promote a piece that's not a pawn.";
+                }
+                switch (command[3]){
+                    case "PAWN", "pawn", "p" -> {return "You can't promote a pawn to a pawn.";}
+                    case "QUEEN", "queen", "q" -> {promotionPiece = ChessPiece.PieceType.QUEEN;}
+                    case "BISHOP", "bishop", "b" -> {promotionPiece = ChessPiece.PieceType.BISHOP;}
+                    case "ROOK", "rook", "r" -> {promotionPiece = ChessPiece.PieceType.ROOK;}
+                    case "KNIGHT", "knight", "k" -> {promotionPiece = ChessPiece.PieceType.KNIGHT;}
+                    default -> {return "\"" + command[3] + "\" is not a valid promotion piece.";}
+                }
+            }
+
             ChessPosition end = PositionConverter.locationToPosition(command[2]);
-            this.webSocketFacade.makeMove(this.authData, this.gameID, start, end, null); // TODO: Add promotion piece logic
+            this.webSocketFacade.makeMove(this.authData, this.gameID, start, end, promotionPiece);
         } catch (ChessPositionException exception) {
             return "Sorry that move is not valid. Check your position notation:" +
                     "each position should start with a letter from a to h," +
