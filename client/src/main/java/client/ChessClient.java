@@ -5,25 +5,18 @@ import websocket.PositionConverter;
 import websocket.exception.ChessPositionException;
 import exceptions.ServerFacadeException;
 import exceptions.WebSocketFacadeException;
-import model.AuthData;
-import model.GameData;
-import model.GameMetaData;
-import ui.ServerFacade;
-import ui.WebSocketFacade;
-
+import model.*;
+import ui.*;
 import java.util.Collection;
 import java.util.HashMap;
 
 public class ChessClient {
     private String loginStatus;
     private String menuState; // Which menu you are currently in
-
     private ServerFacade serverFacade;
     private WebSocketFacade webSocketFacade;
-
     public static final String STATUS_LOGGED_IN = "LOGGED IN";
     public static final String STATUS_LOGGED_OUT = "LOGGED OUT";
-
     public static final String STATE_PRELOGIN= "PRELOGIN";
     public static final String STATE_POSTLOGIN = "POSTLOGIN";
     public static final String STATE_GAME = "GAME";
@@ -33,24 +26,20 @@ public class ChessClient {
     private String username;
     private AuthData authData;
     private ChessGame.TeamColor teamColor;
-
     // Info about games
     private HashMap<Integer, GameMetaData> gamesMap;
     private GameMetaData[] currentGames;
     private int lastCreatedGameID;
-
     // Joined Game info
     private ChessBoard board;
     private ChessGame game;
     private GameData gameData;
     private int gameID;
-
     // Observe info
     private boolean observing;
     private ChessBoard observingBoard;
     private ChessGame observingGame;
     private GameData observingGameData;
-
     // UI info
     private ChessPosition highlightPosition;
 
@@ -60,29 +49,24 @@ public class ChessClient {
         this.webSocketFacade = webSocketFacade;
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
         this.menuState = STATE_PRELOGIN;
-
         // User info
         this.teamColor = null;
         this.username = null;
         this.authData = null;
-
         // Info about games
         this.gamesMap = new HashMap<>();
         this.currentGames = null;
         this.lastCreatedGameID = 0; // No game created, because the IDs from the database start at 1.
-
         // Joined game info
         this.board = null;
         this.game = null;
         this.gameData = null;
         this.gameID = 0; // No game at the beginning
-
         // Observe info
         this.observing = false;
         this.observingBoard = null;
         this.observingGame = null;
         this.observingGameData = null;
-
         // UI info
         this.highlightPosition = null;
     }
@@ -90,202 +74,106 @@ public class ChessClient {
     public String getLoginStatus(){
         return this.loginStatus;
     }
-
     public void setLoginStatus(String loginStatus){
         this.loginStatus = loginStatus;
     }
-
-    public boolean isLoggedIn(){
-        return this.loginStatus.equals(STATUS_LOGGED_IN);
-    }
-
     public String getMenuState(){
         return this.menuState;
     }
-
     public void setMenuState(String menuState){
         this.menuState = menuState;
     }
-
-    public int getLastCreatedGameID(){
-        return this.lastCreatedGameID;
-    }
-
     public void setLastCreatedGameID(int gameID){
         this.lastCreatedGameID = gameID;
     }
-
     public ChessBoard getBoard(){
         return this.board;
     }
-
     public void setBoard(ChessBoard board){
         this.board = board;
     }
-
     public ChessGame.TeamColor getTeamColor(){
         return this.teamColor;
     }
-
     public void setTeamColor(ChessGame.TeamColor teamColor){
         this.teamColor = teamColor;
     }
-
     public GameMetaData[] getCurrentGames(){
         return this.currentGames;
     }
     public void setCurrentGames(GameMetaData[] currentGames){
         this.currentGames = currentGames;
     }
-
     public ChessBoard getObservingBoard(){
         return this.observingBoard;
     }
-
     public void setObservingBoard(ChessBoard observingBoard){
         this.observingBoard = observingBoard;
     }
-
-    public AuthData getAuthData(){
-        return this.authData;
-    }
-
+    public AuthData getAuthData(){return this.authData;}
     public void setAuthData(AuthData authData) {
         this.authData = authData;
     }
-
     public GameData getGameData(){
         return this.gameData;
     }
-
     public void setGameData(GameData gameData){
         this.gameData = gameData;
     }
-
     public ChessGame getGame(){
         return this.game;
     }
-
     public void setGame(ChessGame game){
         this.game = game;
     }
-
     public int getGameID(){
         return this.gameID;
     }
-
     public void setGameID(int gameID){
         this.gameID = gameID;
     }
-
     public void setGamesMap(HashMap<Integer, GameMetaData> map){
         this.gamesMap = map;
     }
-
-
     public void setObservingGame(ChessGame game){
         this.observingGame = game;
     }
-
     public void setObservingGameData(GameData gameData){
         this.observingGameData = gameData;
     }
-
     public GameData getObservingGameData(){
         return this.observingGameData;
     }
-
-    public ChessGame getObservingGame(){
-        return this.observingGame;
-    }
-
     public void setHighlightPosition(ChessPosition position){
         this.highlightPosition = position;
     }
-
     public ChessPosition getHighlightPosition(){
         return this.highlightPosition;
     }
-
-    public void setObserving(boolean observing){
-        this.observing = observing;
-    }
-
-    public boolean isObserving(){
-        return this.observing;
-    }
-
-    public String getUsername(){
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public void setObserving(boolean observing){this.observing = observing;}
+    public boolean isObserving(){return this.observing;}
+    public void setUsername(String username) {this.username = username;}
 
     public String evalLine(String line){
         String result = "";
         String[] command = line.split(" ");
-        switch (command[0]){
-            case "quit":
-                result = this.evalQuit();
-                break;
-
-            case "help":
-                result = this.evalHelp();
-                break;
-
-            case "register":
-                result = this.evalRegister(command);
-                break;
-
-            case "login":
-                result = this.evalLogin(command);
-                break;
-
-            case "create":
-                result = this.evalCreate(command);
-                break;
-
-            case "list":
-                result = this.evalList();
-                break;
-
-            case "join":
-                result = this.evalJoin(command);
-                break;
-
-            case "observe":
-                result = this.evalObserve(command);
-                break;
-
-            case "logout":
-                result = this.evalLogout();
-                break;
-
-            case "highlight":
-                result = this.evalHighlight(command);
-                break;
-
-            case "redraw":
-                result = evalRedraw();
-                break;
-
-            case "leave":
-                result = this.evalLeave();
-                break;
-
-            case "move":
-                result = this.evalMove(command);
-                break;
-
-            case "resign":
-                result = this.evalResign();
-                break;
-
-            default:
-                result = "Unknown command.";
-        }
+        result = switch (command[0]) {
+            case "quit" -> this.evalQuit();
+            case "help" -> this.evalHelp();
+            case "register" -> this.evalRegister(command);
+            case "login" -> this.evalLogin(command);
+            case "create" -> this.evalCreate(command);
+            case "list" -> this.evalList();
+            case "join" -> this.evalJoin(command);
+            case "observe" -> this.evalObserve(command);
+            case "logout" -> this.evalLogout();
+            case "highlight" -> this.evalHighlight(command);
+            case "redraw" -> evalRedraw();
+            case "leave" -> this.evalLeave();
+            case "move" -> this.evalMove(command);
+            case "resign" -> this.evalResign();
+            default -> "Unknown command.";
+        };
         return result;
     }
 
@@ -420,7 +308,6 @@ public class ChessClient {
                     this.serverFacade.listGames(this.getAuthData().authToken())
             );
 
-            // Create a map
             HashMap<Integer, GameMetaData> tempGamesMap = new HashMap<>();
             for (int i = 1; i < this.currentGames.length+1; i++){
                 tempGamesMap.put(i, this.currentGames[i-1]);
@@ -459,7 +346,6 @@ public class ChessClient {
             return "Sorry that game does not exist!";
         }
         int curGameID = chosenGameMetaData.gameID();
-
         String stringTeamColor = command[2];
         if (this.currentGames == null){
             return "You need to list the games or create one before you can join one.";
@@ -467,10 +353,7 @@ public class ChessClient {
         try{
             this.serverFacade.joinGame(stringTeamColor, curGameID, this.authData.authToken());
             this.setGameID(curGameID);
-
             this.webSocketFacade.joinGame(this.authData.authToken(), curGameID);
-
-            //TimeUnit.SECONDS.sleep(5);
 
             if (stringTeamColor.equals("WHITE")){
                 this.setTeamColor(ChessGame.TeamColor.WHITE);
@@ -559,18 +442,15 @@ public class ChessClient {
         }
         try {
             ChessPosition start = PositionConverter.locationToPosition(command[1]);
-
             ChessPiece startPiece = this.getBoard().getPiece(start);
             if(startPiece == null){
                 return "There's no piece at " + command[1] + " to move!";
             }
-
             if (startPiece.getTeamColor() != this.teamColor){
                 return "You can't move your opponent's pieces.";
             }
 
             ChessPosition end = PositionConverter.locationToPosition(command[2]);
-
             // TODO: Add promotion piece logic (it would be required in the command)
             this.webSocketFacade.makeMove(this.authData, this.gameID, start, end, null);
         } catch (ChessPositionException exception) {
@@ -631,7 +511,6 @@ public class ChessClient {
      */
     public ChessMove[] getLegalMoves(ChessPosition position){
         Collection<ChessMove> moves = null;
-
         if (this.getObservingBoard() == null && this.getGame() != null){
             moves = this.game.validMoves(position);
         } else if (this.getObservingBoard() != null){
@@ -652,22 +531,18 @@ public class ChessClient {
         ChessGame updatedGame = newGameData.game();
         ChessBoard updatedBoard = updatedGame.getBoard();
         int updatedGameID = newGameData.gameID();
-
         this.setGameData(newGameData);
         this.setGame(updatedGame);
         this.setBoard(updatedBoard);
         this.setGameID(updatedGameID);
-        return;
     }
 
     public void updateObservingGameInfo(GameData newObservingGameData) {
         ChessGame updatedObservingGame = newObservingGameData.game();
         ChessBoard updatedObservingBoard = updatedObservingGame.getBoard();
-
         this.setObservingGameData(newObservingGameData);
         this.setObservingGame(updatedObservingGame);
         this.setObservingBoard(updatedObservingBoard);
-        return;
     }
 
     public void clearGameInfo(){
@@ -675,14 +550,12 @@ public class ChessClient {
         this.setGame(null);
         this.setBoard(null);
         this.setGameID(0);
-        return;
     }
 
     public void clearObservingGameInfo(){
         this.setObservingGameData(null);
         this.setObservingGame(null);
         this.setObservingBoard(null);
-        return;
     }
 
     public void updateWebSocketFacade(WebSocketFacade updatedWebSocketFacade){

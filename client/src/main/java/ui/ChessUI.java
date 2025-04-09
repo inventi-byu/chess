@@ -76,65 +76,7 @@ public class ChessUI {
             } catch (Exception exception) {this.println("Sorry that\'s an invalid command!");}
             try{
                 result = this.client.evalLine(line);
-
-                switch (result) {
-                    case "helpPreLogin" -> this.displayHelpPreLogin();
-                    case "helpPostLogin" -> this.displayHelpPostLogin();
-                    case "join", "helpGame" -> this.displayHelpGame();
-                    case "helpObserve", "observe" -> this.displayHelpObserve();
-                    case "quit" -> {continue;}
-                    case "register" -> {
-                        this.println("Successfully registered. You are now logged in.");
-                        this.displayPostLoginMenu();
-                        this.displayHelpPostLogin();
-                    }
-                    case "login" -> {
-                        this.println("Successfully logged in.");
-                        this.displayPostLoginMenu();
-                        this.displayHelpPostLogin();
-                    }
-                    case "logout" -> {
-                        this.println("You successfully logged out.");
-                        this.print("\n");
-                        this.displayPreLoginMenu();
-                    }
-                    case "create" -> this.println("Successfully created game.");
-                    case "list" -> this.displayListOfGames();
-                    case "redraw" -> {
-                        if (this.client.getMenuState().equals(ChessClient.STATE_GAME)) {
-                            this.displayChessBoard(client.getBoard(), client.getTeamColor(), null);
-                        } else if (this.client.getMenuState().equals(ChessClient.STATE_OBSERVE)) {
-                            this.displayChessBoard(client.getObservingBoard(), ChessGame.TeamColor.WHITE, null);
-                        }
-                    }
-                    case "leave" -> {
-                        this.displayPostLoginMenu();
-                        this.displayHelpPostLogin();
-                    }
-                    case "move" -> this.println("You moved! One more move towards chess victory!");
-                    case "resign" -> this.println("You resigned! Wow...just...wow.");
-                    case "highlight" -> {
-                        if (client.getMenuState().equals(ChessClient.STATE_GAME)) {
-                            this.displayChessBoard(client.getBoard(), client.getTeamColor(), client.getLegalMoves(client.getHighlightPosition()));
-                        } else if (client.getMenuState().equals(ChessClient.STATE_OBSERVE)) {
-                            this.displayChessBoard(client.getObservingBoard(), ChessGame.TeamColor.WHITE,
-                                    client.getLegalMoves(client.getHighlightPosition())
-                            );
-                        }
-                    }
-                    default -> {
-                        // If there was an error, print the user-friendly message.
-                        if (client.getMenuState().equals(ChessClient.STATE_POSTLOGIN)) {
-                            this.println((this.menuTextColorPostLogin + result));
-                        } else if ((client.getMenuState().equals(ChessClient.STATE_GAME)) ||
-                                client.getMenuState().equals(ChessClient.STATE_OBSERVE)) {
-                            this.println((this.menuTextColorGame + result));
-                        } else {
-                            this.println((this.menuTextColorPreLogin + result));
-                        }
-                    }
-
-                }
+                this.evalResult(result);
             } catch (Exception ex){this.print(ex.toString());}
         }
     }
@@ -483,13 +425,68 @@ public class ChessUI {
         // Return the list as a plain array
         return rowTilesToHighlightAsList.toArray(new ChessPosition[0]);
     }
+    public void displayln(String string){this.println(string);}
+    public void display(String string){this.print(string);}
 
-    public void displayln(String string){
-        this.println(string);
-    }
+    private void evalResult(String result){
+        switch (result) {
+            case "helpPreLogin" -> this.displayHelpPreLogin();
+            case "helpPostLogin" -> this.displayHelpPostLogin();
+            case "join", "helpGame" -> this.displayHelpGame();
+            case "helpObserve", "observe" -> this.displayHelpObserve();
+            case "quit" -> {}
+            case "register" -> {
+                this.println("Successfully registered. You are now logged in.");
+                this.displayPostLoginMenu();
+                this.displayHelpPostLogin();
+            }
+            case "login" -> {
+                this.println("Successfully logged in.");
+                this.displayPostLoginMenu();
+                this.displayHelpPostLogin();
+            }
+            case "logout" -> {
+                this.println("You successfully logged out.");
+                this.print("\n");
+                this.displayPreLoginMenu();
+            }
+            case "create" -> this.println("Successfully created game.");
+            case "list" -> this.displayListOfGames();
+            case "redraw" -> {
+                if (this.client.getMenuState().equals(ChessClient.STATE_GAME)) {
+                    this.displayChessBoard(client.getBoard(), client.getTeamColor(), null);
+                } else if (this.client.getMenuState().equals(ChessClient.STATE_OBSERVE)) {
+                    this.displayChessBoard(client.getObservingBoard(), ChessGame.TeamColor.WHITE, null);
+                }
+            }
+            case "leave" -> {
+                this.displayPostLoginMenu();
+                this.displayHelpPostLogin();
+            }
+            case "move" -> this.println("You moved! One more move towards chess victory!");
+            case "resign" -> this.println("You resigned! Wow...just...wow.");
+            case "highlight" -> {
+                if (client.getMenuState().equals(ChessClient.STATE_GAME)) {
+                    this.displayChessBoard(client.getBoard(), client.getTeamColor(), client.getLegalMoves(client.getHighlightPosition()));
+                } else if (client.getMenuState().equals(ChessClient.STATE_OBSERVE)) {
+                    this.displayChessBoard(client.getObservingBoard(), ChessGame.TeamColor.WHITE,
+                            client.getLegalMoves(client.getHighlightPosition())
+                    );
+                }
+            }
+            default -> {
+                // If there was an error, print the user-friendly message.
+                if (client.getMenuState().equals(ChessClient.STATE_POSTLOGIN)) {
+                    this.println((this.menuTextColorPostLogin + result));
+                } else if ((client.getMenuState().equals(ChessClient.STATE_GAME)) ||
+                        client.getMenuState().equals(ChessClient.STATE_OBSERVE)) {
+                    this.println((this.menuTextColorGame + result));
+                } else {
+                    this.println((this.menuTextColorPreLogin + result));
+                }
+            }
 
-    public void display(String string){
-        this.print(string);
+        }
     }
 
 }
