@@ -463,8 +463,8 @@ public class ChessUI {
                 this.displayPostLoginMenu();
                 this.displayHelpPostLogin();
             }
-            case "move" -> this.println("You moved! One more move towards chess victory!");
-            case "resign" -> this.println("You resigned! Wow...just...wow.");
+            case "move" -> {}
+            case "resign" -> this.println("Wow...just...wow.");
             case "highlight" -> {
                 if (client.getMenuState().equals(ChessClient.STATE_GAME)) {
                     this.displayChessBoard(client.getBoard(), client.getTeamColor(), client.getLegalMoves(client.getHighlightPosition()));
