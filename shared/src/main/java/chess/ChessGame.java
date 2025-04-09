@@ -13,12 +13,14 @@ public class ChessGame {
         private ChessBoard board;
         private ChessGame.TeamColor turn;
         private boolean completed;
+        public ChessGame.TeamColor winner;
 
         public ChessGame() {
             this.board = new ChessBoard();
             this.board.resetBoard();
             this.turn = TeamColor.WHITE;
             this.completed = false;
+            this.winner = null;
         }
 
         /**
@@ -196,6 +198,11 @@ public class ChessGame {
                     }
                 }
                 this.setCompleted(); // The game is over
+                if (teamColor == TeamColor.WHITE){
+                    this.winner = TeamColor.BLACK;
+                } else {
+                    this.winner = TeamColor.WHITE;
+                }
                 return true;
             }
             return false;

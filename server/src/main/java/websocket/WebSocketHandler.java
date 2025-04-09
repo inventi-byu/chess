@@ -197,14 +197,21 @@ public class WebSocketHandler {
                 return;
             }
 
+            ChessGame.TeamColor winner = null;
             try {
+
                 // Make the move and set the new team turn
                 gameData.game().makeMove(command.getMove());
 
+                // Set team turn
                 if (teamColor == ChessGame.TeamColor.WHITE){
                     gameData.game().setTeamTurn(ChessGame.TeamColor.BLACK);
                 } else {
                     gameData.game().setTeamTurn(ChessGame.TeamColor.WHITE);
+                }
+
+                if (gameData.game().winner != null){
+                    winner = gameData.game().winner;
                 }
 
             } catch (InvalidMoveException exception){
@@ -214,24 +221,53 @@ public class WebSocketHandler {
 
             // Update the game and get message ready
             this.gameService.gameDAO.updateGame(gameData);
-            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
-            ArrayList<Session> actorList = this.getActorList(command.getGameID());
-
-            if(actorList != null) {
-                this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
-            }
 
             // Get information about the move
             ChessMove move = command.getMove();
             String start = PositionConverter.positionToLocation(move.getStartPosition());
             String end = PositionConverter.positionToLocation(move.getEndPosition());
+            ArrayList<Session> actorList = this.getActorList(command.getGameID());
 
-            String message = username + " made a move from " + start + " to " + end + ".";
 
-            // Notify people a move was made
-            if(actorList != null){
-                this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
+            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
+
+            if (actorList != null) {
+                this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
             }
+
+            String message = null;
+
+            if (winner == null) {
+                if(gameData.game().isInCheck(ChessGame.TeamColor.WHITE)){
+                    message = whiteUsername + " is now in check because " + username + " made a move from " + start + " to " + end + ".";
+                    // Notify people a move was made
+                    if (actorList != null) {
+                        this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
+                    }
+                } else if(gameData.game().isInCheck(ChessGame.TeamColor.BLACK)){
+                    message = blackUsername + " is now in check because " + username + " made a move from " + start + " to " + end + ".";
+                    // Notify people a move was made
+                    if (actorList != null) {
+                        this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
+                    }
+                } else {
+                    message = username + " made a move from " + start + " to " + end + ".";
+                    // Notify people a move was made
+                    if (actorList != null) {
+                        this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
+                    }
+                }
+
+            } else {
+                String winnerUser = winner == ChessGame.TeamColor.WHITE ?  whiteUsername : blackUsername;
+                String loserUser = winner == ChessGame.TeamColor.WHITE ?  blackUsername : whiteUsername;
+                message = winnerUser + " made a checkmate against " + loserUser + " by moving from " + start + " to " + end + ".";
+                // Notify people a move was made
+                if (actorList != null) {
+                    this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
+                }
+            }
+
 
 
         } catch (ResponseException exception) {
