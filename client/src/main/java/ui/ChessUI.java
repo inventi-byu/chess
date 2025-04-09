@@ -73,104 +73,69 @@ public class ChessUI {
             String line = "";
             try {
                 line = scanner.nextLine();
-            } catch (Exception exception) {
-                this.println("Sorry that\'s an invalid command!");
-            }
+            } catch (Exception exception) {this.println("Sorry that\'s an invalid command!");}
             try{
                 result = this.client.evalLine(line);
 
                 switch (result) {
-                    case "helpPreLogin":
-                        this.displayHelpPreLogin();
-                        break;
-                    case "helpPostLogin":
-                        this.displayHelpPostLogin();
-                        break;
-                    case "join", "helpGame":
-                        this.displayHelpGame();
-                        break;
-                    case "helpObserve":
-                        this.displayHelpObserve();
-                        break;
-                    case "quit":
-                        break;
-                    case "register":
+                    case "helpPreLogin" -> this.displayHelpPreLogin();
+                    case "helpPostLogin" -> this.displayHelpPostLogin();
+                    case "join", "helpGame" -> this.displayHelpGame();
+                    case "helpObserve", "observe" -> this.displayHelpObserve();
+                    case "quit" -> {continue;}
+                    case "register" -> {
                         this.println("Successfully registered. You are now logged in.");
                         this.displayPostLoginMenu();
                         this.displayHelpPostLogin();
-                        break;
-                    case "login":
+                    }
+                    case "login" -> {
                         this.println("Successfully logged in.");
                         this.displayPostLoginMenu();
                         this.displayHelpPostLogin();
-                        break;
-                    case "logout":
+                    }
+                    case "logout" -> {
                         this.println("You successfully logged out.");
                         this.print("\n");
                         this.displayPreLoginMenu();
-                        break;
-                    case "create":
-                        this.println("Successfully created game.");
-                        break;
-                    case "list":
-                        this.displayListOfGames();
-                        break;
-                    case "observe":
-                        this.displayObserveMenu(client.getObservingBoard());
-                        this.displayHelpObserve();
-                        break;
-                    case "redraw":
-                        if(this.client.getMenuState().equals(ChessClient.STATE_GAME)){
+                    }
+                    case "create" -> this.println("Successfully created game.");
+                    case "list" -> this.displayListOfGames();
+                    case "redraw" -> {
+                        if (this.client.getMenuState().equals(ChessClient.STATE_GAME)) {
                             this.displayChessBoard(client.getBoard(), client.getTeamColor(), null);
-                        } else if(this.client.getMenuState().equals(ChessClient.STATE_OBSERVE)){
+                        } else if (this.client.getMenuState().equals(ChessClient.STATE_OBSERVE)) {
                             this.displayChessBoard(client.getObservingBoard(), ChessGame.TeamColor.WHITE, null);
                         }
-                        break;
-                    case "leave":
+                    }
+                    case "leave" -> {
                         this.displayPostLoginMenu();
                         this.displayHelpPostLogin();
-                        break;
-                    case "move":
-                        switch (this.rand.nextInt(3)){
-                            case 0 -> this.println("You moved! One more move towards chess victory!");
-                            case 1 -> this.println("You moved! And so the tables turn...");
-                            case 2 -> this.println("You moved! And the battle continues...");
-                        }
-                        break;
-                    case "resign":
-                        switch (this.rand.nextInt(3)){
-                            case 0 -> this.println("You resigned! Wow...just...wow.");
-                            case 1 -> this.println("You resigned! But you were so close :(");
-                            case 2 -> this.println("You resigned! Don't give up next time!");
-                        }
-                        break;
-                        
-                    case "highlight":
-                        if (client.getMenuState().equals(ChessClient.STATE_GAME)){
+                    }
+                    case "move" -> this.println("You moved! One more move towards chess victory!");
+                    case "resign" -> this.println("You resigned! Wow...just...wow.");
+                    case "highlight" -> {
+                        if (client.getMenuState().equals(ChessClient.STATE_GAME)) {
                             this.displayChessBoard(client.getBoard(), client.getTeamColor(), client.getLegalMoves(client.getHighlightPosition()));
-                        } else if (client.getMenuState().equals(ChessClient.STATE_OBSERVE)){
+                        } else if (client.getMenuState().equals(ChessClient.STATE_OBSERVE)) {
                             this.displayChessBoard(client.getObservingBoard(), ChessGame.TeamColor.WHITE,
                                     client.getLegalMoves(client.getHighlightPosition())
                             );
                         }
-                        break;
-
-                    default:
+                    }
+                    default -> {
                         // If there was an error, print the user-friendly message.
-                        if(client.getMenuState().equals(ChessClient.STATE_POSTLOGIN)){
-                            this.println( (this.menuTextColorPostLogin + result) );
+                        if (client.getMenuState().equals(ChessClient.STATE_POSTLOGIN)) {
+                            this.println((this.menuTextColorPostLogin + result));
                         } else if ((client.getMenuState().equals(ChessClient.STATE_GAME)) ||
-                                client.getMenuState().equals(ChessClient.STATE_OBSERVE)){
-                            this.println( (this.menuTextColorGame + result) );
+                                client.getMenuState().equals(ChessClient.STATE_OBSERVE)) {
+                            this.println((this.menuTextColorGame + result));
                         } else {
-                            this.println( (this.menuTextColorPreLogin + result) );
+                            this.println((this.menuTextColorPreLogin + result));
                         }
+                    }
 
                 }
-
-            } catch (Exception ex){
-                this.print(ex.toString());
-            }
+            } catch (Exception ex){this.print(ex.toString());}
         }
     }
 
@@ -263,10 +228,6 @@ public class ChessUI {
                 help - Get help with possible commands
                 """
         );
-    }
-
-    public void displayObserveMenu(ChessBoard board){
-        return;
     }
 
     public void displayListOfGames(){
@@ -530,5 +491,5 @@ public class ChessUI {
     public void display(String string){
         this.print(string);
     }
-
+    
 }
