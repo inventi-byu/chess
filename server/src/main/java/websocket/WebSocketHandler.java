@@ -62,7 +62,7 @@ public class WebSocketHandler {
             return;
         }
         if(command.getGameID() == null){
-            this.sendError(session, "Invalid gameID.");
+            this.sendError(session, "Invalid game.");
             return;
         }
 
@@ -212,11 +212,9 @@ public class WebSocketHandler {
                 return;
             }
 
-            // Update the game
+            // Update the game and get message ready
             this.gameService.gameDAO.updateGame(gameData);
-
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
-
             ArrayList<Session> actorList = this.getActorList(command.getGameID());
 
             if(actorList != null) {
@@ -384,7 +382,6 @@ public class WebSocketHandler {
                 this.sendError(session, "You can't resign when you are just observing!");
                 return;
             }
-
             if (gameData.game().isCompleted()){
                 this.sendError(session, "You cannot resign, the game is already over");
                 return;
@@ -404,12 +401,9 @@ public class WebSocketHandler {
             // Update the game data
             this.gameService.gameDAO.updateGame(gameData);
 
-            // Get observers
+            // Get people
             ArrayList<Session> actorList = this.getActorList(command.getGameID());
-
-            // Set up load game messages
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
-
             String message = username + " resigned. " + opponentUsername + " won the game!";
 
             // Notify the user and observers to load the game

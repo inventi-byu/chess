@@ -491,5 +491,5 @@ public class ChessUI {
     public void display(String string){
         this.print(string);
     }
-    
+
 }
