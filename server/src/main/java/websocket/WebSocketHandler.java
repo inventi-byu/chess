@@ -25,7 +25,6 @@ import java.util.HashMap;
 public class WebSocketHandler {
     GameService gameService;
     HashMap<Integer, ArrayList<Session>> actors;
-
     private final ConnectionsManager connections = new ConnectionsManager();
 
     public WebSocketHandler(GameService gameService){
@@ -197,9 +196,7 @@ public class WebSocketHandler {
                 return;
             }
 
-            ChessGame.TeamColor winner = null;
             try {
-
                 // Make the move and set the new team turn
                 gameData.game().makeMove(command.getMove());
 
@@ -208,10 +205,6 @@ public class WebSocketHandler {
                     gameData.game().setTeamTurn(ChessGame.TeamColor.BLACK);
                 } else {
                     gameData.game().setTeamTurn(ChessGame.TeamColor.WHITE);
-                }
-
-                if (gameData.game().winner != null){
-                    winner = gameData.game().winner;
                 }
 
             } catch (InvalidMoveException exception){
@@ -228,47 +221,39 @@ public class WebSocketHandler {
             String end = PositionConverter.positionToLocation(move.getEndPosition());
             ArrayList<Session> actorList = this.getActorList(command.getGameID());
 
-
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
 
             if (actorList != null) {
                 this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
             }
 
+            // Notify people a move was made
             String message = null;
+            message = username + " made a move from " + start + " to " + end + ".";
 
-            if (winner == null) {
+            if (actorList != null) {
+                this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
+            }
+
+            if (!gameData.game().isInCheckmate(ChessGame.TeamColor.WHITE) && !gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK)) {
+                message = null;
                 if(gameData.game().isInCheck(ChessGame.TeamColor.WHITE)){
-                    message = whiteUsername + " is now in check because " + username + " made a move from " + start + " to " + end + ".";
-                    // Notify people a move was made
-                    if (actorList != null) {
-                        this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
-                    }
-                } else if(gameData.game().isInCheck(ChessGame.TeamColor.BLACK)){
-                    message = blackUsername + " is now in check because " + username + " made a move from " + start + " to " + end + ".";
-                    // Notify people a move was made
-                    if (actorList != null) {
-                        this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
-                    }
-                } else {
-                    message = username + " made a move from " + start + " to " + end + ".";
-                    // Notify people a move was made
-                    if (actorList != null) {
-                        this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
-                    }
+                    message = whiteUsername + " is now in check.";
+                } else if(gameData.game().isInCheck(ChessGame.TeamColor.BLACK)) {
+                    message = blackUsername + " is now in check.";
                 }
-
+                if (message != null && actorList != null) {
+                    this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
+                }
+                return;
             } else {
-                String winnerUser = winner == ChessGame.TeamColor.WHITE ?  whiteUsername : blackUsername;
-                String loserUser = winner == ChessGame.TeamColor.WHITE ?  blackUsername : whiteUsername;
-                message = winnerUser + " made a checkmate against " + loserUser + " by moving from " + start + " to " + end + ".";
-                // Notify people a move was made
+                String winnerUser = gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK) ?  whiteUsername : blackUsername;
+                String loserUser = gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK) ?  blackUsername : whiteUsername;
+                message = loserUser + " is in checkmate. " + winnerUser + " won the match!";
                 if (actorList != null) {
                     this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
                 }
             }
-
-
 
         } catch (ResponseException exception) {
             this.sendError(session, "Invalid credentials.");
@@ -318,7 +303,6 @@ public class WebSocketHandler {
             }
 
             // Observing if we are not white username, and we are not black username
-
             if (checkWhite && username.equals(whiteUsername)){
                 userToRemove = whiteUsername;
             } else if (checkBlack && username.equals(blackUsername)){
@@ -333,7 +317,6 @@ public class WebSocketHandler {
 
             // Notify that someone left
             String message = "";
-
             ArrayList<Session> actorList = this.getActorList(command.getGameID());
 
             if (!observing) {
@@ -392,6 +375,7 @@ public class WebSocketHandler {
             String whiteUsername = gameData.whiteUsername();
             String blackUsername = gameData.blackUsername();
             String opponentUsername = null;
+            ChessGame.TeamColor opponentColor = null;
             boolean observing = false;
 
             // Make sure .equals does not throw null pointer exception
@@ -408,8 +392,10 @@ public class WebSocketHandler {
             // Observing if we are not white username, and we are not black username
             if (checkWhite && username.equals(whiteUsername)){
                 opponentUsername = blackUsername;
+                opponentColor = ChessGame.TeamColor.BLACK;
             } else if (checkBlack && username.equals(blackUsername)){
                 opponentUsername = whiteUsername;
+                opponentColor = ChessGame.TeamColor.WHITE;
             } else {
                 observing = true;
             }
@@ -426,6 +412,7 @@ public class WebSocketHandler {
             try {
                 // Set the game as completed
                 gameData.game().setCompleted();
+                gameData.game().winner = opponentColor;
                 if (whiteUsername == null && blackUsername == null){
                     this.sendError(session, "Sorry you can't resign when you're observing.");
                     return;
@@ -505,8 +492,6 @@ public class WebSocketHandler {
             if (actorsInGame != null){
                 actorsInGame.remove(session);
                 this.updateActorList(gameID, actorsInGame);
-            } else {
-                return;
             }
         } catch (Exception exception){
             return;
