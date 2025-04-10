@@ -186,7 +186,7 @@ public class WebSocketHandler {
             }
 
             // Make sure the game is still going
-            if(gameData.game().isCompleted()){
+            if(gameData.game().isInCheckmate(ChessGame.TeamColor.WHITE) || gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK)){
                 this.sendError(session, "Sorry you can't move, the game is already over!");
                 return;
             }
