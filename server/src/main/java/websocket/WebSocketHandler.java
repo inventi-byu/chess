@@ -154,19 +154,15 @@ public class WebSocketHandler {
             return;
         }
 
-        // Authenticate
         AuthData authData = null;
         String username = null;
         String whiteUsername = null;
         String blackUsername = null;
         ChessGame.TeamColor teamColor = null;
-
         try{
             // Authenticate and get GameData
             authData = this.gameService.authenticateWithToken(command.getAuthToken());
-            // Get the GameData
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
-            // Grab username and find the team color
             username = authData.username();
             whiteUsername = gameData.whiteUsername();
             blackUsername = gameData.blackUsername();
@@ -179,10 +175,7 @@ public class WebSocketHandler {
                 this.sendError(session, "Sorry you can't move when you're observing!");
                 return;
             }
-
-            // Make sure the game is still going
-            if(gameData.game().isCompleted() ||
-                    gameData.game().isInCheckmate(ChessGame.TeamColor.WHITE) ||
+            if(gameData.game().isCompleted() || gameData.game().isInCheckmate(ChessGame.TeamColor.WHITE) ||
                     gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK)){
                 this.sendError(session, "Sorry you can't move, the game is already over!");
                 return;
@@ -195,7 +188,6 @@ public class WebSocketHandler {
             try {
                 // Make the move and set the new team turn
                 gameData.game().makeMove(command.getMove());
-                // Set team turn
                 if (teamColor == ChessGame.TeamColor.WHITE){
                     gameData.game().setTeamTurn(ChessGame.TeamColor.BLACK);
                 } else {
@@ -209,8 +201,7 @@ public class WebSocketHandler {
                 return;
             }
 
-            // Get information about the move
-            ChessMove move = command.getMove();
+            ChessMove move = command.getMove(); // Get information about the move
             String start = PositionConverter.positionToLocation(move.getStartPosition());
             String end = PositionConverter.positionToLocation(move.getEndPosition());
             ArrayList<Session> actorList = this.getActorList(command.getGameID());
@@ -219,9 +210,7 @@ public class WebSocketHandler {
             if (actorList != null) {
                 this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
             }
-
-            // Notify people a move was made
-            String message = null;
+            String message = null; // Notify people a move was made
             message = username + " made a move from " + start + " to " + end + ".";
             if (actorList != null) {
                 this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
@@ -236,8 +225,7 @@ public class WebSocketHandler {
                 }
                 if (message != null && actorList != null) {
                     this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
-                }
-                return;
+                } // return;
             } else {
                 String winnerUser = gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK) ?  whiteUsername : blackUsername;
                 String loserUser = gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK) ?  blackUsername : whiteUsername;
@@ -246,9 +234,10 @@ public class WebSocketHandler {
                     this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
                 }
             }
-        } catch (ResponseException exception) {
+        }catch (ResponseException exception) {
             this.sendError(session, "Invalid credentials.");
-        } catch (IOException exception){
+        }
+        catch (IOException exception){
             this.sendError(session, "Sorry could not connect to game.");
         }
     }
