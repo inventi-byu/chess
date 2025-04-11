@@ -195,7 +195,6 @@ public class WebSocketHandler {
                 }
                 // Update the game and get message ready
                 this.gameService.gameDAO.updateGame(gameData);
-
             } catch (InvalidMoveException exception){
                 this.sendError(session, "Invalid move.");
                 return;
