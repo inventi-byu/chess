@@ -13,6 +13,7 @@ public class ChessUI {
 
     private static final String SPACE = " ";
     private static final String EMPTY_SPACE = "   ";
+    private boolean resignState;
 
     public String menuBGColor;
     private String menuTextColorPreLogin;
@@ -40,6 +41,7 @@ public class ChessUI {
     public ChessUI(ChessClient client) {
         this.client = client;
 
+        this.resignState = false;
         this.menuBGColor = EscapeSequences.SET_BG_COLOR_BLACK;
         this.menuTextColorPreLogin = EscapeSequences.SET_TEXT_COLOR_WHITE;
         this.menuTextColorLoggedIn = EscapeSequences.SET_TEXT_COLOR_GREEN;
@@ -75,8 +77,17 @@ public class ChessUI {
                 line = scanner.nextLine();
             } catch (Exception exception) {this.println("Sorry that\'s an invalid command!");}
             try{
-                result = this.client.evalLine(line);
-                this.evalResult(result);
+                if (line.equals("y")){
+                    this.client.evalResign();
+                    resignState = false;
+                } else if (line.equals("n")){
+                    continue;
+                }
+                else{
+                    result = this.client.evalLine(line);
+                    this.evalResult(result);
+                }
+
             } catch (Exception ex){this.print(ex.toString());}
         }
     }
@@ -464,6 +475,7 @@ public class ChessUI {
                 this.displayHelpPostLogin();
             }
             case "move" -> {}
+            case "resign1" -> {this.println("Are you sure want to resign? (y/n)"); this.resignState = true;}
             case "resign" -> this.println("Wow...just...wow.");
             case "highlight" -> {
                 if (client.getMenuState().equals(ChessClient.STATE_GAME)) {

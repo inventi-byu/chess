@@ -456,6 +456,10 @@ public class ChessClient {
         return "leave";
     }
 
+    public String evalResign1(){
+        return "resign1";
+    }
+
     public String evalResign(){
         if(!this.getMenuState().equals(STATE_GAME)){
             return "Sorry you have to have joined a game to use that command.";

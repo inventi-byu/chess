@@ -24,7 +24,8 @@ public class ChessClientEvalCaller {
             case "redraw" -> this.client.evalRedraw();
             case "leave" -> this.client.evalLeave();
             case "move" -> this.client.evalMove(command);
-            case "resign" -> this.client.evalResign();
+            case "resign" -> this.client.evalResign1();
+            case "y" -> this.client.evalResign();
             default -> "Unknown command.";
         };
         return result;
