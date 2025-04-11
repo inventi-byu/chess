@@ -186,7 +186,7 @@ public class WebSocketHandler {
             }
 
             // Make sure the game is still going
-            if(gameData.game().isInCheckmate(ChessGame.TeamColor.WHITE) || gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK)){
+            if(gameData.game().isCompleted() || gameData.game().isInCheckmate(ChessGame.TeamColor.WHITE) || gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK)){
                 this.sendError(session, "Sorry you can't move, the game is already over!");
                 return;
             }
@@ -207,13 +207,13 @@ public class WebSocketHandler {
                     gameData.game().setTeamTurn(ChessGame.TeamColor.WHITE);
                 }
 
+                // Update the game and get message ready
+                this.gameService.gameDAO.updateGame(gameData);
+
             } catch (InvalidMoveException exception){
                 this.sendError(session, "Invalid move.");
                 return;
             }
-
-            // Update the game and get message ready
-            this.gameService.gameDAO.updateGame(gameData);
 
             // Get information about the move
             ChessMove move = command.getMove();
@@ -375,7 +375,6 @@ public class WebSocketHandler {
             String whiteUsername = gameData.whiteUsername();
             String blackUsername = gameData.blackUsername();
             String opponentUsername = null;
-            ChessGame.TeamColor opponentColor = null;
             boolean observing = false;
 
             // Make sure .equals does not throw null pointer exception
@@ -392,10 +391,8 @@ public class WebSocketHandler {
             // Observing if we are not white username, and we are not black username
             if (checkWhite && username.equals(whiteUsername)){
                 opponentUsername = blackUsername;
-                opponentColor = ChessGame.TeamColor.BLACK;
             } else if (checkBlack && username.equals(blackUsername)){
                 opponentUsername = whiteUsername;
-                opponentColor = ChessGame.TeamColor.WHITE;
             } else {
                 observing = true;
             }
@@ -404,29 +401,29 @@ public class WebSocketHandler {
                 this.sendError(session, "You can't resign when you are just observing!");
                 return;
             }
+
             if (gameData.game().isCompleted()){
-                this.sendError(session, "You cannot resign, the game is already over");
+                this.sendError(session, "You cannot resign, the game is already over.");
                 return;
             }
 
             try {
-                // Set the game as completed
-                gameData.game().setCompleted();
-                gameData.game().winner = opponentColor;
                 if (whiteUsername == null && blackUsername == null){
                     this.sendError(session, "Sorry you can't resign when you're observing.");
                     return;
                 }
+                // Set the game as completed
+                gameData.game().setCompleted();
+
+                // Update the game data
+                this.gameService.gameDAO.updateGame(gameData);
+
             } catch (Exception exception){
                 this.sendError(session, "Failed to resign.");
             }
 
-            // Update the game data
-            this.gameService.gameDAO.updateGame(gameData);
-
             // Get people
             ArrayList<Session> actorList = this.getActorList(command.getGameID());
-            LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
             String message = username + " resigned. " + opponentUsername + " won the game!";
 
             // Notify the user and observers to load the game
@@ -436,7 +433,6 @@ public class WebSocketHandler {
 
         } catch (ResponseException exception) {
             this.sendError(session, "Invalid credentials.");
-
         } catch (IOException exception){
             this.sendError(session, "Sorry could not connect to game.");
         }
