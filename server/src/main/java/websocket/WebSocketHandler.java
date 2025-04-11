@@ -100,7 +100,6 @@ public class WebSocketHandler {
             }
 
             // Observing if we are not white username, and we are not black username
-
             if (checkWhite && username.equals(whiteUsername)){
                 teamColor = ChessGame.TeamColor.WHITE;
             } else if (checkBlack && username.equals(blackUsername)){
@@ -150,7 +149,6 @@ public class WebSocketHandler {
             this.sendError(session, "Invalid gameID.");
             return;
         }
-
         if (command.getMove() == null){
             this.sendError(session, "Invalid move.");
             return;
@@ -166,13 +164,10 @@ public class WebSocketHandler {
         try{
             // Authenticate and get GameData
             authData = this.gameService.authenticateWithToken(command.getAuthToken());
-
             // Get the GameData
             GameData gameData = this.gameService.gameDAO.getGame(command.getGameID());
-
             // Grab username and find the team color
             username = authData.username();
-
             whiteUsername = gameData.whiteUsername();
             blackUsername = gameData.blackUsername();
 
@@ -190,7 +185,6 @@ public class WebSocketHandler {
                 this.sendError(session, "Sorry you can't move, the game is already over!");
                 return;
             }
-
             if(gameData.game().getTeamTurn() != teamColor){
                 this.sendError(session, "Sorry you can't move, its not your turn!");
                 return;
@@ -199,14 +193,12 @@ public class WebSocketHandler {
             try {
                 // Make the move and set the new team turn
                 gameData.game().makeMove(command.getMove());
-
                 // Set team turn
                 if (teamColor == ChessGame.TeamColor.WHITE){
                     gameData.game().setTeamTurn(ChessGame.TeamColor.BLACK);
                 } else {
                     gameData.game().setTeamTurn(ChessGame.TeamColor.WHITE);
                 }
-
                 // Update the game and get message ready
                 this.gameService.gameDAO.updateGame(gameData);
 
@@ -222,7 +214,6 @@ public class WebSocketHandler {
             ArrayList<Session> actorList = this.getActorList(command.getGameID());
 
             LoadGameMessage loadGameMessage = new LoadGameMessage(gameData);
-
             if (actorList != null) {
                 this.connections.notify(actorList.toArray(new Session[0]), loadGameMessage);
             }
@@ -230,7 +221,6 @@ public class WebSocketHandler {
             // Notify people a move was made
             String message = null;
             message = username + " made a move from " + start + " to " + end + ".";
-
             if (actorList != null) {
                 this.connections.notifyExcept(actorList.toArray(new Session[0]), session, new NotificationMessage(message));
             }
@@ -254,10 +244,8 @@ public class WebSocketHandler {
                     this.connections.notify(actorList.toArray(new Session[0]), new NotificationMessage(message));
                 }
             }
-
         } catch (ResponseException exception) {
             this.sendError(session, "Invalid credentials.");
-
         } catch (IOException exception){
             this.sendError(session, "Sorry could not connect to game.");
         }

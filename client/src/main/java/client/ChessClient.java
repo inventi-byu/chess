@@ -24,52 +24,41 @@ public class ChessClient {
     private final ChessClientInfoUpdater infoUpdater = new ChessClientInfoUpdater(this);
     private final ChessClientEvalCaller evalCaller = new ChessClientEvalCaller(this);
 
-    // User info
     private String username;
     private AuthData authData;
     private ChessGame.TeamColor teamColor;
-    // Info about games
     private HashMap<Integer, GameMetaData> gamesMap;
     private GameMetaData[] currentGames;
     private int lastCreatedGameID;
-    // Joined Game info
     private ChessBoard board;
     private ChessGame game;
     private GameData gameData;
     private int gameID;
-    // Observe info
     private boolean observing;
     private ChessBoard observingBoard;
     private ChessGame observingGame;
     private GameData observingGameData;
-    // UI info
     private ChessPosition highlightPosition;
 
     public ChessClient(ServerFacade serverFacade, WebSocketFacade webSocketFacade){
-        // Client info
         this.serverFacade = serverFacade;
         this.webSocketFacade = webSocketFacade;
         this.loginStatus = ChessClient.STATUS_LOGGED_OUT;
         this.menuState = STATE_PRELOGIN;
-        // User info
         this.teamColor = null;
         this.username = null;
         this.authData = null;
-        // Info about games
         this.gamesMap = new HashMap<>();
         this.currentGames = null;
         this.lastCreatedGameID = 0; // No game created, IDs from database start at 1
-        // Joined game info
         this.board = null;
         this.game = null;
         this.gameData = null;
         this.gameID = 0; // No game at the beginning
-        // Observe info
         this.observing = false;
         this.observingBoard = null;
         this.observingGame = null;
         this.observingGameData = null;
-        // UI info
         this.highlightPosition = null;
     }
 
@@ -323,7 +312,6 @@ public class ChessClient {
             this.serverFacade.joinGame(stringTeamColor, curGameID, this.authData.authToken());
             this.setGameID(curGameID);
             this.webSocketFacade.joinGame(this.authData.authToken(), curGameID);
-
             if (stringTeamColor.equals("WHITE")){
                 this.setTeamColor(ChessGame.TeamColor.WHITE);
             } else {
